@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI i praksis – Fagseminar 2026</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+  <style>
+    :root {
+      --accent: #7c6af7;
+      --accent-light: #a89df9;
+      --green: #4ade80;
+      --yellow: #facc15;
+      --red: #f87171;
+      --card-bg: rgba(255,255,255,0.05);
+      --card-border: rgba(255,255,255,0.1);
+    }
+
+    .reveal {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: none;
+    }
+
+    .reveal h1 { font-size: 2.2em; line-height: 1.15; }
+    .reveal h2 { font-size: 1.5em; color: var(--accent-light); }
+    .reveal h3 { font-size: 1.1em; color: #aaa; font-weight: 500; }
+
+    .reveal p, .reveal li { font-size: 0.88em; line-height: 1.65; }
+    .reveal ul { list-style: none; padding: 0; }
+    .reveal ul li::before { content: "→ "; color: var(--accent-light); font-weight: 700; }
+
+    /* Title slide */
+    .title-slide { text-align: left; }
+    .title-slide .eyebrow {
+      font-size: 0.7em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 0.5em;
+      font-weight: 600;
+    }
+    .title-slide h1 { margin-bottom: 0.2em; }
+    .title-slide .subtitle { color: #888; font-size: 0.85em; margin-top: 0.8em; }
+    .title-slide .divider {
+      width: 60px; height: 3px;
+      background: var(--accent);
+      margin: 1.2em 0;
+      border-radius: 2px;
+    }
+
+    /* Section divider */
+    .section-slide { text-align: left; }
+    .section-slide .number {
+      font-size: 5em;
+      font-weight: 800;
+      color: rgba(124,106,247,0.18);
+      line-height: 1;
+      margin-bottom: -0.1em;
+    }
+    .section-slide h2 { font-size: 1.8em; color: #fff; }
+    .section-slide p { color: #888; max-width: 550px; }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 1em;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 18px 16px;
+      text-align: left;
+    }
+    .card .card-title {
+      font-size: 0.75em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-light);
+      margin-bottom: 6px;
+    }
+    .card .card-body { font-size: 0.78em; color: #ccc; line-height: 1.5; }
+    .card code {
+      background: rgba(124,106,247,0.2);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    /* Result table */
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78em;
+      margin-top: 0.8em;
+    }
+    .result-table th {
+      background: rgba(124,106,247,0.25);
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent-light);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .result-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--card-border);
+      color: #ddd;
+    }
+    .result-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .result-table .best { color: var(--green); font-weight: 700; }
+    .result-table .mid  { color: var(--yellow); }
+    .result-table .low  { color: var(--red); }
+
+    /* Highlight boxes */
+    .highlight-box {
+      background: rgba(124,106,247,0.12);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 0.6em 0;
+      font-size: 0.82em;
+      color: #e0e0e0;
+    }
+    .highlight-box.green {
+      background: rgba(74,222,128,0.1);
+      border-color: var(--green);
+    }
+    .highlight-box.red {
+      background: rgba(248,113,113,0.1);
+      border-color: var(--red);
+    }
+    .highlight-box.yellow {
+      background: rgba(250,204,21,0.1);
+      border-color: var(--yellow);
+    }
+
+    /* Quote */
+    .quote-block {
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      margin: 0.8em 0;
+      font-style: italic;
+      font-size: 1em;
+      color: #ccc;
+      background: var(--card-bg);
+      border-radius: 0 8px 8px 0;
+    }
+    .quote-block .attribution {
+      font-size: 0.7em;
+      color: #777;
+      font-style: normal;
+      margin-top: 8px;
+    }
+
+    /* Two columns */
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.65em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+    .badge-green { background: rgba(74,222,128,0.2); color: var(--green); }
+    .badge-red   { background: rgba(248,113,113,0.2); color: var(--red); }
+    .badge-yellow { background: rgba(250,204,21,0.2); color: var(--yellow); }
+
+    /* Big stat */
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 1em; }
+    .stat-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 20px 14px;
+      text-align: center;
+    }
+    .stat-box .stat-value {
+      font-size: 2.2em;
+      font-weight: 800;
+      color: var(--accent-light);
+      line-height: 1;
+    }
+    .stat-box .stat-label {
+      font-size: 0.68em;
+      color: #888;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Tag list */
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.6em; }
+    .tag {
+      background: rgba(124,106,247,0.15);
+      border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.72em;
+      color: var(--accent-light);
+    }
+
+    /* Progress bar */
+    .bar-row { margin: 6px 0; }
+    .bar-label { font-size: 0.72em; color: #aaa; margin-bottom: 3px; display: flex; justify-content: space-between; }
+    .bar-track { background: rgba(255,255,255,0.08); border-radius: 4px; height: 8px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .bar-fill.a { background: var(--red);    width: 31%; }
+    .bar-fill.b { background: var(--yellow); width: 78%; }
+    .bar-fill.c { background: var(--yellow); width: 65%; }
+    .bar-fill.d { background: var(--green);  width: 84%; }
+
+    /* Slide bg accent */
+    .reveal section.has-accent-top::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .small { font-size: 0.72em; color: #888; }
+
+    /* Final slide */
+    .final-slide { text-align: left; }
+    .final-slide .big-text {
+      font-size: 1.6em;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #fff;
+      max-width: 680px;
+    }
+    .final-slide .big-text em { color: var(--accent-light); font-style: normal; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+  <!-- ============================================================ -->
+  <!-- TITTEL -->
+  <!-- ============================================================ -->
+  <section data-background-gradient="radial-gradient(ellipse at top left, rgba(124,106,247,0.2) 0%, transparent 60%)">
+    <div class="title-slide">
+      <div class="eyebrow">Fagseminar 2026</div>
+      <h1>AI i praksis:<br>To eksperimenter</h1>
+      <div class="divider"></div>
+      <div class="subtitle">
+        Kan AI tvinges til å skrive bedre kode?<br>
+        Hva skjer når produksjonshastigheten 10x-es?
+      </div>
+      <p class="small" style="margin-top:2em;">Mars 2026 · Tobias T. &amp; Anders K.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- AGENDA -->
+  <!-- ============================================================ -->
+  <section>
+    <h2>Agenda</h2>
+    <div class="cards" style="grid-template-columns: 1fr 1fr;">
+      <div class="card">
+        <div class="card-title">Eksperiment 1</div>
+        <div class="card-body">
+          Kan vi tvinge en AI-agent til å følge kodeprinsipper, arkitektur og teststrategier?<br><br>
+          Skills · CLAUDE.md · Commands · Hooks
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Eksperiment 2</div>
+        <div class="card-body">
+          Hva skjer når produksjonshastigheten 10x-es?<br><br>
+          10 microservices · Parallelt team · Organisatoriske konsekvenser
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SEKSJON 1 -->
+  <!-- ============================================================ -->
+  <section data-background-gradient="radial-gradient(ellipse at bottom right, rgba(124,106,247,0.15) 0%, transparent 60%)">
+    <div class="section-slide">
+      <div class="number">01</div>
+      <h2>Kan vi tvinge AI til å skrive bedre kode?</h2>
+      <p>Skills, kontekst og kommandoer som styringsmekanismer</p>
+    </div>
+  </section>
+
+  <!-- Problemstilling -->
+  <section class="has-accent-top">
+    <h2>Problemstilling</h2>
+    <div class="highlight-box" style="font-size:0.95em; margin-bottom: 1em;">
+      Kan vi styre en AI-kodingsagent til å konsekvent følge kode- og arkitekturprinsipper og teststrategier – og produserer dette målbart bedre kode enn ukontrollert generering?
+    </div>
+    <div class="tag-list">
+      <span class="tag">TDD</span>
+      <span class="tag">Dependency Injection</span>
+      <span class="tag">TypeScript strict</span>
+      <span class="tag">Interface-first</span>
+      <span class="tag">Konsistent arkitektur</span>
+    </div>
+  </section>
+
+  <!-- Mekanismer -->
+  <section>
+    <h2>Fire mekanismer testet</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Skills</div>
+        <div class="card-body">Egendefinerte slash-kommandoer i <code>.claude/commands/</code> som koder inn arbeidsflyt<br><br><em style="color:#888;">Eks: <code>/tdd-feature</code></em></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Context</div>
+        <div class="card-body">Prosjektspesifikke instruksjoner, arkitekturregler og forbudte mønstre i <code>CLAUDE.md</code></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Commands</div>
+        <div class="card-body">Eksplisitte instruksjoner i selve prompten om fremgangsmåte<br><br><em style="color:#888;">Eks: "skriv testen først"</em></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Andre</div>
+        <div class="card-body">System-prompt via MCP-server, pre-commit hooks som feiler ved manglende testdekning</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Oppsett -->
+  <section>
+    <h2>Eksperimentoppsett</h2>
+    <p style="color:#aaa; margin-bottom:0.8em;">Samme feature – fire betingelser. Repo: <code>akk/skill-test-bench</code></p>
+    <div style="font-size:0.8em;">
+      <div class="highlight-box" style="margin-bottom:8px;"><strong>A – Baseline</strong> &nbsp;<span class="badge badge-red">Ukontrollert</span><br>Kun prompt: "Implementer AuthService med login, logout og refreshToken."</div>
+      <div class="highlight-box" style="margin-bottom:8px;"><strong>B – TDD-prompt</strong> &nbsp;<span class="badge badge-yellow">Commands</span><br>Detaljert instruksjon om red–green–refactor i prompten</div>
+      <div class="highlight-box" style="margin-bottom:8px;"><strong>C – CLAUDE.md</strong> &nbsp;<span class="badge badge-yellow">Context</span><br>DI-regler, interface-krav, ingen <code>any</code>, minst én test per metode</div>
+      <div class="highlight-box"><strong>D – /tdd-feature</strong> &nbsp;<span class="badge badge-green">Skill</span><br>Strukturert arbeidsflyt: spec → interface → test → impl → refaktor</div>
+    </div>
+  </section>
+
+  <!-- Resultater tabell -->
+  <section>
+    <h2>Resultater</h2>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>Betingelse</th>
+          <th>Testdekning</th>
+          <th>Arkitektur</th>
+          <th>Lesbarhet</th>
+          <th>Feil i review</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A – Ukontrollert</td>
+          <td class="low">31 %</td>
+          <td class="low">2 / 5</td>
+          <td class="mid">3 / 5</td>
+          <td class="low">4</td>
+        </tr>
+        <tr>
+          <td>B – TDD-prompt</td>
+          <td class="mid">78 %</td>
+          <td class="mid">3 / 5</td>
+          <td class="mid">4 / 5</td>
+          <td class="mid">1</td>
+        </tr>
+        <tr>
+          <td>C – CLAUDE.md</td>
+          <td class="mid">65 %</td>
+          <td class="best">5 / 5</td>
+          <td class="mid">4 / 5</td>
+          <td class="mid">1</td>
+        </tr>
+        <tr>
+          <td>D – Skill</td>
+          <td class="best">84 %</td>
+          <td class="best">5 / 5</td>
+          <td class="best">5 / 5</td>
+          <td class="best">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Testdekning visuelt -->
+  <section>
+    <h2>Testdekning per betingelse</h2>
+    <div style="margin-top:1.2em;">
+      <div class="bar-row">
+        <div class="bar-label"><span>A – Ukontrollert</span><span style="color:var(--red);">31 %</span></div>
+        <div class="bar-track"><div class="bar-fill a"></div></div>
+      </div>
+      <div class="bar-row" style="margin-top:14px;">
+        <div class="bar-label"><span>B – TDD-prompt</span><span style="color:var(--yellow);">78 %</span></div>
+        <div class="bar-track"><div class="bar-fill b"></div></div>
+      </div>
+      <div class="bar-row" style="margin-top:14px;">
+        <div class="bar-label"><span>C – CLAUDE.md</span><span style="color:var(--yellow);">65 %</span></div>
+        <div class="bar-track"><div class="bar-fill c"></div></div>
+      </div>
+      <div class="bar-row" style="margin-top:14px;">
+        <div class="bar-label"><span>D – Skill</span><span style="color:var(--green);">84 %</span></div>
+        <div class="bar-track"><div class="bar-fill d"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Funn -->
+  <section>
+    <h2>Hva funket – og ikke</h2>
+    <div class="cols">
+      <div>
+        <p style="color:var(--green); font-weight:700; font-size:0.8em; margin-bottom:0.4em;">✓ Funket</p>
+        <div class="highlight-box green" style="margin-bottom:8px;"><strong>Skills</strong> – arbeidsflyt kodet inn som eksekverbar sekvens, umulig å "glemme" et steg</div>
+        <div class="highlight-box green"><strong>CLAUDE.md</strong> – effektivt for arkitekturregler formulert som forbud: ingen <code>any</code>, alltid interface først</div>
+      </div>
+      <div>
+        <p style="color:var(--red); font-weight:700; font-size:0.8em; margin-bottom:0.4em;">✗ Funket ikke</p>
+        <div class="highlight-box red" style="margin-bottom:8px;"><strong>TDD-prompt alene</strong> – agenten driftet ut av flyten når kompleksiteten økte</div>
+        <div class="highlight-box red"><strong>Coverage ≠ kvalitet</strong> – tester verifiserte implementasjon, ikke hensikt</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Konklusjon 1 -->
+  <section data-background-gradient="radial-gradient(ellipse at top left, rgba(74,222,128,0.1) 0%, transparent 60%)">
+    <h2>Konklusjon – Eksperiment 1</h2>
+    <div style="margin-top:0.6em;">
+      <div class="highlight-box green" style="margin-bottom:10px;">Skills gir mest konsistent atferd – strukturerer arbeidsflyt eksplisitt</div>
+      <div class="highlight-box green" style="margin-bottom:10px;">CLAUDE.md er effektivt for arkitekturregler og forbud</div>
+      <div class="highlight-box yellow" style="margin-bottom:10px;">Prompt-instruksjoner alene holder ikke over tid</div>
+      <div class="highlight-box green">Kombinasjonen Skill + CLAUDE.md ga de beste resultatene</div>
+    </div>
+    <p class="small" style="margin-top:1.2em;">Anbefaling: Invester i et lite bibliotek av prosjektspesifikke skills fremfor å stole på promptdisiplin alene.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- SEKSJON 2 -->
+  <!-- ============================================================ -->
+  <section data-background-gradient="radial-gradient(ellipse at bottom left, rgba(248,113,113,0.12) 0%, transparent 60%)">
+    <div class="section-slide">
+      <div class="number">02</div>
+      <h2>Hva skjer når produksjonshastigheten 10x-es?</h2>
+      <p>Koordinering, sporbarhet og organisatorisk absorpsjon</p>
+    </div>
+  </section>
+
+  <!-- Oppsett 2 -->
+  <section>
+    <h2>Eksperimentoppsett</h2>
+    <div class="cols">
+      <div>
+        <p style="color:var(--accent-light); font-weight:700; font-size:0.78em; margin-bottom:0.4em;">FASE 1 — Generering (dag 1–3)</p>
+        <ul style="font-size:0.82em;">
+          <li>3 utviklere + AI genererte hele plattformen</li>
+          <li>10 microservices med REST API, datamodell, migrasjoner og OpenAPI-spec</li>
+          <li>~50 CRUD-endepunkter</li>
+          <li>Ferdig på <strong style="color:var(--green);">2,5 dag</strong> — estimert manuelt: 6–8 uker</li>
+        </ul>
+      </div>
+      <div>
+        <p style="color:var(--accent-light); font-weight:700; font-size:0.78em; margin-bottom:0.4em;">FASE 2 — Parallell utvikling (dag 4–21)</p>
+        <ul style="font-size:0.82em;">
+          <li>6 nye utviklere + tech lead + PO</li>
+          <li>Jobbet som normalt i kodebasen</li>
+          <li>Standard README — ingen spesiell onboarding</li>
+          <li>Mål: legge til features og fikse bugs</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stat-grid" style="margin-top:1.2em;">
+      <div class="stat-box"><div class="stat-value">10</div><div class="stat-label">Microservices</div></div>
+      <div class="stat-box"><div class="stat-value">~50</div><div class="stat-label">Endepunkter</div></div>
+      <div class="stat-box"><div class="stat-value">2,5d</div><div class="stat-label">Vs 6–8 uker</div></div>
+    </div>
+  </section>
+
+  <!-- Hva skjedde -->
+  <section>
+    <h2>Hva skjedde</h2>
+    <div class="cards" style="grid-template-columns: 1fr 1fr;">
+      <div class="card">
+        <div class="card-title" style="color:var(--red);">Koordinering kollapset</div>
+        <div class="card-body">3 utviklere implementerte overlappende løsninger for samme feature i parallell. Alle tre ble merget samme dag.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--red);">Ingen eide kodebasen</div>
+        <div class="card-body">Ingen ADR-er, ingen designintensjoner. Utviklerne beskrev det som å arve et legacy-system fra dag én.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--red);">Sporbarhet forsvant</div>
+        <div class="card-body">PO gjenkjente ikke kodebasen som noe hun hadde bestilt. 2 dager brukt på å fastslå om en endring allerede var implementert.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--red);">Testillusjon</div>
+        <div class="card-body">70 % coverage — men testene verifiserte implementasjonen, ikke kravene. En bug i <code>payment-service</code> passerte alle tester.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sitat -->
+  <section>
+    <div class="quote-block" style="font-size:1.15em;">
+      "Jeg stolte ikke på koden fordi jeg ikke forsto den. Og jeg hadde ikke tid til å forstå den fordi det var så mye av den."
+      <div class="attribution">— Utvikler, uke 2</div>
+    </div>
+    <div style="margin-top:1.4em;">
+      <p style="font-size:0.85em; color:#aaa; margin-bottom:0.6em;">Ville du satt navn på denne koden i produksjon?</p>
+      <div class="cards" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="card" style="text-align:center;">
+          <div style="font-size:2em; font-weight:800; color:var(--green);">0</div>
+          <div class="card-body">Ja, uten forbehold</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:2em; font-weight:800; color:var(--yellow);">2</div>
+          <div class="card-body">Ja, med forbehold</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:2em; font-weight:800; color:var(--red);">4</div>
+          <div class="card-body">Nei / usikker</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Utfordringer -->
+  <section>
+    <h2>Utfordringer identifisert</h2>
+    <table class="result-table">
+      <thead>
+        <tr><th>Utfordring</th><th>Hva skjedde</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Koordineringssvikt</strong></td><td>Ingen domeneeierskap, overlappende parallellimplementasjon</td></tr>
+        <tr><td><strong>Kognitiv gjeld</strong></td><td>Kodebasen vokste raskere enn forståelsen av den</td></tr>
+        <tr><td><strong>Sporbarhetstap</strong></td><td>Ingen kobling mellom kode og forretningsbehov</td></tr>
+        <tr><td><strong>Tillitsunderskudd</strong></td><td>Utviklerne stolte ikke på kode de ikke hadde skrevet</td></tr>
+        <tr><td><strong>Onboarding-kollaps</strong></td><td>Ingen "war stories" bak designvalgene</td></tr>
+        <tr><td><strong>Testillusjon</strong></td><td>Høy coverage uten reell funksjonell beskyttelse</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Organisatoriske implikasjoner -->
+  <section>
+    <h2>Resten av organisasjonen hengte ikke med</h2>
+    <div class="cols">
+      <div>
+        <div class="highlight-box red" style="margin-bottom:10px;">
+          <strong>Juridisk / sikkerhet / compliance</strong> hadde ikke kapasitet til å følge tempoet.<br>
+          <code>payment-service</code> ble deployet til staging uten PCI-DSS-vurdering.
+        </div>
+        <div class="highlight-box red">
+          <strong>PR-review</strong> kollapset under volumet — teamet brukte mer tid på review i uke 2 enn på selve utviklingen.
+        </div>
+      </div>
+      <div>
+        <div class="highlight-box yellow" style="margin-bottom:10px;">
+          <strong>Produktorganisasjonen</strong> og designere opplevde at teknologi beveget seg uten dem — ikke med dem.
+        </div>
+        <div class="highlight-box yellow">
+          <strong>Sprint-planlegging og standup</strong> er designet for X linjer kode per dag per person. Når X ganges med 10, skalerer ikke prosessene.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Løsninger -->
+  <section>
+    <h2>Mulige løsninger</h2>
+    <div class="cards" style="grid-template-columns: 1fr 1fr 1fr;">
+      <div class="card">
+        <div class="card-title">ADR-first</div>
+        <div class="card-body">Generer arkitektur og domenekart før kode. Teamet godkjenner designvalg — gir sporbarhet bakover.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Domene-eierskap</div>
+        <div class="card-body">Én navngitt person eier forståelsen av hvert domene — ikke koden, men konsekvensene av endringer.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Krav-til-kode</div>
+        <div class="card-body">Tagg hvert endepunkt med ID til brukerhistorien som genererte det — som del av AI-prompten.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">BDD-tester</div>
+        <div class="card-body">Erstatt coverage-mål med scenarioer i naturlig språk (Gherkin). PO godkjenner før implementasjon.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Forståelsessprinten</div>
+        <div class="card-body">2 dager der teamet leser AI-generert kode uten å skrive ny — bygger mental modell først.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Gradvis overlevering</div>
+        <div class="card-body">Generer én tjeneste om gangen med onboarding-runde mellom hver — bevarer eierskap og forståelse.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Konklusjon 2 -->
+  <section data-background-gradient="radial-gradient(ellipse at top right, rgba(248,113,113,0.1) 0%, transparent 60%)">
+    <h2>Konklusjon – Eksperiment 2</h2>
+    <div style="margin-top:0.6em;">
+      <div class="highlight-box green" style="margin-bottom:8px;"><strong>10x produksjonshastighet er teknisk mulig</strong> — men organisasjonen skalerer ikke automatisk med det</div>
+      <div class="highlight-box red" style="margin-bottom:8px;"><strong>Forståelse akkumuleres ikke</strong> — den må bygges aktivt</div>
+      <div class="highlight-box red" style="margin-bottom:8px;"><strong>Sporbarhet</strong> må designes inn fra dag én, ikke etterinstalleres</div>
+      <div class="highlight-box red" style="margin-bottom:8px;"><strong>Tillit til kode</strong> kommer ikke fra coverage — den krever at noen faktisk har forstått koden</div>
+      <div class="highlight-box yellow"><strong>De kritiske flaskehalsene er ikke lenger tekniske</strong> — de er menneskelige og organisatoriske</div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- AVSLUTNING -->
+  <!-- ============================================================ -->
+  <section data-background-gradient="radial-gradient(ellipse at center, rgba(124,106,247,0.18) 0%, transparent 65%)">
+    <div class="final-slide">
+      <p style="color:var(--accent-light); font-size:0.7em; letter-spacing:0.1em; text-transform:uppercase; font-weight:700;">Fellesnevner</p>
+      <div class="big-text" style="margin-top:0.4em;">
+        Utfordringen er ikke å skrive <em>mer kode</em>.<br>
+        Utfordringen er å bygge en <em>organisasjon</em><br>
+        som kan leve i den.
+      </div>
+      <div class="divider" style="margin-top:1.4em;"></div>
+      <div class="cols" style="margin-top:1.2em; gap:40px;">
+        <div>
+          <p style="color:#888; font-size:0.72em; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.3em;">Eksperiment 1 tar hjem</p>
+          <p style="font-size:0.82em; color:#ddd;">Skills + CLAUDE.md = konsistent AI-atferd</p>
+        </div>
+        <div>
+          <p style="color:#888; font-size:0.72em; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.3em;">Eksperiment 2 tar hjem</p>
+          <p style="font-size:0.82em; color:#ddd;">Kognitiv gjeld og koordinering er de nye teknisk gjeldene</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    center: true,
+    margin: 0.08,
+    plugins: [RevealHighlight, RevealNotes],
+    keyboard: {
+      39: 'next',
+      37: 'prev'
+    }
+  });
+</script>
+</body>
+</html>
