@@ -13,10 +13,11 @@ tema: "2 – AI-assistert systemutvikling"
 Velg én problemstilling, eller formuler en egen:
 
 1. **Flyt fra behov til kode:** Kan en AI-assistert utviklingsflyt dekke hele kjeden fra brukerreise → spesifikasjon → implementasjon → test uten at kvaliteten faller sammenlignet med tradisjonell flyt?
-2. **Nye flaskehalser:** Når AI akselererer kodeskriving, oppstår det nye flaskehalser i review, kravstilling eller deploy — og hva er de?
-3. **Krav-til-kode-sporbarhet:** Hvordan kan en AI-assistert flyt opprettholde sporbarhet mellom forretningskrav og implementasjon, og hva skjer hvis denne koblingen mangler?
-4. **Teststrategier i AI-flyt:** Er testdekning et godt kvalitetsmål for AI-generert kode, eller er atferdsbaserte tester (BDD/Gherkin) mer meningsfulle?
-5. **Produkteier-involvering:** Hvordan endres produkteierens rolle og innflytelse når utviklingshastigheten øker kraftig med AI-hjelp?
+2. **Spec-driven** Gir det mening å bruke noen form for spec-rammeverk, eller holder det med github issues. (Eksempler: ) 
+3. **Nye flaskehalser:** Når AI akselererer kodeskriving, oppstår det nye flaskehalser i review, kravstilling eller deploy — og hva er de?
+4. **Krav-til-kode-sporbarhet:** Hvordan kan en AI-assistert flyt opprettholde sporbarhet mellom forretningskrav og implementasjon, og hva skjer hvis denne koblingen mangler?
+5. **Teststrategier i AI-flyt:** Er testdekning et godt kvalitetsmål for AI-generert kode, eller er atferdsbaserte tester (BDD/Gherkin) mer meningsfulle?
+6. **Produkteier-involvering:** Hvordan endres produkteierens rolle og innflytelse når utviklingshastigheten øker kraftig med AI-hjelp?
 
 ---
 
