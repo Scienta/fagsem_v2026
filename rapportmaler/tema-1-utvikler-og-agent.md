@@ -12,7 +12,7 @@ tema: "1 – Utvikler + agent i praksis"
 
 Velg én problemstilling, eller formuler en egen:
 
-1. **Styringsmekanismer:** Hvilken kombinasjon av CLAUDE.md, egendefinerte slash-kommandoer og sub-agenter gir mest konsistent og forutsigbar agentatferd — og hvorfor?
+1. **Styringsmekanismer:** Hvilken kombinasjon av CLAUDE.md, egendefinerte slash-kommandoer og sub-agenter gir mest konsistent og forutsigbar agentatferd — og hvorfor? For eksempel: Gir det verdi å dokumentere koden kort og konsist i claude.md eller blir agenten forvirra siden dette også kan leses ut kode. 
 2. **Autonomi vs. kontroll:** Gir tett, iterativ styring (mange korte instruksjoner) bedre sluttresultat enn å la agenten jobbe autonomt med én lang spesifikasjon?
 3. **CI/CD-integrasjon:** Øker integrasjon med linting, statisk analyse og testdekning (via pre-commit hooks eller MCP-verktøy) kvaliteten på AI-generert kode målbart?
 4. **Arbeidsfordeling:** Finnes det en naturlig grense for hvilke oppgaver som bør delegeres til en agent vs. gjøres av utvikleren selv — og hva kjennetegner den grensen?
