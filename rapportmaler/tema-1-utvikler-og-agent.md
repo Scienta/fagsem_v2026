@@ -85,24 +85,3 @@ Velg én problemstilling, eller formuler en egen:
 
 *(1–3 setninger: hva er det viktigste dere lærte?)*
 
----
-
-### 7. Strukturert sammendrag *(behandles av språkmodell)*
-
-> Fyll ut feltene nøyaktig. Bruk korte, faktaorienterte formuleringer.
-
-```yaml
-gruppe: ""
-tema: "Tema 1 – Utvikler + agent i praksis"
-forskningsspørsmål: ""
-hypotese: ""
-metode_kort: ""          # én setning om eksperimentoppsettet
-hovedfunn:
-  - ""
-  - ""
-  - ""
-hypotese_bekreftet: ""   # "ja" / "nei" / "delvis"
-konklusjon_én_setning: ""
-overraskende_funn: ""
-anbefaling: ""
-```
