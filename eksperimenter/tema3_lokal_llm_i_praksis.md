@@ -76,3 +76,16 @@ Sammenlign 2–3 lokale modeller på samme lille oppgave eller oppgavesett.
 - ressursbruk
 - styrbarhet
 - hvilken modell som gir mest praktisk nytte
+
+## Eksperiment 6 – Skybasert orkestrering, lokal implementering
+**Hypotese:** En skybasert LLM kan fungere godt til planlegging og oppdeling, mens lokale LLM-er kan være gode nok til å løse mindre og tydeligere deloppgaver.
+
+**Gjennomføring:**  
+Velg en liten, sammensatt oppgave og del den i flere steg eller deloppgaver. Bruk en skybasert LLM til å forstå oppgaven, foreslå oppdeling og delegere arbeid til lokale LLM-er for implementasjon, for eksempel via et **MCP-grensesnitt**.
+
+**Observer:**  
+- om skybasert planlegging gir bedre retning
+- om lokale modeller er gode nok på avgrensede oppgaver
+- hvor mye friksjon som oppstår i overlevering mellom modellene
+- om denne hybridmodellen virker nyttig i praksis
+
