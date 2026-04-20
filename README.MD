@@ -19,20 +19,20 @@ Spør tobiast om du lurer på noe eller trenger tilgang.
 ## Program 
 Programmet ser i korte trekk slik ut: 
 
-**Dag 1:**  
-**12:00 - 12:45** Lunsj 
-**13:00 - 13:30** Intro  
-**13:30 - 18:00** Arbeid i grupper
-**19:00 - 00:00** Middag + bar 
+**Dag 1:**   \
+**12:00 - 12:45** Lunsj  \
+**13:00 - 13:30** Intro   \
+**13:30 - 18:00** Arbeid i grupper \
+**19:00 - 00:00** Middag + bar  \
 
-**Dag 2:** 
-**08:00 - 09:45** Frokost + utsjekk  
-**10:00 - 10:45** Gruppene oppsummerer internt. Løse tråder osv
-**10:45 - 11:15** Daniel forteller om hva de gjør på Telenor, og hvor han tror verdien av LLMs ligger
-**11:15 - 12:00** Oppsummering og diskusjon i plenum
+**Dag 2:**  \
+**08:00 - 09:45** Frokost + utsjekk   \
+**10:00 - 10:45** Gruppene oppsummerer internt. Løse tråder osv \
+**10:45 - 11:15** Daniel forteller om hva de gjør på Telenor, og hvor han tror verdien av LLMs ligger \
+**11:15 - 12:00** Oppsummering og diskusjon i plenum \
 
 ## Forskningspørsmpål og rapportering
-Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi har utarbeidet noen forslag for å unngå at 
+Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi har utarbeidet noen forslag for å unngå at ideetørke spiser av seminaret. På den måten kan man falle tilbake på forslagene hvis man ser at diskusjonene trekker ut i tid. 
 
 # Rapport
 Rapportmalen kan forenkles til én felles fil for alle tema.
