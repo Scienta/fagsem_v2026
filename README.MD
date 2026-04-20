@@ -33,16 +33,11 @@ Programmet ser i korte trekk slik ut:
 
 ## Forskningspørsmpål og rapportering
 Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi har utarbeidet noen forslag for å unngå at ideetørke spiser av seminaret. På den måten kan man falle tilbake på forslagene hvis man ser at diskusjonene trekker ut i tid. 
+[Forslag til forskningspørsmål](https://github.com/Scienta/fagsem_v2026/tree/main/eksperimenter)
 
 # Rapport
-Rapportmalen kan forenkles til én felles fil for alle tema.
-
-Anbefalt mal:
-- [felles-rapportmal.md](https://github.com/Scienta/fagsem_v2026/blob/main/rapportmaler/felles-rapportmal.md)
-
-Tema og eksperimentforslag ligger i `/eksperimenter`.
-
-Eksisterende rapporter i denne mappen er eksempler, ikke nødvendigvis den nye standarden.
+Vi har utarbeidet en felles rapportmalen for alle tema / tema. Dette forenkler videre behandling av resultatene, og det er veldig fint om dere kan bruke den. Eventuelle ønsker om endring kan stilles til tobiast: 
+[Sterkt anfalt mal](https://github.com/Scienta/fagsem_v2026/blob/main/rapportmaler/felles-rapportmal.md)
 
 # Gruppeinndeling
 Vi har delt inn i grupper a +-4 innenfor de temaene 
