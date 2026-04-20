@@ -20,10 +20,10 @@ Spør tobiast om du lurer på noe eller trenger tilgang.
 Programmet ser i korte trekk slik ut: 
 
 **Dag 1:**   \
-**12:00 - 12:45** Lunsj  \
-**13:00 - 13:30** Intro   \
+**12:00 - 12:45** Lunsj \
+**13:00 - 13:30** Intro \
 **13:30 - 18:00** Arbeid i grupper \
-**19:00 - 00:00** Middag + bar  \
+**19:00 - 00:00** Middag + bar \
 
 **Dag 2:**  \
 **08:00 - 09:45** Frokost + utsjekk   \
@@ -36,7 +36,7 @@ Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi h
 [Forslag til forskningspørsmål](https://github.com/Scienta/fagsem_v2026/tree/main/eksperimenter)
 
 # Rapport
-Vi har utarbeidet en felles rapportmalen for alle tema / tema. Dette forenkler videre behandling av resultatene, og det er veldig fint om dere kan bruke den. Eventuelle ønsker om endring kan stilles til tobiast: 
+Vi har utarbeidet en felles rapportmalen for alle tema / tema. Dette forenkler videre behandling av resultatene, og det er veldig fint om dere kan bruke den. Eventuelle ønsker om endring kan stilles til tobiast, så kan vi vurdere å ta det inn i malen: 
 [Sterkt anfalt mal](https://github.com/Scienta/fagsem_v2026/blob/main/rapportmaler/felles-rapportmal.md)
 
 # Gruppeinndeling
@@ -53,4 +53,9 @@ Vi har delt inn i grupper a +-4 innenfor de temaene
 # gr10
 # gr11
 # gr12  
+
+# slack 
+Hvis man lurer på noe kan spørsmålet stilles til Nils-Christian, Haakon eller Tobias, aller helst på slack så alle ser svaret. Vi bruker
+#fagseminar-v2026-program
+
 
