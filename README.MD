@@ -19,17 +19,17 @@ Spør tobiast om du lurer på noe eller trenger tilgang.
 ## Program 
 Programmet ser i korte trekk slik ut: 
 
-** Dag 1: **  
-** 12:00 - 12:45 ** Lunsj 
-** 13:00 - 13:30 ** Intro  
-** 13:30 - 18:00 ** Arbeid i grupper
-** 19:00 - 00:00 ** Middag + bar 
+**Dag 1:**  
+**12:00 - 12:45** Lunsj 
+**13:00 - 13:30** Intro  
+**13:30 - 18:00** Arbeid i grupper
+**19:00 - 00:00** Middag + bar 
 
-** Dag 2: ** 
-** 08:00 - 09:45 ** Frokost + utsjekk  
-** 10:00 - 10:45 ** Gruppene oppsummerer internt. Løse tråder osv
-** 10:45 - 11:15 ** Daniel forteller om hva de gjør på Telenor, og hvor han tror verdien av LLMs ligger
-** 11:15 - 12:00 ** Oppsummering og diskusjon i plenum
+**Dag 2:** 
+**08:00 - 09:45** Frokost + utsjekk  
+**10:00 - 10:45** Gruppene oppsummerer internt. Løse tråder osv
+**10:45 - 11:15** Daniel forteller om hva de gjør på Telenor, og hvor han tror verdien av LLMs ligger
+**11:15 - 12:00** Oppsummering og diskusjon i plenum
 
 ## Forskningspørsmpål og rapportering
 Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi har utarbeidet noen forslag for å unngå at 
@@ -38,7 +38,7 @@ Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi h
 Rapportmalen kan forenkles til én felles fil for alle tema.
 
 Anbefalt mal:
-- [felles-rapportmal.md](../rapportmaler/felles-rapportmal.md)
+- [felles-rapportmal.md](https://github.com/Scienta/fagsem_v2026/blob/main/rapportmaler/felles-rapportmal.md)
 
 Tema og eksperimentforslag ligger i `/eksperimenter`.
 
@@ -58,4 +58,4 @@ Vi har delt inn i grupper a +-4 innenfor de temaene
 # gr10
 # gr11
 # gr12  
->>>>>>> Stashed changes
+
