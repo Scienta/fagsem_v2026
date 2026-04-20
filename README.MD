@@ -3,9 +3,9 @@
 # Program fagseminar 
 
 ## TLDR; 
-Målet med denne helgen er å ekspremintere med språkmodeller. Under seminaret skal vi skrive kode, kanskje gjøre noen administrative oppgaver og skrive litt tekst. Poenget er å skrive minst mulig direkte, OG MEST MULIG VED HJELP AV SPRÅKMODELL 
+Målet med denne helgen er å ekserimentere med språkmodeller. Under seminaret skal vi skrive kode, kanskje gjøre noen administrative oppgaver og skrive litt tekst. Poenget er å skrive minst mulig direkte, OG MEST MULIG VED HJELP AV SPRÅKMODELL.
 
-Strek: Foreløpig ser det ut til at arrangementet går som planlagt, til tross for streik! I verste fall har vi en backup-plan :-) 
+Streik: Foreløpig ser det ut til at arrangementet går som planlagt, til tross for streik! I verste fall har vi en backup-plan :-) 
 
 ### FØR seminaret må du: 
 1) Installere egnet AI-verktøy du ønsker å bruke (Claude code, codex, open code, claude cowork, osv). 
