@@ -1,14 +1,4 @@
-<<<<<<< Updated upstream
-# Rapport
 
-Rapportmalen kan forenkles til én felles fil for alle tema.
-
-Anbefalt mal:
-- [felles-rapportmal.md](../rapportmaler/felles-rapportmal.md)
-
-Tema og eksperimentforslag ligger i `/eksperimenter`.
-
-Eksisterende rapporter i denne mappen er eksempler, ikke nødvendigvis den nye standarden.
 =======
 # Program fagseminar 
 
@@ -42,7 +32,17 @@ Programmet ser i korte trekk slik ut:
 ** 11:15 - 12:00 ** Oppsummering og diskusjon i plenum
 
 ## Forskningspørsmpål og rapportering
-Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi har arbeidet 
+Gruppene står fritt til å undersøke de temaene de er interesserte i, men vi har utarbeidet noen forslag for å unngå at 
+
+# Rapport
+Rapportmalen kan forenkles til én felles fil for alle tema.
+
+Anbefalt mal:
+- [felles-rapportmal.md](../rapportmaler/felles-rapportmal.md)
+
+Tema og eksperimentforslag ligger i `/eksperimenter`.
+
+Eksisterende rapporter i denne mappen er eksempler, ikke nødvendigvis den nye standarden.
 
 # Gruppeinndeling
 Vi har delt inn i grupper a +-4 innenfor de temaene 
