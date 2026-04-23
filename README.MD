@@ -42,17 +42,71 @@ Vi har utarbeidet en felles rapportmalen for alle tema / tema. Dette forenkler v
 # Gruppeinndeling
 Vi har delt inn i grupper a +-4 innenfor de temaene 
 # gr1 
+- Anders Kvernberg
+- André Aubert
+- Bartas Venckus
+- Carl Kristian Eriksen
+
 # gr2 
+- Cathrine Dannevig
+- Christian Darre-Winsnes
+- Daniel Bakkelund
+- Erlend Nossum
+
 # gr3 
+- Espen Myklevoll
+- Espen Skjæran
+- Felix Rabe
+- Filip Egge
+
 # gr4 
+- Fred Inge Henden
+- Fredrik Meyer
+- Georg F. Persen
+- Gjermund Karlsen Lie
+
 # gr5 
+- Haakon Spilde
+- Hakon Kvernes
+- Hege Leite Størvold
+- Ingvild Hardeng
+
 # gr6 
+- Jan-Erik Bergmann
+- Johan Hauan
+- Jonathan Lillesæter
+- Julian Jark
+
 # gr7 
+- Kjetil Valstadsve
+- Knut-Helge Vik
+- Maria Selivanova
+- Marius Krabset
+
 # gr8 
+- Nils Christian Haugen
+- Nina Olsen
+- Oskar Otterskog
+
 # gr9 
+- Per Spilling
+- Roy Grønmo
+- Runar Opsahl
+
 # gr10
+- Rune Storløpa
+- Sindre Mehus
+- Steinar Johan Haug
+
 # gr11
+- Stian Meuche
+- Stig Falsten
+- Thomas Gran
+
 # gr12  
+- Tobias Torrissen
+- Trygve Laugstøl
+- Vegard Angell
 
 # slack 
 Hvis man lurer på noe kan spørsmålet stilles til Nils-Christian, Haakon eller Tobias, aller helst på slack så alle ser svaret. Vi bruker
