@@ -16,6 +16,7 @@ export function MusicQuizPage({ onFinish }: Props) {
   const [isGenerating, setIsGenerating] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<(string | null)[]>([])
+  const [roundScores, setRoundScores] = useState<number[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [timeLeft, setTimeLeft] = useState(TIMER_START)
   const [timedOut, setTimedOut] = useState(false)
@@ -25,6 +26,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     generateQuizQuestions().then(qs => {
       setQuestions(qs)
       setAnswers(new Array(qs.length).fill(null))
+      setRoundScores(new Array(qs.length).fill(0))
       setIsGenerating(false)
     })
   }, [])
@@ -69,14 +71,14 @@ export function MusicQuizPage({ onFinish }: Props) {
     if (!timedOut) return
     const advance = setTimeout(() => {
       if (isLastQuestion) {
-        const score = questions.filter((q, i) => answers[i] === q.correctArtist).length
-        onFinish(score, questions.length)
+        const totalPoints = roundScores.reduce((a, b) => a + b, 0)
+        onFinish(totalPoints, questions.length * 30000)
       } else {
         setCurrentIndex(prev => prev + 1)
       }
     }, 1500)
     return () => clearTimeout(advance)
-  }, [timedOut, isLastQuestion, questions, answers, onFinish])
+  }, [timedOut, isLastQuestion, questions, roundScores, onFinish])
 
   function togglePlay() {
     const audio = audioRef.current
@@ -94,6 +96,14 @@ export function MusicQuizPage({ onFinish }: Props) {
     if (isAnswered) return
     audioRef.current?.pause()
     setIsPlaying(false)
+    const points = option === question.correctArtist
+      ? Math.round(1000 + (timeLeft / TIMER_START) * 29000)
+      : 0
+    setRoundScores(prev => {
+      const next = [...prev]
+      next[currentIndex] = points
+      return next
+    })
     setAnswers(prev => {
       const next = [...prev]
       next[currentIndex] = option
@@ -103,8 +113,8 @@ export function MusicQuizPage({ onFinish }: Props) {
 
   function handleNext() {
     if (isLastQuestion) {
-      const score = questions.filter((q, i) => answers[i] === q.correctArtist).length
-      onFinish(score, questions.length)
+      const totalPoints = roundScores.reduce((a, b) => a + b, 0)
+      onFinish(totalPoints, questions.length * 30000)
     } else {
       setCurrentIndex(prev => prev + 1)
     }
