@@ -59,8 +59,8 @@ Vi har delt inn i grupper a +-4 innenfor de temaene
 3.2 Daniel Bakkelund, kjetil, Johan Hauan, Hakon Kvernes \
 3.3 Thomas Gran, Anders Kvernberg, Bartas Venckus \
 
-## Flere parallelle kodeagenter \
-4.1 Are Fossli Viberg, Maria Selivanova \
+## Flere parallelle kodeagenter 
+4.1 Are Fossli Viberg, Maria Selivanova 
 
 ## Personlig assistent 
 5.1 Stian Meuche, Nina Olsen, Vibeke Corneliussen \
