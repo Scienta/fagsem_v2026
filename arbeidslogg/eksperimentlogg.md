@@ -124,6 +124,7 @@ Se `benchmarks/README.md` for full dokumentasjon.
 - **Forsøk 2** – Norsk prompt, eksempler og hint om reduksjonslogikk: Feil algoritme. `total_aces == aces` alltid (alle ess har points=11), så returnerer alltid False.
 - **Forsøk 3** – Engelsk prompt, eksplisitt nummerert pseudokode, uten kildekode: Korrekt algoritme, men hallusinerte API (`card.point_value`, `self.cards`, `card.rank == 'Ace'`).
 - **Forsøk 4** – Engelsk prompt, eksplisitt pseudokode + full kildekode (card.py + hand.py): Korrekt algoritme OG korrekte attributtnavn. Alle 4 kanttilfeller passerte manuell verifisering, og alle 24 eksisterende tester forble grønne.
+
 - Måling / eksempel:
   ```python
   @property
@@ -253,66 +254,55 @@ Se `benchmarks/README.md` for full dokumentasjon.
 
 ---
 
-### Oppføring 9 – Oppsett: kontekstvinduproblem med standard Ollama-konfigurasjon
+### Oppføring 9 – Real-world Java-oppgave: OTP Early Pruning
 
-- Forfatter: Anders
-- Tidspunkt: 2026-04-24 ~15:20
-- Hva ble testet: qwen3:8b via `claude --model qwen3:8b` (agentarbeidsform, ende-til-ende)
-- Betingelse / variant: Standard Ollama-oppsett, ingen endringer i num_ctx
-- Resultat / observasjon: **Agenten hengte seg tilsynelatende.** Én forespørsel fullførte etter 2 min 37 sek, deretter ingen aktivitet. Ollamaloggen viste kritisk advarsel: `truncating input prompt limit=4096 prompt=27964 keep=4 new=4096` — prompten (kodebase + verktøyhistorikk) ble kuttet fra 27 964 til 4096 tokens. Modellen svarte uten nesten noe relevant kontekst.
-- Måling / eksempel: 1 forespørsel fullført på 2m37s. Effektiv kontekst: 4 av 27 964 tokens.
-- Tolkning / usikkerhet: Standard `num_ctx=4096` i Ollama er for lite for agentbruk. Claude Code bygger raskt opp kontekst (fillesing + verktøykall), og prompten vokser langt over 4096 tokens allerede i første runde. **Løsning: opprett modellvarianter med `num_ctx 32768` via `ollama create`** — dette deler eksisterende vekter (ingen nedlasting) og setter kun nytt manifest. Gjelder alle 4 modeller i eksperimentet.
-
----
-
-### Oppføring 10 – Kontekstvekst-timeout: qwen3:8b-32k, multi-turn samtale
-
-- Forfatter: Anders (via Claude Code)
+- Forfatter: Thomas Gran
 - Tidspunkt: 2026-04-24
-- Hva ble testet: qwen3:8b-32k med multi-turn samtale (tre steg sendt som én voksende konversasjon)
-- Betingelse / variant: card.py + hand.py som kontekst, steg 1-svar lagt til historikken, deretter steg 2 kalt med full historikk. Timeout satt til 300s per kall.
-- Resultat / observasjon:
-  - **Steg 1 (forstå koden):** Fullførte på 288.8 sekunder. Korrekt og strukturert forklaring av Hand-klassen og ess-logikk.
-  - **Steg 2 (implementer is_soft):** Timeout etter 300s. Konteksten inneholdt nå step 1-svaret i tillegg — prompten vokste, og modellen rakk ikke å svare innen grensen.
-- Måling / eksempel: Steg 1: 288.8s. Steg 2: timeout >300s.
-- Tolkning / usikkerhet: Multi-turn samtale med akkumulert kontekst er for tregt på denne maskinvaren. Hvert steg tar lenger tid enn det forrige fordi promptlengden vokser. Konklusjon: **stateless kall per steg** (kun relevant kontekst per forespørsel) er nødvendig for praktisk bruk av qwen3:8b-32k lokalt.
+- Hva ble testet: llama3.1:8b brukt som kodingsassistent på implementasjon av Early Pruning i OpenTripPlanner (opentripplanner/OpenTripPlanner#7470) — real-world Java-kodebase
+- Betingelse / variant: Relevante kodeseksjoner hentet og gitt som kontekst per steg. Claude (meg) orkestrerte flyten, leste filer, sendte prompts til Llama og vurderte output
+- Maskin: MacBook Pro M1 Pro, 32 GB RAM
+
+**Hva Llama gjorde:**
+
+- **Steg 1 – Forstå (29 sek):** Fikk de tre nøkkelfilene som kontekst. Identifiserte korrekt at sortering hørte hjemme i `PreCachedRaptorTransferIndex` og pruning i begge worker states. Forsto algoritmen konseptuelt.
+- **Steg 2 – Sorter transfer-kanter (4 sek):** Produserte korrekt Java: `.stream().sorted(Comparator.comparingInt(DefaultRaptorTransfer::durationInSeconds)).collect(Collectors.toList())`. Ble brukt direkte.
+- **Steg 3 – Pruning i StdRangeRaptorWorkerState (10 sek):** Produserte riktig *struktur*: `transferToStop()` endret til å returnere `boolean`, ytre løkke i `transferToStops()` bryter på `true`. To feil: (1) brukte `bestDestinationArrivalTime` som om det var en definert variabel (hallusinert), (2) metodekroppen var ufullstendig — erstattet eksisterende logikk med `// ...`.
+- **Steg 4 – Korreksjon (3 iterasjoner, ~16 sek):** Fikk beskjed om begge feilene. Fikset parameter-signaturen for `transferToStops()` korrekt. Klarte likevel aldri å skrive fullstendig metodekropp for `transferToStop()` — gjentok `// Resten av vanlig logikk her...`.
+
+**Hva Claude gjorde:**
+
+- Leste alle relevante filer og hentet riktige kodeseksjoner som kontekst til Llama
+- Vurderte Llamas output og identifiserte feilene
+- Implementerte den fullstendige, korrekte `transferToStop()`-metoden i `StdRangeRaptorWorkerState` (brukte `exceedsTimeLimit` som pruning-signal i stedet for den hallusinerte variabelen)
+- Implementerte McRAPTOR-varianten (`McRangeRaptorWorkerState`) selvstendig — Llama ble aldri spurt om denne, siden flyten hadde brutt ned
+- La til `import`-setninger som Llama glemte i sorteringssteget
+
+- Resultat / observasjon: Implementasjonen fullført. 917 tester i `raptor`-modulen grønne.
+- Måling: Total Llama-tid ~50 sek over 5 kall. Llama bidro med ~60% av koden (sortering + struktur), Claude supplerte ~40% (fullstendig metodekropp + McRAPTOR).
+- Tolkning: Llama klarer godt avgrensede endringer der hele konteksten er i én metode. Svikter når implementasjonen krever å holde oversikt over to metoder samtidig og holde eksisterende logikk intakt. Egnet som "første utkast"-assistent — men krever tett review og korreksjon av menneskelig (eller sterkere) modell.
 
 ---
 
-### Oppføring 11 – qwen3:8b-32k, oppgave 1, stateless per steg
+### Oppføring 10 – SpeedTest kjørt med Early Pruning-implementasjonen
 
-- Forfatter: Anders (via Claude Code)
-- Tidspunkt: 2026-04-24
-- Hva ble testet: qwen3:8b-32k — oppgave 1 (is_soft-property), stateless API-kall per steg
-- Betingelse / variant: Tre uavhengige kall. Steg 1: card.py + hand.py + forklaringsprompt. Steg 2: kun hand.py + implementasjonsprompt. Steg 3: kun test_hand.py + testprompt. Ingen samtalehistorikk mellom steg. Timeout 600s per kall.
-- Resultat / observasjon:
-  - **Steg 1 (forstå koden):** Fullførte på 171.7 sekunder (raskere enn forrige kjøring fordi modellen allerede lå i RAM). Korrekt, strukturert forklaring med fem punkter — inkl. ess-justeringslogikken beskrevet riktig.
-  - **Steg 2 (implementer is_soft):** Timeout etter 600 sekunder. Modellen startet ikke å generere output innen fristen, selv med stateless kall og minimal kontekst (~300 tokens).
-  - **Forsøk med manuell "hello"-prompt etterpå:** Heller ikke dette svarte — bekrefter at modellen var fullstendig blokkert.
-- Måling / eksempel: Steg 1: 171.7s. Steg 2: timeout >600s. Manuell "hello": ingen respons.
-- Tolkning / usikkerhet:
-  - **Trolig årsak: RAM-press.** `qwen3:8b-32k` (10.2 GB) og `gemma4:latest` (10.5 GB) lå lastet samtidig = ~20 GB modell-RAM på en maskin med 32 GB totalt. En annen Claude Code-instans hadde aktivert begge modellene. Dette etterlater for lite minne til OS og generering, og fører til at inferens henger eller krasjer.
-  - **Konklusjon:** qwen3:8b-32k alene kan gjennomføre enkle forklaringsoppgaver, men er ekstremt treg (~170s per steg). Kodegenerering (steg 2) under RAM-press er ikke gjennomførbart. **32k kontekstvindus-konfigurasjonen er sannsynligvis for tung for CPU-only inferens med parallelle modeller.**
+- Forfatter: Thomas Gran
+- Tidspunkt: 2026-04-25
+- Hva ble testet: OTP SpeedTest mot 11 Vestfold-reisesøk med Early Pruning aktivert i koden
+- Betingelse: dev-2.x-toppen (commit e828da9), graph `ser.ver.id: 252` fra Entur's Vestfold-datasett, 5 testrunder
 
----
+**Oppsett-problemer løst:**
+- Foreldet `raptor-2.10.0-SNAPSHOT.jar` i lokal Maven-repo brukte gammel bytekode (pre-rename `tripIndex()`) — slettet og reinstallert med `mvn install`
+- `StreetPath`-klassen manglet i classpath — fikset ved `mvn install` av alle avhengige moduler
 
-### Oppføring 12 – Oppsummering: qwen3:8b-32k, oppgave 1
+**SpeedTest-resultater (WITH Early Pruning, 11 søk, 5 runder):**
 
-- Forfatter: Anders (via Claude Code)
-- Tidspunkt: 2026-04-24
-- Hva ble testet: Totalt tre kjøringsforsøk med qwen3:8b-32k på oppgave 1 (is_soft)
-- Betingelse / variant: Se oppføring 9–11 for detaljer
-- Resultat / observasjon:
-  - **Steg 1 (forstå koden) fullførte 2 av 3 ganger** — 288.8s og 171.7s. Svar var korrekt og strukturert begge ganger.
-  - **Steg 2 (implementere is_soft) fullførte aldri** — timeout i alle forsøk (300s og 600s).
-  - **Oppgaven ble ikke løst** — ingen `is_soft`-implementasjon eller tester ble produsert av modellen.
-- Måling / eksempel: Raskeste steg 1: 171.7s. Steg 2: aldri fullført (>600s).
-- Tolkning / usikkerhet:
-  - qwen3:8b-32k er **ikke brukbar for agentarbeidsform** på denne maskinvaren (ThinkPad T14 Gen 5, CPU-only).
-  - Forklaringsoppgaver (lese og beskrive kode) er mulig, men svært trege.
-  - Kodegenerering med 32k kontekstvindus er utenfor kapasiteten i praksis.
-  - **Neste steg:** Prøv `qwen3:8b` (standard 4096 token kontekstvindu) alene med svært korte prompts — eller bytt til `gpt-oss:20b` for å se om MoE-arkitektur gir bedre throughput.
+| Profil | Avg transit (ms) | Avg total (ms) |
+|---|---|---|
+| Standard RAPTOR | 3.8 | 18.4 |
+| Multi-criteria RAPTOR | 7.6 | 24.6 |
 
----
+- Total tid for alle 11 søk: ~0.2–0.3 sekunder per runde
+- Ingen baseline (uten Early Pruning) tilgjengelig siden vi ikke kan rulle tilbake endringene enkelt — ytelsessammenligning krever egen benchmark
+- Routing fungerer korrekt (alle 11 søk returnerer gyldige reiseruter med buss i Vestfold)
 
-### Oppføring
+**Konklusjon SpeedTest:** Implementasjonen er stabil og korrekt. For å kvantifisere selve ytelseseffekten av Early Pruning trengs en A/B-test mot kode uten optimaliseringen.
