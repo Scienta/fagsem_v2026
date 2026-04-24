@@ -90,18 +90,18 @@ ThemeStats {
 - [ ] Statistikk-seksjon: hent og vis `GET /api/stats` (polling hvert 5s), ett kort per tema
 
 ### Tester – Backend (JUnit 5 + MockMvc) — testeragenten skriver disse FØR backend implementerer
-- [ ] `StatsControllerTest` – `GET /stats` returnerer 200 og liste med 5 elementer (ett per tema)
-- [ ] `StatsControllerTest` – alle temaer returneres selv uten sesjoner/funn (nulltellere)
-- [ ] `StatsControllerTest` – med én ACTIVE sesjon: `sessionsActive = 1`, `sessionsDone = 0` for riktig tema
-- [ ] `StatsControllerTest` – med én DONE sesjon: `sessionsActive = 0`, `sessionsDone = 1`
-- [ ] `StatsControllerTest` – med ett BLOCKER-funn: `findingsBlocker = 1`, andre er 0
-- [ ] `StatsControllerTest` – resultatet er sortert alfabetisk på `theme`
+- [x] `StatsControllerTest` – `GET /stats` returnerer 200 og liste med 5 elementer (ett per tema)
+- [x] `StatsControllerTest` – alle temaer returneres selv uten sesjoner/funn (nulltellere)
+- [x] `StatsControllerTest` – med én ACTIVE sesjon: `sessionsActive = 1`, `sessionsDone = 0` for riktig tema
+- [x] `StatsControllerTest` – med én DONE sesjon: `sessionsActive = 0`, `sessionsDone = 1`
+- [x] `StatsControllerTest` – med ett BLOCKER-funn: `findingsBlocker = 1`, andre er 0
+- [x] `StatsControllerTest` – resultatet er sortert alfabetisk på `theme`
 
 ### Tester – Frontend (Vitest + Testing Library) — testeragenten skriver disse FØR frontend implementerer
-- [ ] `App.test.tsx` – statistikk-seksjon rendres med heading "Statistikk per tema"
-- [ ] `App.test.tsx` – tom tilstand viser "Ingen statistikk ennå — start en sesjon."
-- [ ] `App.test.tsx` – med data vises temanavnet
-- [ ] `App.test.tsx` – `getStats: vi.fn()` i mock og `mockResolvedValue([])` i beforeEach (eksisterende tester skal passere)
+- [x] `App.test.tsx` – statistikk-seksjon rendres med heading "Statistikk per tema"
+- [x] `App.test.tsx` – tom tilstand viser "Ingen statistikk ennå — start en sesjon."
+- [x] `App.test.tsx` – med data vises temanavnet
+- [x] `App.test.tsx` – `getStats: vi.fn()` i mock og `mockResolvedValue([])` i beforeEach (eksisterende tester skal passere)
 
 ### Tester – Backend (JUnit 5 + MockMvc) — eksisterende
 - [x] `GroupControllerTest` – `GET /groups` returnerer 200 og ikke-tom liste med gyldige felter

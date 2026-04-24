@@ -11,6 +11,7 @@ vi.mock('./api', () => ({
     startSession: vi.fn(),
     endSession: vi.fn(),
     logFinding: vi.fn(),
+    getStats: vi.fn(),
   },
 }))
 
@@ -22,6 +23,7 @@ describe('App', () => {
     mockApi.getGroups.mockResolvedValue([])
     mockApi.getFindings.mockResolvedValue([])
     mockApi.getSessions.mockResolvedValue([])
+    mockApi.getStats.mockResolvedValue([])
   })
 
   afterEach(() => {
@@ -79,5 +81,32 @@ describe('App', () => {
     render(<App />)
 
     expect(await screen.findByText('Klarte ikke hente grupper fra backend')).toBeInTheDocument()
+  })
+
+  it('statistikk-seksjon rendres med heading "Statistikk per tema"', async () => {
+    render(<App />)
+    expect(await screen.findByText('Statistikk per tema')).toBeInTheDocument()
+  })
+
+  it('statistikk tom tilstand viser "Ingen statistikk ennå — start en sesjon."', async () => {
+    mockApi.getStats.mockResolvedValue([])
+    render(<App />)
+    expect(await screen.findByText('Ingen statistikk ennå — start en sesjon.')).toBeInTheDocument()
+  })
+
+  it('statistikk viser temanavnet når data er tilgjengelig', async () => {
+    mockApi.getStats.mockResolvedValue([
+      {
+        theme: 'AI-assistert systemutvikling',
+        groups: 3,
+        sessionsActive: 1,
+        sessionsDone: 0,
+        findingsObservation: 2,
+        findingsResult: 1,
+        findingsBlocker: 0,
+      },
+    ])
+    render(<App />)
+    expect(await screen.findByText('AI-assistert systemutvikling')).toBeInTheDocument()
   })
 })
