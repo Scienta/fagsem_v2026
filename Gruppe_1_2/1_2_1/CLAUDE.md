@@ -23,3 +23,16 @@ Hold denne filen oppdatert underveis i arbeidet.
   - Node.js måtte installeres via Homebrew (ikke installert på forhånd)
   - `npm install` og serveroppstart verifisert – serveren svarer på `http://localhost:3000`
 - **Lærte:** Claude håndterte hele arkitekturdesign og implementasjon i én runde. Planleggingsfasen (ExitPlanMode) hjalp med å avklare scope og tech-valg før koding startet.
+
+### 2026-04-24 – Mario-funksjoner lagt til
+
+- **Testet:** Utvidelse av prototype med Goomba-fiender, mynter/poeng og bedre grafikk
+- **Variant:** Alt generert med Phaser Graphics API – ingen bildefiler
+- **Hva skjedde:**
+  - Lagt til pixel-art Mario-karakter for hver spiller (rød/blå/grønn/oransje kjeledress)
+  - 5 Goomba-fiender med patrol-AI (deterministisk simulering på alle klienter, synkroniserte drap via Socket.io)
+  - 22 mynter spredt over banen – innsamling synkronisert via server slik at sent-tilkoblede spillere ser riktig tilstand
+  - Poengsum per spiller (100p for å trampe Goomba, 200p per mynt)
+  - Respawn med kortvarig uovervinnelighet ved berøring av Goomba eller fall utenfor skjermen
+  - Server sporer `deadGoombas` og `collectedCoins` for korrekt initialstate for nye spillere
+- **Lærte:** Deterministisk klient-simulering av fiender (alle klienter kjører samme AI) fungerer godt på LAN. Krever kun synkronisering av hendelser (fiende drept, mynt samlet), ikke løpende posisjoner for fiendene.

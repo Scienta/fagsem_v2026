@@ -12,6 +12,9 @@ const players = new Map();
 let nextPlayerNumber = 1;
 const PLAYER_COLORS = { 1: 0xe74c3c, 2: 0x3498db, 3: 0x2ecc71, 4: 0xf39c12 };
 
+const deadGoombas = new Set();
+const collectedCoins = new Set();
+
 io.on('connection', (socket) => {
   if (players.size >= 4) {
     socket.emit('server_full');
@@ -38,7 +41,9 @@ io.on('connection', (socket) => {
 
   socket.emit('init', {
     self: player,
-    existingPlayers: [...players.values()].filter(p => p.id !== socket.id)
+    existingPlayers: [...players.values()].filter(p => p.id !== socket.id),
+    deadGoombas: [...deadGoombas],
+    collectedCoins: [...collectedCoins]
   });
 
   socket.broadcast.emit('player_joined', player);
@@ -48,6 +53,16 @@ io.on('connection', (socket) => {
     if (!p) return;
     Object.assign(p, data);
     socket.broadcast.emit('player_moved', { id: socket.id, ...data });
+  });
+
+  socket.on('goomba_killed', ({ id }) => {
+    deadGoombas.add(id);
+    socket.broadcast.emit('goomba_killed', { id });
+  });
+
+  socket.on('coin_collected', ({ id }) => {
+    collectedCoins.add(id);
+    socket.broadcast.emit('coin_collected', { id });
   });
 
   socket.on('disconnect', () => {
