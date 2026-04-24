@@ -1,0 +1,135 @@
+---
+tema: "Tema 4 – Flere parallelle kodeagenter"
+---
+
+# Rapport – Gruppe 4.1: Session Tracker
+
+---
+
+## 1. Gruppeinformasjon
+
+| Felt | Verdi |
+|---|---|
+| Gruppenummer | 4.1 |
+| Deltakere | Are Fossli Viberg, Maria Selivanova |
+| Tema | Tema 4 – Flere parallelle kodeagenter |
+| Dato(er) for eksperiment | 2026-04-24 |
+| Verktøy/modeller brukt | Claude Code (claude-sonnet-4-6), 4 parallelle agentøkter |
+| Repo / kodebase | `gruppe-4-1/session-tracker/` på branch `tema4/session-tracker` |
+
+---
+
+## 2. Valgt problemstilling
+
+**Forskningsspørsmål:**
+Kan flere parallelle kodeagenter (backend, frontend, tester) bygge en fungerende fullstack-applikasjon, koordinert av en menneskedrevet koordinatoragent — og hva kreves for at dette skal fungere?
+
+**Hypotese:**
+Parallelle agenter kan jobbe effektivt og uavhengig, forutsatt at de deler en tydelig API-kontrakt og at en koordinatoragent aktivt holder kontrakten oppdatert og løser avvik.
+
+---
+
+## 3. Eksperimentoppsett
+
+### Hva ble testet
+
+Vi bygde **Session Tracker** — en live fullstack-app for å spore arbeidsøkter og funn på tvers av seminargrupper under fagdagen. Appen har:
+
+- Backend: Kotlin + Spring Boot med REST API og in-memory lagring
+- Frontend: TypeScript + React med live polling og moderne GUI
+- Tester: JUnit 5 (backend) + Vitest/Testing Library (frontend)
+
+Applikasjonen ble bygget med 4 separate agentøkter som jobbet parallelt:
+
+| Agent | Scope | Verktøy |
+|---|---|---|
+| Koordinatoragent | `KOORDINERING.md`, API-kontrakt, beslutninger | Claude Code (koordinator-rollen) |
+| Backendagent | `backend/src/main/` | Claude Code i `backend/`-mappen |
+| Frontendagent | `frontend/src/` | Claude Code i `frontend/`-mappen |
+| Testeragent | `backend/src/test/`, `frontend/src/*.test.*` | Claude Code i `tester/`-mappen |
+
+### Betingelser
+
+| Betingelse | Beskrivelse |
+|---|---|
+| A – Med koordinering | Koordinatoragenten vedlikeholder `KOORDINERING.md` som single source of truth for API-kontrakten. Endringer kommuniseres eksplisitt til riktig agent. |
+| B – Uten koordinering (referanse) | Ikke testet direkte, men manglende koordinering ble observert som risiko: frontendagenten avdekket et manglende `GET /sessions`-endepunkt ved implementering — noe som ikke ble fanget i planleggingen |
+
+### Målemetoder
+
+- Funksjonell integrasjon: kjørte applikasjonen og testet at backend og frontend kommuniserer korrekt
+- Testdekning: alle backend- og frontend-tester grønne
+- Koordineringsoverhead: antall runder med avvik mellom agenter og korrigeringer
+- Fremdrift: oppgavestatus i `KOORDINERING.md`
+
+---
+
+## 4. Resultater
+
+### Hva ble levert
+
+**Backend — alle endepunkter implementert:**
+- `GET /groups` — 13 faktiske seminargrupper, sortert alfanumerisk
+- `GET /sessions?status=`, `POST /sessions`, `PATCH /sessions/:id`
+- `GET /findings?type=`, `GET /sessions/:id/findings`, `POST /sessions/:id/findings`
+- `GET /stats` — aggregering per tema (ThemeStats)
+
+**Frontend — full funksjonalitet:**
+- Grupper gruppert etter tema med temafarger
+- Live sesjonshåndtering (start, logg funn, avslutt)
+- Live funn-feed med polling hvert 5s
+- Statistikk-seksjon per tema
+- Moderne GUI med fargepalett og kortlayout
+- Gruppe 4.1 visuelt fremhevet
+
+**Tester — alle grønne:**
+- Backend: GroupController, SessionController, FindingController, StatsController
+- Frontend: App.test.tsx, api.test.ts
+
+**Koordineringsavvik som ble oppdaget og løst:**
+
+| Avvik | Oppdaget av | Løsning |
+|---|---|---|
+| `GET /sessions` manglet i kontrakten | Frontendagent ved implementering | Lagt til i kontrakt, backend implementerte |
+| Seed-data brukte eksempelnavn | Koordinator (menneske) | Backend oppdaterte til faktiske seminargrupper |
+| `GET /groups` returnerte tilfeldig rekkefølge | Koordinator | Backend sorterer nå på `name` |
+
+### Beslutningslogg (utdrag)
+
+| Beslutning | Begrunnelse |
+|---|---|
+| In-memory storage (ConcurrentHashMap) | Holder det enkelt for seminar-kontekst |
+| Server genererer `id` og `startedAt` | Unngår synkroniseringsproblemer mellom klienter |
+| Frontend proxier `/api` → backend | Fungerer uten CORS-konfig |
+| TDD: testeragenten skriver tester FØR implementasjon | Sikrer at implementasjonen er testet fra start |
+| H2 filbasert database (planlagt) | Data overlever restart; unngår Docker-avhengighet |
+
+---
+
+## 5. Diskusjon
+
+### Hva funket
+
+- **`KOORDINERING.md` som single source of truth** fungerte godt. Agentene hadde et klart sted å slå opp kontrakt og status, og koordinatoragenten kunne oppdatere ett dokument fremfor å endre kode direkte.
+- **Rolledeling backend/frontend/tester** fungerte etter intensjonen — agentene holdt seg i sine egne mapper og koden integrerte uten store konflikter.
+- **TDD-rekkefølgen** (tester skrives før implementasjon) ga en tydelig kontrakt mellom testeragent og implementasjonsagenter.
+- **Menneskelig koordinator som mellomledd** mellom agentøktene var nødvendig og fungerte ryddig — koordinatoren formulerte eksplisitte oppdateringer som ble videreformidlet til riktig agent.
+- **Sortering og faktiske data** ble koordinert uten friksjon — koordinatoren leste README.MD og ba backendagenten oppdatere seed-data.
+
+### Hva funket ikke
+
+- **Manglende `GET /sessions` i opprinnelig kontrakt** — frontendagenten oppdaget hullet ved implementering, ikke ved planlegging. Viser at kontrakten bør gjennomgås grundigere i forkant.
+- **Agentene leser ikke `KOORDINERING.md` automatisk** — koordinatoren må eksplisitt formidle hva som er nytt. Hvis en agent ikke leser siste versjon, jobber den mot utdatert kontrakt.
+- **Sesjoner i lokal React-state** var et tidlig design-valg som skapt problemer for deling på tvers av klienter — krevde koordinering i etterkant.
+
+### Begrensninger
+
+- Kun én runde eksperimentering — vi implementerte én app, ikke sammenlignet med en ikke-koordinert variant
+- Menneskene i gruppen var kun 2 personer, noe som begrenset parallelliseringen i praksis (én person per agentøkt)
+- In-memory storage betyr at data forsvinner ved restart — H2-migreringen var planlagt men ikke gjennomført under seminaret
+
+---
+
+## 6. Konklusjon
+
+Parallelle kodeagenter kan bygge en fungerende fullstack-applikasjon, men det krever en tydelig og aktivt vedlikeholdt API-kontrakt samt en koordinatorrolle som oversetter mellom agenter. Det viktigste vi lærte: **kontrakten er flaskehalsen** — avvik mellom agenter oppstår ikke fordi agentene gjør feil, men fordi kontrakten er ufullstendig eller ikke kommuniseres eksplisitt. En koordinatoragent med et levende koordineringsdokument løser dette godt i praksis.
