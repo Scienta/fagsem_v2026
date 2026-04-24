@@ -77,22 +77,46 @@ Se `benchmarks/README.md` for full dokumentasjon.
 
 ## Løpende logg
 
-### Oppføring
+### Oppføring 1 – Steg 1: Forstå koden
 
-- Tidspunkt:
-- Forfatter:
-- Hva ble testet:
-- Betingelse / variant:
-- Resultat / observasjon:
-- Måling / eksempel:
-- Tolkning / usikkerhet:
+- Forfatter: Thomas Gran
+- Tidspunkt: 2026-04-24
+- Hva ble testet: llama3.1:8b bedt om å forklare Hand-klassen og ess-logikken
+- Betingelse / variant: Én fil (hand.py) gitt som kontekst, norsk prompt
+- Resultat / observasjon: Korrekt og strukturert forklaring. Ess-logikken (reduksjon fra 11→1 ved bust) beskrevet riktig. Noe blanding av norsk/engelsk terminologi ("aker" for ace).
+- Måling / eksempel: 41 sekunder responstid
+- Tolkning / usikkerhet: Forståelsesteget fungerte godt for én isolert fil.
+
+---
+
+### Oppføring 2 – Steg 2+3: Implementere is_soft
+
+- Forfatter: Thomas Gran
+- Tidspunkt: 2026-04-24
+- Hva ble testet: llama3.1:8b bedt om å implementere `is_soft`-property på Hand
+- Betingelse / variant: hand.py gitt som kontekst, bedt om kun kode
+- Resultat / observasjon: **Feil implementasjon.** Sjekker `11 in non_ace_values` der non_ace_values er verdier fra ikke-ess-kort — disse kan aldri være 11. Metoden returnerer alltid False.
+- Måling / eksempel: `non_ace_values = [...]; return any(11 in non_ace_values)` — 14 sek responstid
+- Tolkning / usikkerhet: Koden ser plausibel ut ved rask lesing, men er logisk feil. Modellen forstår domenet, men klarer ikke den logiske koblingen.
+
+---
+
+### Oppføring 3 – Steg 4: Skrive tester for is_soft
+
+- Forfatter: Thomas Gran
+- Tidspunkt: 2026-04-24
+- Hva ble testet: llama3.1:8b bedt om å skrive pytest-tester for is_soft
+- Betingelse / variant: Ingen eksisterende kode gitt som kontekst
+- Resultat / observasjon: **Feil API.** Brukte `Rank.ESS` (hallusinert norsk enum-navn, riktig er `Rank.ACE`) og `hand.add_card()` (ikke-eksisterende metode, riktig er `hand.add()`). Testene ville krasjet ved kjøring.
+- Måling / eksempel: 9 sek responstid
+- Tolkning / usikkerhet: Uten kodebasen som kontekst hallusinerer modellen API-et. Testene avdekket heller ikke sin egen implementasjonsfeil.
 
 ---
 
 ### Oppføring
 
+- Forfatter: <!-- Anders Kvernberg / Bartas Venckus / Thomas Gran -->
 - Tidspunkt:
-- Forfatter:
 - Hva ble testet:
 - Betingelse / variant:
 - Resultat / observasjon:
