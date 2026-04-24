@@ -78,7 +78,7 @@ ThemeStats {
 - [x] `FindingController` – `POST /sessions/:id/findings`, `GET /sessions/:id/findings`, `GET /findings`
 - [x] In-memory storage (ConcurrentHashMap per ressurstype)
 - [x] Returnerer 404 med beskjed ved ukjent id
-- [ ] `StatsController` – `GET /stats` som returnerer aggregerte ThemeStats per tema
+- [x] `StatsController` – `GET /stats` som returnerer aggregerte ThemeStats per tema
 
 ### Frontend
 - [x] Hent og vis grupper fra `GET /api/groups`
