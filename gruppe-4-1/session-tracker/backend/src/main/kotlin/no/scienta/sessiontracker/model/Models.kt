@@ -6,16 +6,18 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.time.Instant
 import java.util.UUID
 
 @Entity
+@Table(name = "groups")
 data class Group(
     @Id val id: String = UUID.randomUUID().toString(),
     val name: String = "",
     val theme: String = "",
     @ElementCollection(fetch = FetchType.EAGER)
-    val members: List<String> = emptyList(),
+    var members: MutableList<String> = mutableListOf(),
 )
 
 enum class SessionStatus { ACTIVE, DONE }
