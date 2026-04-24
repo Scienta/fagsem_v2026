@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snake</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0f1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #e0e0e0;
+      user-select: none;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #4ade80, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    #scoreboard {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #888;
+    }
+
+    #scoreboard span { color: #e0e0e0; font-weight: 700; font-size: 1.05rem; }
+
+    #arena {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 2px #1e2a3a,
+        0 0 40px rgba(34, 211, 238, 0.15),
+        0 8px 40px rgba(0,0,0,0.6);
+    }
+
+    canvas {
+      display: block;
+      background: #0d1117;
+    }
+
+    #overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 12, 20, 0.88);
+      backdrop-filter: blur(4px);
+      border-radius: 12px;
+      transition: opacity 0.25s;
+    }
+
+    #overlay.hidden { opacity: 0; pointer-events: none; }
+
+    #overlay h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f87171;
+      margin-bottom: 0.4rem;
+    }
+
+    #overlay.start h2 { color: #4ade80; }
+
+    #overlay p {
+      color: #9ca3af;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    #overlay .final-score {
+      font-size: 1.2rem;
+      color: #e0e0e0;
+      margin-bottom: 1.4rem;
+    }
+
+    #overlay .final-score span { color: #4ade80; font-weight: 700; }
+
+    button {
+      padding: 0.65rem 2.2rem;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #4ade80, #22d3ee);
+      color: #0f0f1a;
+      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 4px 18px rgba(74, 222, 128, 0.35);
+    }
+
+    button:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(74, 222, 128, 0.5); }
+    button:active { transform: translateY(0); }
+
+    #hint {
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      color: #4b5563;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Snake</h1>
+
+<div id="scoreboard">
+  Score: <span id="score">0</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp;
+  Best: <span id="best">0</span>
+</div>
+
+<div id="arena">
+  <canvas id="canvas"></canvas>
+
+  <div id="overlay" class="start">
+    <h2>Snake</h2>
+    <p>Use arrow keys to move</p>
+    <p class="final-score" id="overlay-score" style="display:none"></p>
+    <button id="btn">Play</button>
+  </div>
+</div>
+
+<div id="hint">Press R to restart at any time</div>
+
+<script>
+  const COLS = 24, ROWS = 24, CELL = 22;
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width  = COLS * CELL;
+  canvas.height = ROWS * CELL;
+
+  const overlay      = document.getElementById('overlay');
+  const btn          = document.getElementById('btn');
+  const scoreEl      = document.getElementById('score');
+  const bestEl       = document.getElementById('best');
+  const overlayScore = document.getElementById('overlay-score');
+
+  let snake, dir, nextDir, food, score, best = 0, loopId, running = false;
+
+  // ── Colour helpers ──────────────────────────────────────────────────────────
+  function segColor(i, len) {
+    const t = i / Math.max(len - 1, 1);
+    // head: #4ade80  →  tail: #22d3ee
+    const r = Math.round(74  + (34  - 74)  * t);
+    const g = Math.round(222 + (211 - 222) * t);
+    const b = Math.round(128 + (238 - 128) * t);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  // ── Drawing ─────────────────────────────────────────────────────────────────
+  function drawGrid() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 0.5;
+    for (let c = 0; c <= COLS; c++) {
+      ctx.beginPath(); ctx.moveTo(c*CELL, 0); ctx.lineTo(c*CELL, canvas.height); ctx.stroke();
+    }
+    for (let r = 0; r <= ROWS; r++) {
+      ctx.beginPath(); ctx.moveTo(0, r*CELL); ctx.lineTo(canvas.width, r*CELL); ctx.stroke();
+    }
+  }
+
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y); ctx.arcTo(x+w, y,   x+w,   y+r,   r);
+    ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h,   r);
+    ctx.lineTo(x+r, y+h); ctx.arcTo(x,   y+h, x,     y+h-r, r);
+    ctx.lineTo(x, y+r); ctx.arcTo(x,   y,   x+r,   y,     r);
+    ctx.closePath();
+  }
+
+  function drawSnake() {
+    const pad = 2, r = 5;
+    snake.forEach((seg, i) => {
+      ctx.fillStyle = segColor(i, snake.length);
+      roundRect(seg.x*CELL+pad, seg.y*CELL+pad, CELL-pad*2, CELL-pad*2, r);
+      ctx.fill();
+
+      // subtle inner glow on head
+      if (i === 0) {
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+        ctx.fillStyle = '#fff';
+        roundRect(seg.x*CELL+pad+3, seg.y*CELL+pad+3, CELL-pad*2-6, CELL-pad*2-6, r-2);
+        ctx.fill();
+        ctx.restore();
+      }
+    });
+  }
+
+  function drawFood() {
+    const cx = food.x*CELL + CELL/2;
+    const cy = food.y*CELL + CELL/2;
+    const radius = CELL/2 - 4;
+
+    // glow
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius*2.2);
+    grd.addColorStop(0, 'rgba(248,113,113,0.35)');
+    grd.addColorStop(1, 'rgba(248,113,113,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(cx, cy, radius*2.2, 0, Math.PI*2); ctx.fill();
+
+    // body
+    const grad = ctx.createRadialGradient(cx-2, cy-2, 0, cx, cy, radius);
+    grad.addColorStop(0, '#fca5a5');
+    grad.addColorStop(1, '#ef4444');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI*2); ctx.fill();
+  }
+
+  function render() {
+    drawGrid();
+    drawFood();
+    drawSnake();
+  }
+
+  // ── Game logic ───────────────────────────────────────────────────────────────
+  function placeFood() {
+    const free = [];
+    for (let x = 0; x < COLS; x++)
+      for (let y = 0; y < ROWS; y++)
+        if (!snake.some(s => s.x===x && s.y===y)) free.push({x,y});
+    food = free[Math.floor(Math.random()*free.length)];
+  }
+
+  function init() {
+    const mx = Math.floor(COLS/2), my = Math.floor(ROWS/2);
+    snake   = [{x:mx,y:my},{x:mx-1,y:my},{x:mx-2,y:my}];
+    dir     = {x:1, y:0};
+    nextDir = {x:1, y:0};
+    score   = 0;
+    scoreEl.textContent = 0;
+    placeFood();
+  }
+
+  function step() {
+    dir = nextDir;
+    const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+    // wall collision
+    if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) return gameOver();
+    // self collision
+    if (snake.some(s => s.x===head.x && s.y===head.y)) return gameOver();
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+      score++;
+      scoreEl.textContent = score;
+      if (score > best) { best = score; bestEl.textContent = best; }
+      placeFood();
+    } else {
+      snake.pop();
+    }
+    render();
+  }
+
+  function gameOver() {
+    running = false;
+    clearInterval(loopId);
+    overlay.classList.remove('start', 'hidden');
+    overlay.querySelector('h2').textContent = 'Game Over';
+    overlayScore.style.display = '';
+    overlayScore.innerHTML = `Score: <span>${score}</span>`;
+    btn.textContent = 'Restart';
+  }
+
+  function startGame() {
+    init();
+    render();
+    running = true;
+    overlay.classList.add('hidden');
+    clearInterval(loopId);
+    loopId = setInterval(step, 110);
+  }
+
+  // ── Input ────────────────────────────────────────────────────────────────────
+  const keyMap = {
+    ArrowUp:    {x:0,  y:-1},
+    ArrowDown:  {x:0,  y:1},
+    ArrowLeft:  {x:-1, y:0},
+    ArrowRight: {x:1,  y:0},
+    w: {x:0,y:-1}, W: {x:0,y:-1},
+    s: {x:0,y:1},  S: {x:0,y:1},
+    a: {x:-1,y:0}, A: {x:-1,y:0},
+    d: {x:1,y:0},  D: {x:1,y:0},
+  };
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'r' || e.key === 'R') { startGame(); return; }
+    const d = keyMap[e.key];
+    if (!d) return;
+    // prevent 180° reversal
+    if (d.x !== -dir.x || d.y !== -dir.y) nextDir = d;
+    // prevent arrow keys from scrolling
+    if (e.key.startsWith('Arrow')) e.preventDefault();
+  });
+
+  btn.addEventListener('click', startGame);
+
+  // initial render (no game yet)
+  init();
+  render();
+</script>
+</body>
+</html>

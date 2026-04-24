@@ -1,0 +1,8 @@
+model=gemini-3-flash-preview
+elapsed_seconds=27
+input_tokens=26405
+output_tokens=2878
+reasoning_tokens=0
+cache_write_tokens=0
+cache_read_tokens=0
+total_tokens=29283

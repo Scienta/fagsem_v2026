@@ -1,0 +1,8 @@
+model=gemini-2.5-pro
+elapsed_seconds=37
+input_tokens=14369
+output_tokens=2215
+reasoning_tokens=0
+cache_write_tokens=0
+cache_read_tokens=11463
+total_tokens=28047

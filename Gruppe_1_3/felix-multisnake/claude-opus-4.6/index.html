@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Segoe UI', system-ui, sans-serif; color: #eee; }
+  #game-container { text-align: center; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #0ff; text-shadow: 0 0 10px #0ff4; }
+  #info { display: flex; justify-content: center; gap: 2rem; margin-bottom: 0.75rem; font-size: 1.1rem; }
+  #info span { background: #16213e; padding: 0.3rem 1rem; border-radius: 6px; }
+  canvas { border: 2px solid #0ff4; border-radius: 4px; display: block; margin: 0 auto; background: #0f0f23; }
+  #overlay { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+  #overlay.show { opacity: 1; pointer-events: auto; }
+  #overlay h2 { font-size: 1.8rem; color: #f55; text-shadow: 0 0 8px #f554; }
+  #overlay p { font-size: 1.1rem; }
+  button { background: #0ff; color: #1a1a2e; border: none; padding: 0.6rem 1.6rem; font-size: 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+  button:hover { background: #5ff; }
+  #wrapper { position: relative; display: inline-block; }
+</style>
+</head>
+<body>
+<div id="game-container">
+  <h1>Snake</h1>
+  <div id="info"><span>Score: <b id="score">0</b></span><span>Best: <b id="best">0</b></span></div>
+  <div id="wrapper">
+    <canvas id="c" width="400" height="400"></canvas>
+    <div id="overlay"><h2 id="msg">Press any arrow key to start</h2><p id="sub"></p><button id="btn" style="display:none">Play Again</button></div>
+  </div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const canvas = $('c'), ctx = canvas.getContext('2d');
+const COLS = 20, ROWS = 20, CELL = canvas.width / COLS;
+const overlay = $('overlay'), msg = $('msg'), sub = $('sub'), btn = $('btn');
+const scoreEl = $('score'), bestEl = $('best');
+
+let snake, dir, nextDir, food, score, best = 0, running, timer;
+
+function init() {
+  snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir = {x:1,y:0}; nextDir = {x:1,y:0};
+  score = 0; scoreEl.textContent = 0;
+  running = false;
+  placeFood();
+  draw();
+  msg.textContent = 'Press any arrow key to start';
+  sub.textContent = ''; btn.style.display = 'none';
+  overlay.classList.add('show');
+}
+
+function placeFood() {
+  let pos;
+  do { pos = {x: Math.floor(Math.random()*COLS), y: Math.floor(Math.random()*ROWS)}; }
+  while (snake.some(s => s.x===pos.x && s.y===pos.y));
+  food = pos;
+}
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // grid
+  ctx.strokeStyle = '#ffffff08';
+  for (let i=0;i<=COLS;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,canvas.height);ctx.stroke();}
+  for (let i=0;i<=ROWS;i++){ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(canvas.width,i*CELL);ctx.stroke();}
+  // food
+  ctx.fillStyle = '#f55';
+  ctx.shadowColor = '#f55'; ctx.shadowBlur = 10;
+  ctx.beginPath(); ctx.arc(food.x*CELL+CELL/2, food.y*CELL+CELL/2, CELL/2-2, 0, Math.PI*2); ctx.fill();
+  ctx.shadowBlur = 0;
+  // snake
+  snake.forEach((s,i) => {
+    ctx.fillStyle = i===0 ? '#0ff' : '#0cc';
+    ctx.shadowColor = '#0ff'; ctx.shadowBlur = i===0?8:0;
+    const r = 3;
+    ctx.beginPath(); ctx.roundRect(s.x*CELL+1, s.y*CELL+1, CELL-2, CELL-2, r); ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+}
+
+function tick() {
+  dir = nextDir;
+  const head = {x: snake[0].x+dir.x, y: snake[0].y+dir.y};
+  if (head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS||snake.some(s=>s.x===head.x&&s.y===head.y)) return gameOver();
+  snake.unshift(head);
+  if (head.x===food.x && head.y===food.y) {
+    score++; scoreEl.textContent = score;
+    if(score>best){best=score;bestEl.textContent=best;}
+    placeFood();
+  } else snake.pop();
+  draw();
+}
+
+function gameOver() {
+  clearInterval(timer); running = false;
+  msg.textContent = 'Game Over';
+  sub.textContent = `Score: ${score}`;
+  btn.style.display = ''; overlay.classList.add('show');
+}
+
+function start() {
+  overlay.classList.remove('show');
+  running = true;
+  timer = setInterval(tick, 110);
+}
+
+const DIRS = {ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1},ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0}};
+document.addEventListener('keydown', e => {
+  const d = DIRS[e.key]; if(!d) return;
+  e.preventDefault();
+  if(!running){init();nextDir=d;dir=d;start();return;}
+  if(d.x+dir.x!==0||d.y+dir.y!==0) nextDir=d;
+});
+
+btn.addEventListener('click', ()=>{init();nextDir={x:1,y:0};start();});
+
+// position overlay over canvas
+function posOverlay(){const r=canvas.getBoundingClientRect();overlay.style.left=r.left+'px';overlay.style.top=r.top+'px';overlay.style.width=r.width+'px';overlay.style.height=r.height+'px';overlay.style.position='fixed';}
+window.addEventListener('resize',posOverlay);
+init(); posOverlay(); setTimeout(posOverlay,50);
+</script>
+</body>
+</html>

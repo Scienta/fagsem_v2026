@@ -1,0 +1,8 @@
+model=gpt-5.2-codex
+elapsed_seconds=98
+input_tokens=23193
+output_tokens=5316
+reasoning_tokens=64
+cache_write_tokens=0
+cache_read_tokens=33536
+total_tokens=62109

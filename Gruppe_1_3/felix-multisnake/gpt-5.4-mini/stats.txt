@@ -1,0 +1,8 @@
+model=gpt-5.4-mini
+elapsed_seconds=42
+input_tokens=12772
+output_tokens=4830
+reasoning_tokens=218
+cache_write_tokens=0
+cache_read_tokens=22016
+total_tokens=39836

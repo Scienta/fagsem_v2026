@@ -1,0 +1,8 @@
+model=claude-opus-4.5
+elapsed_seconds=50
+input_tokens=2
+output_tokens=3928
+reasoning_tokens=0
+cache_write_tokens=16939
+cache_read_tokens=13151
+total_tokens=34020

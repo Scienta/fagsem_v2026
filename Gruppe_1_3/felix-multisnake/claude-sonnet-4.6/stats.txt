@@ -1,0 +1,8 @@
+model=claude-sonnet-4.6
+elapsed_seconds=63
+input_tokens=3
+output_tokens=3877
+reasoning_tokens=0
+cache_write_tokens=16848
+cache_read_tokens=13151
+total_tokens=33879
