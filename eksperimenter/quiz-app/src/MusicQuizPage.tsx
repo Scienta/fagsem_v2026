@@ -188,6 +188,7 @@ export function MusicQuizPage({ onFinish }: Props) {
             style={{ backgroundImage: `url(${question.artworkUrl})` }}
           />
           <div
+            key={`sharp-${currentIndex}`}
             className={`album-cover-sharp${isAnswered ? ' visible' : ''}`}
             style={{ backgroundImage: `url(${question.artworkUrl})` }}
           />
