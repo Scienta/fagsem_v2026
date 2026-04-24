@@ -81,21 +81,21 @@ case "${should_set_key:-n}" in
       export ANTHROPIC_API_KEY="$api_key"
 
       info "Lagret ANTHROPIC_API_KEY i $rc_file"
-      echo "Nokkelen er lagret utenfor repoet, i hjemmekatalogen din."
-      warn "ANTHROPIC_API_KEY overstyrer vanlig Claude-login nar den er aktiv."
-      echo "Apne et nytt terminalvindu eller kjor:"
+      echo "Nøkkelen er lagret utenfor repoet, i hjemmekatalogen din."
+      warn "ANTHROPIC_API_KEY overstyrer vanlig Claude-login når den er aktiv."
+      echo "Åpne et nytt terminalvindu eller kjør:"
       echo "source \"$rc_file\""
     fi
     ;;
   *)
-    warn "API-nokkel ble ikke lagret. Du kan fortsatt logge inn ved a kjore 'claude'."
+    warn "API-nøkkel ble ikke lagret. Du kan fortsatt logge inn ved å kjøre 'claude'."
     ;;
 esac
 
 info "Ferdig"
 echo "Neste steg:"
 echo "1. Gå til prosjektmappen din"
-echo "2. Kjor 'claude'"
-echo "3. Hvis du bruker API-nokkel, godkjenn 'Use custom API key' ved behov"
+echo "2. Kjør 'claude'"
+echo "3. Hvis du bruker API-nøkkel, godkjenn 'Use custom API key' ved behov"
 echo
-warn "Ikke lagre API-nokler i filer i dette repoet, for eksempel .env, settings-filer eller notater."
+warn "Ikke lagre API-nøkler i filer i dette repoet, for eksempel .env, settings-filer eller notater."

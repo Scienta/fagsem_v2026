@@ -1,7 +1,6 @@
 # Program fagseminar 
 
 ## TLDR; 
-
 ### WIFI: scandic_easy
 
 Målet med denne helgen er å ekserimentere med språkmodeller. Under seminaret skal vi skrive kode, kanskje gjøre noen administrative oppgaver og skrive litt tekst. Poenget er å skrive minst mulig direkte, OG MEST MULIG VED HJELP AV SPRÅKMODELL.
@@ -72,4 +71,3 @@ Vi har delt inn i grupper a +-4 innenfor de temaene
 # slack 
 Hvis man lurer på noe kan spørsmålet stilles til Nils-Christian, Haakon eller Tobias, aller helst på slack så alle ser svaret. Vi bruker
 #fagseminar-v2026-program
-
