@@ -1,15 +1,15 @@
 # Oppsett av Claude Code
 
 Disse skriptene installerer Claude Code CLI og kan i tillegg lagre `ANTHROPIC_API_KEY`.
-Nokkelen lagres utenfor repoet:
+Nøkkelen lagres utenfor repoet:
 - pa macOS i shell-profilen i hjemmekatalogen, for eksempel `~/.zshrc`
-- pa Windows som bruker-miljovariabel
+- pa Windows som bruker-miljøvariabel
 
-Ikke legg API-nokler i filer i dette repoet.
+Ikke legg API-nøkler i filer i dette repoet.
 
 ## macOS
 
-Kjor:
+Kjør:
 
 ```bash
 bash setup/install-claude-code-macos.sh
@@ -17,14 +17,14 @@ bash setup/install-claude-code-macos.sh
 
 ## Windows PowerShell
 
-Kjor:
+Kjør:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\setup\install-claude-code-windows.ps1
 ```
 
 Windows-skriptet sjekker om Git for Windows finnes.
-Hvis det mangler, tilbyr skriptet a installere det med `winget`.
+Hvis det mangler, tilbyr skriptet å installere det med `winget`.
 
 Hvis maskinen ikke har `winget`, kan deltakeren enten:
 - installere Git for Windows manuelt fra `https://git-scm.com/download/win`
@@ -34,7 +34,7 @@ Hvis maskinen ikke har `winget`, kan deltakeren enten:
 
 Hvis `ANTHROPIC_API_KEY` er satt, vil Claude Code bruke den i stedet for vanlig Claude-login.
 
-Hvis du heller vil bruke Claude-abonnement og browser-login, lar du API-nokkelen vare tom og kjorer bare:
+Hvis du heller vil bruke Claude-abonnement og browser-login, lar du API-nøkkelen vare tom og kjører bare:
 
 ```bash
 claude
