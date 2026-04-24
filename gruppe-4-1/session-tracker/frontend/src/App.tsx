@@ -67,6 +67,11 @@ export default function App() {
 
   const groupById = Object.fromEntries(groups.map(g => [g.id, g]))
 
+  const groupsByTheme = groups.reduce<Record<string, Group[]>>((acc, group) => {
+    ;(acc[group.theme] ??= []).push(group)
+    return acc
+  }, {})
+
   return (
     <div style={{ fontFamily: 'sans-serif', maxWidth: 800, margin: '0 auto', padding: '1rem' }}>
       <h1>Fagdag Session Tracker</h1>
@@ -77,28 +82,35 @@ export default function App() {
         </div>
       )}
 
-      {/* Groups */}
+      {/* Groups by theme */}
       <section style={{ marginBottom: '2rem' }}>
         <h2>Grupper</h2>
         {groups.length === 0 ? (
           <p>Ingen grupper lastet (backend oppe?)</p>
         ) : (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {groups.map(group => {
-              const alreadyActive = activeSessions.some(s => s.groupId === group.id)
-              return (
-                <li key={group.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                  <span><strong>{group.name}</strong> — {group.theme}</span>
-                  <button
-                    onClick={() => handleStartSession(group.id)}
-                    disabled={alreadyActive}
-                  >
-                    {alreadyActive ? 'Aktiv' : 'Start sesjon'}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
+          Object.entries(groupsByTheme).map(([theme, themeGroups]) => (
+            <div key={theme} style={{ marginBottom: '1.25rem' }}>
+              <h3 style={{ margin: '0 0 0.5rem', fontSize: '0.95rem', color: '#555' }}>{theme}</h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {themeGroups.map(group => {
+                  const alreadyActive = activeSessions.some(s => s.groupId === group.id)
+                  return (
+                    <li key={group.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.4rem' }}>
+                      <span style={{ minWidth: 100 }}><strong>{group.name}</strong></span>
+                      <span style={{ color: '#777', fontSize: '0.85rem' }}>{group.members.join(', ')}</span>
+                      <button
+                        onClick={() => handleStartSession(group.id)}
+                        disabled={alreadyActive}
+                        style={{ marginLeft: 'auto' }}
+                      >
+                        {alreadyActive ? 'Aktiv' : 'Start sesjon'}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))
         )}
       </section>
 
