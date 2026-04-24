@@ -36,7 +36,28 @@ Erstatt `TODO()` med ekte logikk:
 - `PATCH /sessions/:id` med ukjent id → HTTP 404
 - `GET /findings` uten `?type=` returnerer alle funn
 
+## Tester
+
+Skriv integrasjonstester i `src/test/kotlin/no/scienta/sessiontracker/` med `@SpringBootTest` og MockMvc.
+Én testklasse per controller. Kjør med `./gradlew test`.
+
+**`GroupControllerTest`**
+- `GET /groups` returnerer 200 og ikke-tom liste
+- Hvert Group-objekt har `id`, `name`, `theme`, `members`
+
+**`SessionControllerTest`**
+- `POST /sessions` med gyldig `groupId` → 200, Session har server-generert `id` og `startedAt`
+- `PATCH /sessions/{id}` med `{"status":"DONE"}` → 200, status er DONE
+- `PATCH /sessions/{id}` med ukjent id → **404**
+
+**`FindingControllerTest`**
+- `POST /sessions/{id}/findings` med `text` og `type` → 200, Finding returnert
+- `GET /sessions/{id}/findings` → returnerer kun funn tilknyttet riktig sesjon
+- `GET /findings` uten parameter → returnerer alle funn
+- `GET /findings?type=BLOCKER` → returnerer kun BLOCKER-funn (ikke andre typer)
+
 ## Rapportering
 
 Når du er ferdig med en oppgave, merk den som `[x]` i **Oppgavestatus → Backend** i `../KOORDINERING.md`.
+Merk tilsvarende under **Tester – Backend** når testene er skrevet.
 Hvis du tar en beslutning som påvirker API-kontrakten, legg den til i **Beslutningslogg**.
