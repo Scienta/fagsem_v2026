@@ -138,3 +138,116 @@ Se `benchmarks/README.md` for full dokumentasjon.
       return reduced < aces
   ```
 - Tolkning / usikkerhet: Modellen trenger to ting samtidig for å lykkes: (1) algoritmen formulert som eksplisitt pseudokode (ikke beskrivelse av ønsket adferd), og (2) full kildekode som kontekst for å unngå API-hallusinering. Ingen av delene alene er tilstrekkelig.
+
+---
+
+### Oppføring 5 – qwen3.6: Steg 1 – Forstå koden
+
+- Forfatter: Bartas Venckus
+- Tidspunkt: 2026-04-24
+- Hva ble testet: qwen3.6:latest bedt om å forklare Hand-klassen og ess-logikken
+- Betingelse / variant: card.py + hand.py gitt som kontekst, norsk prompt, num_ctx=8192, think=false
+- Maskin: PC2 – Razer Blade 16 (AMD Ryzen AI 9 365, 20 tråder, 63.1 GB RAM, RTX 5080 16 GB VRAM)
+- Resultat / observasjon: **Korrekt og detaljert forklaring.** Ess-logikken (reduksjon 11→1 ved bust) forklart nøyaktig med konkrete talleksempler. Inkluderte spontant emoji-overskrifter og gjennomarbeidede tall-eksempler som Ess+Ess+9=21.
+- Måling / eksempel: 140s veggklokke | ~1996 tokens | ~14,7 tok/s gen
+- Tolkning / usikkerhet: Kvalitativt bedre og mer detaljert enn llama3.1:8b (41s), men betydelig tregere. qwen3.6 er en reasoning-modell; selv med think=false genererer den lange, gjennomarbeidede svar.
+
+---
+
+### Oppføring 6 – qwen3.6: Kontekstvindu-problem ved kode-generering
+
+- Forfatter: Bartas Venckus
+- Tidspunkt: 2026-04-24
+- Hva ble testet: qwen3.6:latest med thinking aktivert (standard) på implementasjonsoppgaven
+- Betingelse / variant: card.py + hand.py som kontekst, num_ctx=4096 og 8192, num_predict=-1
+- Resultat / observasjon: **Tomt svar ved thinking-modus.** Med num_ctx=4096: 2000 tokens generert, response-feltet tomt (kontekstvinduet fullt under thinking-fasen). Med num_ctx=8192: 7435 tokens generert, 759 prompt + 7435 gen = 8194 ≈ 8192 – igjen tomt svar (thinking fyller hele vinduet). Modellen tenker i `<think>`-tokens som teller mot kontekstbudsjettet men er usynlige for brukeren.
+- Måling / eksempel: 461s veggklokke | 7435 tokens gen | 16,6 tok/s | thinking=22114 tegn | CPU peak 64% | RSS peak 11 741 MB
+- Tolkning / usikkerhet: qwen3.6 er en MoE-reasoning-modell (qwen35moe, 262K kontekstlengde). Thinking-prosessen kan bruke mange tusen tokens. Med for lite num_ctx når den aldri frem til å skrive selve svaret. **Løsning: bruk think=false via chat-API for kode-oppgaver, eller sett num_ctx≥32768.**
+
+---
+
+### Oppføring 7 – qwen3.6: Vellykket implementasjon med think=false
+
+- Forfatter: Bartas Venckus
+- Tidspunkt: 2026-04-24
+- Hva ble testet: qwen3.6:latest med think=false (chat-API) på Oppgave 1
+- Betingelse / variant: card.py + hand.py som kontekst, chat-API, think=false, num_ctx=8192, num_predict=-1
+- Maskin: PC2 – Rocinante (AMD Ryzen AI 9 365, 20 tråder, 63.1 GB RAM, RTX 5080 16 GB VRAM)
+- Resultat / observasjon: **Korrekt implementasjon produsert.** Modellen returnerte full hand.py med riktig `is_soft`. Koden inkluderte mange inline-kommentarer som viste resonneringssteget (bortimot et "thinking på papir"). Den endelige logikken `non_ace_sum + 11 + (num_aces - 1) <= 21` er **matematisk korrekt** og håndterer multi-ess-kanttilfeller (Ess+Ess+10 = False, Ess+Ess+9 = True). Alle 30 tester (24 eksisterende + 6 nye is_soft-tester) grønne.
+  ```python
+  @property
+  def is_soft(self) -> bool:
+      non_ace_sum = sum(card.rank.points for card in self._cards if card.rank != Rank.ACE)
+      num_aces = sum(1 for card in self._cards if card.rank == Rank.ACE)
+      if num_aces == 0:
+          return False
+      return non_ace_sum + 11 + (num_aces - 1) <= 21
+  ```
+- Måling / eksempel:
+  **Maling** (2026-04-24 16:48:47, "qwen3.6:latest – oppgave 1 (is_soft)"):
+  - Maskin: Rocinante — AMD Ryzen AI 9 365 w/ Radeon 880M, 20 tråder, 63.1 GB RAM
+  - Modell: qwen3.6:latest (think=false, chat-API)
+  - Veggklokke: 132.7 s
+  - Prompt-tokens: 761 | Genererte tokens: 2329
+  - Gen-tokens/sek: 18.19 | E2E-tokens/sek: 17.55
+  - CPU (mean/peak): 0.4% / 6.1% | RSS peak: 162 MB (ollama.exe prosess; modellvekter i GPU/RAM-offload)
+- Tolkning / usikkerhet: Med think=false leverer qwen3.6 korrekt kode på én kjøring, uten iterasjon. llama3.1:8b trengte 4 forsøk og eksplisitt pseudokode for å nå samme resultat. Avveining: qwen3.6 er 3–4× tregere (133s vs ~14s), men mer robust. think=false er nødvendig for praktisk bruk – thinking-modus gjør modellen ubrukelig for kode-oppgaver uten num_ctx≥32768.
+- Kode-endring (`demo/blackjack/hand.py`):
+  ```diff
+   @property
+   def is_blackjack(self) -> bool:
+       return len(self._cards) == 2 and self.value == 21
+
+  +@property
+  +def is_soft(self) -> bool:
+  +    non_ace_sum = sum(card.rank.points for card in self._cards if card.rank != Rank.ACE)
+  +    num_aces = sum(1 for card in self._cards if card.rank == Rank.ACE)
+  +    if num_aces == 0:
+  +        return False
+  +    return non_ace_sum + 11 + (num_aces - 1) <= 21
+  +
+   def __str__(self) -> str:
+  ```
+
+---
+
+### Oppføring 8 – qwen3.6: Spillet oppdatert og spillbart
+
+- Forfatter: Bartas Venckus
+- Tidspunkt: 2026-04-24
+- Hva ble gjort: Soft/hard-visning lagt til i main.py, 6 is_soft-tester lagt til i test_hand.py. 30 tester grønne.
+- Kode-endring (`demo/blackjack/main.py`):
+  ```diff
+  -from .game import Game, MIN_BET
+  +from .game import Game, MIN_BET
+  +from .hand import Hand
+  +
+  +
+  +def _hand_label(hand: Hand) -> str:
+  +    qualifier = "soft" if hand.is_soft else "hard"
+  +    return f"{qualifier} {hand.value}"
+  
+  
+   def main():
+  ...
+  -    print(f"\nDine kort:    {game.player_hand}  ({game.player_hand.value})")
+  -    print(f"Dealer viser: {game.dealer_hand._cards[0]}  [skjult]")
+  +    print(f"\nDine kort:    {game.player_hand}  ({_hand_label(game.player_hand)})")
+  +    print(f"Dealer viser: {game.dealer_hand._cards[0]}  [skjult]")
+  ...
+  -                    print(f"Dine kort: {game.player_hand}  ({game.player_hand.value})")
+  +                    print(f"Dine kort: {game.player_hand}  ({_hand_label(game.player_hand)})")
+  ...
+  -    print(f"\nDine kort:    {game.player_hand}  ({game.player_hand.value})")
+  -    print(f"Dealers kort: {game.dealer_hand}  ({game.dealer_hand.value})")
+  +    print(f"\nDine kort:    {game.player_hand}  ({_hand_label(game.player_hand)})")
+  +    print(f"Dealers kort: {game.dealer_hand}  ({_hand_label(game.dealer_hand)})")
+  ```
+- Eksempel på output under spill:
+  ```
+  Dine kort:    A♠  6♥  (soft 17)
+  Dealer viser: K♠  [skjult]
+
+  [h]it / [s]tand: h
+  Dine kort: A♠  6♥  3♣  (hard 20)
+  ```
