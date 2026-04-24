@@ -65,7 +65,7 @@ Finding {
 
 ### Frontend
 - [x] Hent og vis grupper fra `GET /api/groups`
-- [ ] Hent og vis sesjoner fra `GET /api/sessions` (polling hvert 5s — erstatter lokal state)
+- [x] Hent og vis sesjoner fra `GET /api/sessions` (polling hvert 5s — erstatter lokal state)
 - [x] Hent og vis live funn-feed fra `GET /api/findings` (polling hvert 5s)
 - [x] Mulighet til å starte sesjon for en gruppe (POST)
 - [x] Mulighet til å logge funn i en sesjon (POST)

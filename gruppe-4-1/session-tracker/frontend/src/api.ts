@@ -33,6 +33,11 @@ export const api = {
       body: JSON.stringify({ text, type }),
     }),
 
+  getSessions: (status?: 'ACTIVE' | 'DONE'): Promise<Session[]> => {
+    const query = status ? `?status=${status}` : ''
+    return request(`/sessions${query}`)
+  },
+
   getFindings: (type?: FindingType): Promise<Finding[]> => {
     const query = type ? `?type=${type}` : ''
     return request(`/findings${query}`)

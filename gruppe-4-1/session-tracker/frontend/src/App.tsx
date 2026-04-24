@@ -225,7 +225,8 @@ export default function App() {
   const [findingText, setFindingText] = useState<Record<string, string>>({})
   const [findingType, setFindingType] = useState<Record<string, FindingType>>({})
 
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const sessionsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const findingsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     api.getGroups()
@@ -233,21 +234,31 @@ export default function App() {
       .catch(() => setError('Klarte ikke hente grupper fra backend'))
   }, [])
 
+  const fetchSessions = () => {
+    api.getSessions('ACTIVE').then(setSessions).catch(() => {})
+  }
+
+  useEffect(() => {
+    fetchSessions()
+    sessionsIntervalRef.current = setInterval(fetchSessions, POLL_INTERVAL_MS)
+    return () => { if (sessionsIntervalRef.current) clearInterval(sessionsIntervalRef.current) }
+  }, [])
+
   useEffect(() => {
     const fetchFindings = () => {
       api.getFindings().then(setFindings).catch(() => {})
     }
     fetchFindings()
-    pollRef.current = setInterval(fetchFindings, POLL_INTERVAL_MS)
-    return () => { if (pollRef.current) clearInterval(pollRef.current) }
+    findingsIntervalRef.current = setInterval(fetchFindings, POLL_INTERVAL_MS)
+    return () => { if (findingsIntervalRef.current) clearInterval(findingsIntervalRef.current) }
   }, [])
 
   const activeSessions = sessions.filter(s => s.status === 'ACTIVE')
 
   async function handleStartSession(groupId: string) {
     try {
-      const session = await api.startSession(groupId)
-      setSessions(prev => [...prev, session])
+      await api.startSession(groupId)
+      fetchSessions()
     } catch {
       setError(`Klarte ikke starte sesjon for gruppe ${groupId}`)
     }
@@ -255,8 +266,8 @@ export default function App() {
 
   async function handleEndSession(id: string) {
     try {
-      const updated = await api.endSession(id)
-      setSessions(prev => prev.map(s => s.id === id ? updated : s))
+      await api.endSession(id)
+      fetchSessions()
     } catch {
       setError(`Klarte ikke avslutte sesjon ${id}`)
     }
