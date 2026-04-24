@@ -124,7 +124,6 @@ Se `benchmarks/README.md` for full dokumentasjon.
 - **Forsøk 2** – Norsk prompt, eksempler og hint om reduksjonslogikk: Feil algoritme. `total_aces == aces` alltid (alle ess har points=11), så returnerer alltid False.
 - **Forsøk 3** – Engelsk prompt, eksplisitt nummerert pseudokode, uten kildekode: Korrekt algoritme, men hallusinerte API (`card.point_value`, `self.cards`, `card.rank == 'Ace'`).
 - **Forsøk 4** – Engelsk prompt, eksplisitt pseudokode + full kildekode (card.py + hand.py): Korrekt algoritme OG korrekte attributtnavn. Alle 4 kanttilfeller passerte manuell verifisering, og alle 24 eksisterende tester forble grønne.
-
 - Måling / eksempel:
   ```python
   @property
@@ -251,3 +250,69 @@ Se `benchmarks/README.md` for full dokumentasjon.
   [h]it / [s]tand: h
   Dine kort: A♠  6♥  3♣  (hard 20)
   ```
+
+---
+
+### Oppføring 9 – Oppsett: kontekstvinduproblem med standard Ollama-konfigurasjon
+
+- Forfatter: Anders
+- Tidspunkt: 2026-04-24 ~15:20
+- Hva ble testet: qwen3:8b via `claude --model qwen3:8b` (agentarbeidsform, ende-til-ende)
+- Betingelse / variant: Standard Ollama-oppsett, ingen endringer i num_ctx
+- Resultat / observasjon: **Agenten hengte seg tilsynelatende.** Én forespørsel fullførte etter 2 min 37 sek, deretter ingen aktivitet. Ollamaloggen viste kritisk advarsel: `truncating input prompt limit=4096 prompt=27964 keep=4 new=4096` — prompten (kodebase + verktøyhistorikk) ble kuttet fra 27 964 til 4096 tokens. Modellen svarte uten nesten noe relevant kontekst.
+- Måling / eksempel: 1 forespørsel fullført på 2m37s. Effektiv kontekst: 4 av 27 964 tokens.
+- Tolkning / usikkerhet: Standard `num_ctx=4096` i Ollama er for lite for agentbruk. Claude Code bygger raskt opp kontekst (fillesing + verktøykall), og prompten vokser langt over 4096 tokens allerede i første runde. **Løsning: opprett modellvarianter med `num_ctx 32768` via `ollama create`** — dette deler eksisterende vekter (ingen nedlasting) og setter kun nytt manifest. Gjelder alle 4 modeller i eksperimentet.
+
+---
+
+### Oppføring 10 – Kontekstvekst-timeout: qwen3:8b-32k, multi-turn samtale
+
+- Forfatter: Anders (via Claude Code)
+- Tidspunkt: 2026-04-24
+- Hva ble testet: qwen3:8b-32k med multi-turn samtale (tre steg sendt som én voksende konversasjon)
+- Betingelse / variant: card.py + hand.py som kontekst, steg 1-svar lagt til historikken, deretter steg 2 kalt med full historikk. Timeout satt til 300s per kall.
+- Resultat / observasjon:
+  - **Steg 1 (forstå koden):** Fullførte på 288.8 sekunder. Korrekt og strukturert forklaring av Hand-klassen og ess-logikk.
+  - **Steg 2 (implementer is_soft):** Timeout etter 300s. Konteksten inneholdt nå step 1-svaret i tillegg — prompten vokste, og modellen rakk ikke å svare innen grensen.
+- Måling / eksempel: Steg 1: 288.8s. Steg 2: timeout >300s.
+- Tolkning / usikkerhet: Multi-turn samtale med akkumulert kontekst er for tregt på denne maskinvaren. Hvert steg tar lenger tid enn det forrige fordi promptlengden vokser. Konklusjon: **stateless kall per steg** (kun relevant kontekst per forespørsel) er nødvendig for praktisk bruk av qwen3:8b-32k lokalt.
+
+---
+
+### Oppføring 11 – qwen3:8b-32k, oppgave 1, stateless per steg
+
+- Forfatter: Anders (via Claude Code)
+- Tidspunkt: 2026-04-24
+- Hva ble testet: qwen3:8b-32k — oppgave 1 (is_soft-property), stateless API-kall per steg
+- Betingelse / variant: Tre uavhengige kall. Steg 1: card.py + hand.py + forklaringsprompt. Steg 2: kun hand.py + implementasjonsprompt. Steg 3: kun test_hand.py + testprompt. Ingen samtalehistorikk mellom steg. Timeout 600s per kall.
+- Resultat / observasjon:
+  - **Steg 1 (forstå koden):** Fullførte på 171.7 sekunder (raskere enn forrige kjøring fordi modellen allerede lå i RAM). Korrekt, strukturert forklaring med fem punkter — inkl. ess-justeringslogikken beskrevet riktig.
+  - **Steg 2 (implementer is_soft):** Timeout etter 600 sekunder. Modellen startet ikke å generere output innen fristen, selv med stateless kall og minimal kontekst (~300 tokens).
+  - **Forsøk med manuell "hello"-prompt etterpå:** Heller ikke dette svarte — bekrefter at modellen var fullstendig blokkert.
+- Måling / eksempel: Steg 1: 171.7s. Steg 2: timeout >600s. Manuell "hello": ingen respons.
+- Tolkning / usikkerhet:
+  - **Trolig årsak: RAM-press.** `qwen3:8b-32k` (10.2 GB) og `gemma4:latest` (10.5 GB) lå lastet samtidig = ~20 GB modell-RAM på en maskin med 32 GB totalt. En annen Claude Code-instans hadde aktivert begge modellene. Dette etterlater for lite minne til OS og generering, og fører til at inferens henger eller krasjer.
+  - **Konklusjon:** qwen3:8b-32k alene kan gjennomføre enkle forklaringsoppgaver, men er ekstremt treg (~170s per steg). Kodegenerering (steg 2) under RAM-press er ikke gjennomførbart. **32k kontekstvindus-konfigurasjonen er sannsynligvis for tung for CPU-only inferens med parallelle modeller.**
+
+---
+
+### Oppføring 12 – Oppsummering: qwen3:8b-32k, oppgave 1
+
+- Forfatter: Anders (via Claude Code)
+- Tidspunkt: 2026-04-24
+- Hva ble testet: Totalt tre kjøringsforsøk med qwen3:8b-32k på oppgave 1 (is_soft)
+- Betingelse / variant: Se oppføring 9–11 for detaljer
+- Resultat / observasjon:
+  - **Steg 1 (forstå koden) fullførte 2 av 3 ganger** — 288.8s og 171.7s. Svar var korrekt og strukturert begge ganger.
+  - **Steg 2 (implementere is_soft) fullførte aldri** — timeout i alle forsøk (300s og 600s).
+  - **Oppgaven ble ikke løst** — ingen `is_soft`-implementasjon eller tester ble produsert av modellen.
+- Måling / eksempel: Raskeste steg 1: 171.7s. Steg 2: aldri fullført (>600s).
+- Tolkning / usikkerhet:
+  - qwen3:8b-32k er **ikke brukbar for agentarbeidsform** på denne maskinvaren (ThinkPad T14 Gen 5, CPU-only).
+  - Forklaringsoppgaver (lese og beskrive kode) er mulig, men svært trege.
+  - Kodegenerering med 32k kontekstvindus er utenfor kapasiteten i praksis.
+  - **Neste steg:** Prøv `qwen3:8b` (standard 4096 token kontekstvindu) alene med svært korte prompts — eller bytt til `gpt-oss:20b` for å se om MoE-arkitektur gir bedre throughput.
+
+---
+
+### Oppføring
