@@ -12,6 +12,9 @@ Streik: Foreløpig ser det ut til at arrangementet går som planlagt, til tross 
 2) Ha tilgang til Scienta github 
 Spør tobiast om du lurer på noe eller trenger tilgang. 
 
+Hvis du vil bruke Claude Code, finnes det oppsettsskript og veiledning her:
+[Setup av Claude Code](./setup/README.md)
+
 ### PÅ fredag 24/4 må du: 
 - Møte opp kl 12:00 på https://www.scandichotels.com/no/hotell/scandic-holmenkollen-park. Lunsj i resturanten på bord reservert Scienta. 
 - Etter lunsj går vi til møterommet. Sett deg sammen med gruppa di (info lengre ned)
@@ -68,5 +71,4 @@ Vi har delt inn i grupper a +-4 innenfor de temaene
 # slack 
 Hvis man lurer på noe kan spørsmålet stilles til Nils-Christian, Haakon eller Tobias, aller helst på slack så alle ser svaret. Vi bruker
 #fagseminar-v2026-program
-
 
