@@ -79,7 +79,7 @@ Claude.
 
 #### Hva funket ikke
 
-Lokale modeller.
+Lokale små modeller (gemma4:8b og lignende) klarer ikke å benytte seg av verktøyene i Claude Code og OpenCode.
 
 #### Begrensninger
 
