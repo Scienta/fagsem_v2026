@@ -8,7 +8,7 @@ const TIMER_START = 30
 const URGENCY_THRESHOLD = 10
 
 interface Props {
-  onFinish: (score: number) => void
+  onFinish: (score: number, total: number) => void
 }
 
 export function MusicQuizPage({ onFinish }: Props) {
@@ -70,7 +70,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     const advance = setTimeout(() => {
       if (isLastQuestion) {
         const score = questions.filter((q, i) => answers[i] === q.correctArtist).length
-        onFinish(score)
+        onFinish(score, questions.length)
       } else {
         setCurrentIndex(prev => prev + 1)
       }
@@ -104,7 +104,7 @@ export function MusicQuizPage({ onFinish }: Props) {
   function handleNext() {
     if (isLastQuestion) {
       const score = questions.filter((q, i) => answers[i] === q.correctArtist).length
-      onFinish(score)
+      onFinish(score, questions.length)
     } else {
       setCurrentIndex(prev => prev + 1)
     }

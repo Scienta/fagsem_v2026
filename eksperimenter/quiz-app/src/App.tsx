@@ -5,7 +5,6 @@ import { QuizPage } from './QuizPage'
 import { MusicQuizPage } from './MusicQuizPage'
 import { ResultsPage } from './ResultsPage'
 import { questions } from './quiz/questions'
-import { musicQuestions } from './quiz/musicQuestions'
 
 type Page = 'lobby' | 'general-quiz' | 'music-quiz' | 'results'
 
@@ -27,7 +26,7 @@ function App() {
   }
   if (page === 'music-quiz') {
     return (
-      <MusicQuizPage onFinish={(s) => handleFinish(s, musicQuestions.length)} />
+      <MusicQuizPage onFinish={(s, total) => handleFinish(s, total)} />
     )
   }
   if (page === 'results') {
