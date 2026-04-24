@@ -45,6 +45,10 @@ Bruk denne filen til korte notater underveis i eksperimentet.
     - Skjema for å legge til / redigere oppskrifter (dynamiske ingrediens- og stegrader)
     - Bekreftelsesdialog ved sletting
     - Escape-tast lukker modaler
+  
+      ![forside](forside.png)
+  
+      ![oppskrift](oppskrift.png)
 - Måling / eksempel: 7m 57s · ↓ 33.8k tokens
 - Tolkning / usikkerhet:
 
