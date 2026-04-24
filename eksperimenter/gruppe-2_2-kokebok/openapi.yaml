@@ -1,0 +1,438 @@
+openapi: 3.0.3
+info:
+  title: Kokebok API
+  version: 1.0.0
+  description: REST API for kokebok-applikasjonen (oppskrifter, bilder og menyer)
+servers:
+  - url: http://localhost:8080
+    description: Lokal utviklingsserver
+
+tags:
+  - name: recipes
+    description: Oppskriftsbehandling
+  - name: images
+    description: Bildeopplasting
+  - name: menu
+    description: Menygenerering
+
+paths:
+  /api/recipes:
+    get:
+      tags: [recipes]
+      summary: Hent alle oppskrifter
+      operationId: getAllRecipes
+      responses:
+        '200':
+          description: Liste over alle oppskrifter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipeDto'
+    post:
+      tags: [recipes]
+      summary: Opprett ny oppskrift
+      operationId: createRecipe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeDto'
+      responses:
+        '201':
+          description: Oppskrift opprettet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/recipes/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags: [recipes]
+      summary: Hent oppskrift etter ID
+      operationId: getRecipeById
+      responses:
+        '200':
+          description: Oppskriften
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [recipes]
+      summary: Oppdater oppskrift
+      operationId: updateRecipe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeDto'
+      responses:
+        '200':
+          description: Oppdatert oppskrift
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDto'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [recipes]
+      summary: Slett oppskrift
+      operationId: deleteRecipe
+      responses:
+        '204':
+          description: Oppskrift slettet
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/recipes/search:
+    get:
+      tags: [recipes]
+      summary: Søk i oppskrifter
+      operationId: searchRecipes
+      parameters:
+        - name: q
+          in: query
+          description: Søketekst for tittel
+          schema:
+            type: string
+        - name: cuisine
+          in: query
+          description: Filtrer på kjøkken
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filtrer på kategori
+          schema:
+            $ref: '#/components/schemas/RecipeCategory'
+        - name: ingredient
+          in: query
+          description: Filtrer på ingrediensnavn
+          schema:
+            type: string
+        - name: flavors
+          in: query
+          description: Filtrer på smaksetiketter (kan angis flere ganger)
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/FlavorTag'
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: Søkeresultater
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipeDto'
+
+  /api/recipes/categories:
+    get:
+      tags: [recipes]
+      summary: Hent alle kategorier
+      operationId: getCategories
+      responses:
+        '200':
+          description: Liste over kategorier
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipeCategory'
+
+  /api/recipes/flavors:
+    get:
+      tags: [recipes]
+      summary: Hent alle smaksetiketter
+      operationId: getFlavors
+      responses:
+        '200':
+          description: Liste over smaksetiketter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlavorTag'
+
+  /api/recipes/cuisines:
+    get:
+      tags: [recipes]
+      summary: Hent alle kjøkken
+      operationId: getCuisines
+      responses:
+        '200':
+          description: Liste over kjøkken
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /api/images/upload:
+    post:
+      tags: [images]
+      summary: Last opp bilde
+      operationId: uploadImage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Bildefil (maks 10 MB, kun image/*)
+      responses:
+        '200':
+          description: Bilde lastet opp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                    example: "550e8400-e29b-41d4-a716-446655440000.jpg"
+                  url:
+                    type: string
+                    example: "/images/550e8400-e29b-41d4-a716-446655440000.jpg"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /images/{filename}:
+    get:
+      tags: [images]
+      summary: Hent opplastet bilde
+      operationId: getImage
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Bildefilen
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/menu/suggest:
+    get:
+      tags: [menu]
+      summary: Foreslå en meny automatisk
+      operationId: suggestMenu
+      responses:
+        '200':
+          description: Foreslått meny (kategori → oppskrift)
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RecipeDto'
+                example:
+                  FORRETT:
+                    id: 1
+                    title: "Bruschetta"
+                  HOVEDRETT:
+                    id: 5
+                    title: "Pasta Carbonara"
+
+  /api/menu/build:
+    post:
+      tags: [menu]
+      summary: Bygg egendefinert meny
+      operationId: buildMenu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuRequest'
+      responses:
+        '200':
+          description: Bygget meny
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  schemas:
+    RecipeCategory:
+      type: string
+      enum: [FORRETT, HOVEDRETT, DESSERT, SNACK, DRIKKE]
+      description: "FORRETT=Forrett, HOVEDRETT=Hovedrett, DESSERT=Dessert, SNACK=Snack, DRIKKE=Drikke"
+
+    FlavorTag:
+      type: string
+      enum: [SPICY, SWEET, SOUR, SALTY, UMAMI, BITTER, MILD]
+
+    IngredientDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        sortOrder:
+          type: integer
+        name:
+          type: string
+          example: "Hvitløk"
+        quantity:
+          type: number
+          example: 2.5
+        unit:
+          type: string
+          example: "stk"
+
+    RecipeStepDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        stepNumber:
+          type: integer
+        instruction:
+          type: string
+          example: "Finhakk hvitløken og stek i olje til den er gyllen."
+
+    RecipeDto:
+      type: object
+      required: [title, category]
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        title:
+          type: string
+          example: "Pasta Carbonara"
+        description:
+          type: string
+          example: "Klassisk italiensk pastarett med egg, ost og pancetta."
+        cuisine:
+          type: string
+          example: "Italiensk"
+        category:
+          $ref: '#/components/schemas/RecipeCategory'
+        flavorTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlavorTag'
+          uniqueItems: true
+        prepTimeMinutes:
+          type: integer
+          example: 15
+        cookTimeMinutes:
+          type: integer
+          example: 20
+        servings:
+          type: integer
+          example: 4
+        imageFilename:
+          type: string
+          example: "550e8400-e29b-41d4-a716-446655440000.jpg"
+        imageUrl:
+          type: string
+          readOnly: true
+          example: "/images/550e8400-e29b-41d4-a716-446655440000.jpg"
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/IngredientDto'
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeStepDto'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    MenuRequest:
+      type: object
+      description: Kart over kategori → oppskrift-ID
+      properties:
+        categorySelections:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+          example:
+            FORRETT: 1
+            HOVEDRETT: 5
+            DESSERT: 10
+
+    MenuResponse:
+      type: object
+      properties:
+        dishes:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeDto'
+        totalTimeMinutes:
+          type: integer
+          example: 65
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Ressurs ikke funnet"
+
+  responses:
+    NotFound:
+      description: Ressurs ikke funnet
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Ugyldig forespørsel
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
