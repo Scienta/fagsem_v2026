@@ -79,6 +79,7 @@ ThemeStats {
 - [x] In-memory storage (ConcurrentHashMap per ressurstype)
 - [x] Returnerer 404 med beskjed ved ukjent id
 - [x] `StatsController` – `GET /stats` som returnerer aggregerte ThemeStats per tema
+- [ ] Bytt til H2-database med filpersistens via Spring Data JPA (erstatter ConcurrentHashMap)
 
 ### Frontend
 - [x] Hent og vis grupper fra `GET /api/groups`
@@ -136,6 +137,7 @@ ThemeStats {
 | 2026-04-24 | Legg til `GET /sessions?status=` — frontend poller dette i stedet for lokal state | Sesjoner må synkroniseres på tvers av flere frontend-klienter mot samme backend |
 | 2026-04-24 | Legg til `GET /stats` med ThemeStats-aggregering per tema | Fasilitatorene trenger oversikt over aktivitet på tvers av temaer |
 | 2026-04-24 | TDD-rekkefølge: testeragenten skriver tester for stats FØR backend og frontend implementerer | Sikrer at implementasjonen er testet fra start |
+| 2026-04-24 | Bytt ConcurrentHashMap med H2 filbasert database via Spring Data JPA | Data skal overleve restart; H2 valgt fremfor PostgreSQL for å unngå Docker-avhengighet |
 
 ---
 
