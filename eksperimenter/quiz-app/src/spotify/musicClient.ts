@@ -15,6 +15,14 @@ const SEARCH_TERMS = [
   'dance hits',
   'soul classics',
   'classic rock',
+  '80s rock hits',
+  '80s metal hits',
+  'heavy metal 80s',
+  'hair metal 80s',
+  'hard rock 80s',
+  'glam metal',
+  'thrash metal classics',
+  '80s arena rock',
 ]
 
 export interface QuizQuestion {
