@@ -200,6 +200,10 @@ export function MusicQuizPage({ onFinish }: Props) {
           ))}
         </div>
 
+        {isAnswered && roundScores[currentIndex] > 0 && (
+          <p className="points-badge">+{roundScores[currentIndex].toLocaleString('nb-NO')} poeng</p>
+        )}
+
         {isAnswered && !timedOut && (
           <button type="button" className="next-button" onClick={handleNext}>
             {isLastQuestion ? 'Se resultat' : 'Neste spørsmål'}
