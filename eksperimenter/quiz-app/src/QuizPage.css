@@ -24,26 +24,23 @@
   font-size: 0.9rem;
 }
 
-.timer {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #c4b5fd;
-  font-variant-numeric: tabular-nums;
-  min-width: 3.5rem;
-  text-align: right;
-  transition: color 0.3s;
+.timer-bar-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 6px;
 }
 
-.timer--urgent {
-  color: #ef4444;
-  font-size: 2rem;
-  text-shadow: 0 0 16px rgba(239, 68, 68, 0.7);
-  animation: timer-pulse 0.6s ease-in-out infinite;
+.timer-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  border-radius: 9999px;
+  transition: width 1s linear, background 0.5s;
 }
 
-@keyframes timer-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.18); }
+.timer-bar--urgent {
+  background: linear-gradient(90deg, #ef4444, #f87171);
 }
 
 .progress-bar {

@@ -134,12 +134,15 @@ export function MusicQuizPage({ onFinish }: Props) {
           <span className="quiz-counter">
             Spørsmål {currentIndex + 1} av {questions.length}
           </span>
-          <span className={`timer${isUrgent ? ' timer--urgent' : ''}`}>
-            {timeLeft}s
-          </span>
         </div>
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+        <div className="timer-bar-track">
+          <div
+            className={`timer-bar${isUrgent ? ' timer-bar--urgent' : ''}`}
+            style={{ width: `${(timeLeft / TIMER_START) * 100}%` }}
+          />
         </div>
       </div>
 
