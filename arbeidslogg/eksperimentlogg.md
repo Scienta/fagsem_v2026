@@ -113,12 +113,28 @@ Se `benchmarks/README.md` for full dokumentasjon.
 
 ---
 
-### Oppføring
+### Oppføring 4 – Prompt-iterasjon: is_soft med justerte prompts
 
-- Forfatter: <!-- Anders Kvernberg / Bartas Venckus / Thomas Gran -->
-- Tidspunkt:
-- Hva ble testet:
-- Betingelse / variant:
-- Resultat / observasjon:
+- Forfatter: Thomas Gran
+- Tidspunkt: 2026-04-24
+- Hva ble testet: Gjentatt forsøk på å få llama3.1:8b til å implementere `is_soft` korrekt, med progressivt justerte prompts
+- Betingelse / variant: Fire forsøk via Ollama REST API
+
+- **Forsøk 1** – Norsk prompt, fri beskrivelse, hand.py som kontekst: Feil algoritme. `card.rank.points > 10` sjekker alle kort, ikke bare ess som teller som 11. Returnerer True når som helst det er et ess.
+- **Forsøk 2** – Norsk prompt, eksempler og hint om reduksjonslogikk: Feil algoritme. `total_aces == aces` alltid (alle ess har points=11), så returnerer alltid False.
+- **Forsøk 3** – Engelsk prompt, eksplisitt nummerert pseudokode, uten kildekode: Korrekt algoritme, men hallusinerte API (`card.point_value`, `self.cards`, `card.rank == 'Ace'`).
+- **Forsøk 4** – Engelsk prompt, eksplisitt pseudokode + full kildekode (card.py + hand.py): Korrekt algoritme OG korrekte attributtnavn. Alle 4 kanttilfeller passerte manuell verifisering, og alle 24 eksisterende tester forble grønne.
+
 - Måling / eksempel:
-- Tolkning / usikkerhet:
+  ```python
+  @property
+  def is_soft(self) -> bool:
+      total = sum(card.rank.points for card in self._cards)
+      aces = sum(1 for card in self._cards if card.rank == Rank.ACE)
+      reduced = 0
+      while total > 21 and reduced < aces:
+          total -= 10
+          reduced += 1
+      return reduced < aces
+  ```
+- Tolkning / usikkerhet: Modellen trenger to ting samtidig for å lykkes: (1) algoritmen formulert som eksplisitt pseudokode (ikke beskrivelse av ønsket adferd), og (2) full kildekode som kontekst for å unngå API-hallusinering. Ingen av delene alene er tilstrekkelig.
