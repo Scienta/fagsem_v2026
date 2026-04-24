@@ -35,5 +35,5 @@ class GroupController {
 
     // GET /groups - list all groups
     @GetMapping
-    fun listGroups(): List<Group> = groups.values.toList()
+    fun listGroups(): List<Group> = groups.values.sortedBy { it.name }
 }
