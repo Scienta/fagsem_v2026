@@ -63,8 +63,7 @@ Vi har delt inn i grupper a +-4 innenfor de temaene
 4.1 Are Fossli Viberg, Maria Selivanova 
 
 ## Personlig assistent 
-5.1 Stian Meuche, Nina Olsen, Vibeke Corneliussen \
-5.2 Hege Leite Størvold, Cathrine Dannevig 
+5.1  Nina Olsen, Vibeke Corneliussen, Stian Meuche,Hege Leite Størvold, Cathrine Dannevig 
 
 # slack 
 Hvis man lurer på noe kan spørsmålet stilles til Nils-Christian, Haakon eller Tobias, aller helst på slack så alle ser svaret. Vi bruker
