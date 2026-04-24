@@ -8,7 +8,7 @@ Målet er å få hands-on erfaring med hvordan man best kan jobbe sammen med en 
 **Hypotese:** Mer kontekst, tydeligere føringer og repo-spesifikke regler gir bedre resultat enn en løs bestilling.
 
 **Gjennomføring:**  
-Velg en liten oppgave i demo-repoet og løs den i 2–3 varianter:
+Velg en liten oppgave (Forslag her: https://github.com/Scienta/fagsem_v2026/blob/main/eksperimenter/applikasjonsforslag_fagseminar.md) og løs den i 2–3 varianter:
 - minimal instruksjon
 - mer kontekst og tydeligere mål
 - med `Claude.md`, repo-guide eller eksplisitte regler for struktur, test og kvalitet
