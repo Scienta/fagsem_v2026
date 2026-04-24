@@ -12,21 +12,21 @@ tema: ""
 
 ### 1. Gruppeinformasjon
 
-| Felt | Verdi |
-|---|---|
-| Gruppenummer | *(nummer)* |
-| Deltakere | *(navn)* |
-| Tema | *(f.eks. Tema 1 – Utvikler + agent i praksis)* |
-| Dato(er) for eksperiment | *(dato)* |
-| Verktøy/modeller brukt | *(f.eks. Claude Code, Copilot, Cursor, ChatGPT, lokal modell)* |
-| Repo / kodebase / case brukt | *(lenke eller beskrivelse)* |
+| Felt | Verdi                                                          |
+|---|----------------------------------------------------------------|
+| Gruppenummer | 2.2                                                            |
+| Deltakere | Espen Skjæran, Steinar Haug, Jan-Erik Bergmann                 |
+| Tema | Tema 2 – AI assistert systemutvikling                          |
+| Dato(er) for eksperiment | 24.4.2026                                                      |
+| Verktøy/modeller brukt | Claude Code |
+| Repo / kodebase / case brukt | *(lenke eller beskrivelse)*                                    |
 
 ---
 
 ### 2. Valgt problemstilling
 
 **Forskningsspørsmål:**
-*(Skriv inn det dere undersøker)*
+Ressursbruk og løsning med og uten planning
 
 **Hypotese:**
 *(Hva tror dere svaret er - før dere begynner?)*
@@ -41,14 +41,16 @@ tema: ""
 #### Betingelser
 *(Minst to betingelser for sammenligning dersom det passer for eksperimentet)*
 
-| Betingelse | Beskrivelse |
-|---|---|
-| A - Baseline | *(beskriv)* |
-| B - Variant | *(beskriv)* |
+| Betingelse   | Beskrivelse                                        |
+|--------------|----------------------------------------------------|
+| A - Baseline | Kokebok app med kort prompt og default claude valg |
+| B - Variant  | Kokebok app med detaljert spek inkl. teknologivalg |
+| C - Variant  | Kokebok app med detaljert spek og plan             |
+ 
 
 #### Målemetoder
 *(Hvordan vurderte dere resultater? Tidsbruk, kvalitet, antall feil, brukbarhet, læring, o.l.)*
-
+Tid, tokens og kost
 ---
 
 ### 4. Resultater
