@@ -9,8 +9,8 @@ const io = new Server(httpServer, { cors: { origin: '*' } });
 app.use(express.static('public'));
 
 const players = new Map();
-let nextPlayerNumber = 1;
 const PLAYER_COLORS = { 1: 0xe74c3c, 2: 0x3498db, 3: 0x2ecc71, 4: 0xf39c12 };
+const MAX_PLAYERS = 4;
 
 let currentLevel     = 0;
 let transitioning    = false;
@@ -18,14 +18,28 @@ let deadGoombas      = new Set();
 let collectedCoins   = new Set();
 let collectedMushrooms = new Set();
 
+function nextAvailableSlot() {
+  const used = new Set([...players.values()].map(p => p.playerNumber));
+  for (let n = 1; n <= MAX_PLAYERS; n++) {
+    if (!used.has(n)) return n;
+  }
+  return null;
+}
+
 io.on('connection', (socket) => {
-  if (players.size >= 4) {
+  if (players.size >= MAX_PLAYERS) {
     socket.emit('server_full');
     socket.disconnect();
     return;
   }
 
-  const playerNumber = nextPlayerNumber++;
+  const playerNumber = nextAvailableSlot();
+  if (!playerNumber) {
+    socket.emit('server_full');
+    socket.disconnect();
+    return;
+  }
+
   const spawnX = 60 + (playerNumber - 1) * 100;
 
   const player = {
