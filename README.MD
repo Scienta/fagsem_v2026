@@ -43,27 +43,28 @@ Vi har utarbeidet en felles rapportmalen for alle tema / tema. Dette forenkler v
 Vi har delt inn i grupper a +-4 innenfor de temaene 
 
 ## Utvikler + agent i praksis
-1.1 Christian Darre-Winsnes, Oskar Otterskog, Knut-Helge Vik, Sindre Mehus
-1.2 Runar Opsahl, Espen Myklevoll, Fred Inge Henden, Per Spilling
-1.3 Vegard Angell, Felix Rabe, Rune Storløpa, Rafael Winterhalter
-1.4 Roy Grønmo, André Aubert, Eirik Maus, Are Gravbrøt
-1.5 Erlend Kraft, Filip Egge, Asbjørn Willersrud, Julian Jark
+1.1 Christian Darre-Winsnes, Oskar Otterskog, Knut-Helge Vik, Sindre Mehus \
+1.2 Runar Opsahl, Espen Myklevoll, Fred Inge Henden, Per Spilling \
+1.3 Vegard Angell, Felix Rabe, Rune Storløpa, Rafael Winterhalter \
+1.4 Roy Grønmo, André Aubert, Eirik Maus, Are Gravbrøt \
+1.5 Erlend Kraft, Filip Egge, Asbjørn Willersrud, Julian Jark \
 
 ## AI-assistert systemutvikling
-2.1 Fredrik Meyer,  Ingvild Hardeng, Stein Grimstad
-2.2 Steinar Johan Haug, Jan-Erik Bergmann,
+2.1 Fredrik Meyer,  Ingvild Hardeng, Stein Grimstad \
+2.2 Steinar Johan Haug, Jan-Erik Bergmann \
+2.3 Haakon, Nils-Christian, tobiast
 
 ## Lokal LLM i praksis
-3.1 Trygve Laugstøl, Marius Krabset, Erlend Nossum, Georg F. Persen
-3.2 Daniel Bakkelund, kjetil, Johan Hauan, Hakon Kvernes
-3.3 Thomas Gran, Anders Kvernberg, Bartas Venckus
+3.1 Trygve Laugstøl, Marius Krabset, Erlend Nossum, Georg F. Persen \
+3.2 Daniel Bakkelund, kjetil, Johan Hauan, Hakon Kvernes \
+3.3 Thomas Gran, Anders Kvernberg, Bartas Venckus \
 
-## Flere parallelle kodeagenter
-4.1 Are Fossli Viberg, Maria Selivanova
+## Flere parallelle kodeagenter \
+4.1 Are Fossli Viberg, Maria Selivanova \
 
-## Personlig assistent
-5.1 Stian Meuche, Nina Olsen, Vibeke Corneliussen
-5.2 Hege Leite Størvold, Cathrine Dannevig
+## Personlig assistent 
+5.1 Stian Meuche, Nina Olsen, Vibeke Corneliussen \
+5.2 Hege Leite Størvold, Cathrine Dannevig \
 
 # slack 
 Hvis man lurer på noe kan spørsmålet stilles til Nils-Christian, Haakon eller Tobias, aller helst på slack så alle ser svaret. Vi bruker
