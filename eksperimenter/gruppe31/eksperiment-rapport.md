@@ -9,14 +9,10 @@ Vi utførte kloning og grundig analyse av mcalert-prosjektet. Dette innebar å s
 
 ### III. Funn og Resultater (Findings and Results)
 #### 🔍 Kildedata og Funn:
-[Oppsummer de viktigste observasjonene her. For eksempel: "Vi observerte at mcalert effektivt identifiserer hvilke komponenter som rapporterer feil, selv når Prometheus-dataene er komplekse."]
-
-#### ⏱️ Ytelse og Query-tid:
-| Scenario | Forespørselstype | Gjennomsnittlig tid | Kommentar |
-| :--- | :--- | :--- | :--- |
-| Feilhåndtering | [Eksempel: KubeControllerManager] | [Sett inn tidsforbruk] | [Kommentar om hvor raskt feilen ble fanget.] |
-| Normal drift | Hver endpoint | [Sett inn tidsforbruk] | Generelt rask respons. |
+*   `mcalert` effektivt identifiserer hvilke komponenter som rapporterer feil, selv når Prometheus-dataene er komplekse.
+*   **Plattformytelse:** Ollama på Mac presterer vesentlig bedre enn på Linux under lignende belastninger.
+*   **Modellkonsistens:** Vi observerte at den samme språkmodellen oppfører seg forskjellig avhengig av plattform, noe som kan indikere en konfigurasjonsavhengighet.
 
 **Konklusjon:**
-[Oppsummer en kort konklusjon. For eksempel: "Eksperimentet viser at mcalert er et robust og brukervennlig verktøy for å gi umiddelbar oversikt over operasjonell stabilitet i store systemer."]
+Konklusjon: OpenCode er dårlig på konklusjoner
 ###############
