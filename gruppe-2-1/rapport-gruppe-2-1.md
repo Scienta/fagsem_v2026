@@ -140,6 +140,52 @@ PO tok alle vesentlige produktbeslutninger gjennom dialogen:
 
 ---
 
-## 6. Konklusjon
+## 6. Sesjon 2 – PO alene med Claude Code (uten utvikler)
+
+### Kontekst
+
+Etter at sesjon 1 ble gjennomført med Nils-Christian som utvikler, fortsatte Stein (PO) på egen hånd i en ny Claude Code-sesjon — uten utvikler til stede. Dette var ikke planlagt som en egen betingelse, men ble en naturlig videreføring av eksperimentet med et nytt spørsmål: *Kan PO bruke Claude Code direkte, uten en teknisk person som buffer?*
+
+Alle endringer i denne sesjonen ble gjort av PO selv, i dialog med Claude Code.
+
+### Oppsett og tekniske barrierer
+
+PO kjørte `./setup.sh` for å installere avhengigheter. Dette skapte umiddelbart friksjon:
+
+- macOS 12.7 støttes ikke av nyere Homebrew-formulas. Homebrew ble installert, men `brew install node` feilet med feilmelding om manglende støtte.
+- Løsning: Claude Code forklarte at Node.js måtte installeres direkte fra nodejs.org som `.pkg`-fil. PO klarte dette uten teknisk hjelp.
+- Safari klarte ikke koble til `localhost:5173`. Claude Code forklarte problemet og foreslo å bruke `127.0.0.1:5173` eller Chrome. PO brukte Chrome.
+
+**Observasjon:** Teknisk oppsett var en reell barriere. PO stilte spørsmål som "er Node et Ruby-program?" — noe som viser at det tekniske fundamentet var ukjent. Likevel løste PO begge problemer innen ~10 minutter med veiledet hjelp.
+
+### Nye features lagt til av PO
+
+| PO-feedback | Endring | Kommentar |
+|---|---|---|
+| "Ønsker mulighet til å gi instruksjoner ifbm. rewrite" | Globalt instruksjonsfelt lagt til i action bar | Claude tolket dette som ett felles felt for alle poster |
+| "Jeg ønsker å gi instruksjoner til den enkelte posten" | Feltet ble flyttet til hvert enkelt post-item | PO korrigerte implementasjonen — den første tolkningen var feil |
+| "Kan du lage mulighet til å eksportere en post?" | "Export post"-knapp per post, laster ned individuell ZIP | Ny funksjon i `export-zip.js` + knapp i `ExportPostItem` |
+
+### Nye observasjoner
+
+**PO oppdaget og korrigerte feil tolkning.** Da Claude Code la inn et globalt instruksjonsfelt (for alle poster samlet), sa PO "jeg ønsker å gi instruksjoner til den *enkelte* posten" — og fikk det rettet umiddelbart. PO trengte ikke forstå koden for å se at løsningen ikke matchet behovet.
+
+**PO kommuniserte på norsk gjennom hele sesjonen.** Claude Code responderte på norsk og tolket krav presist uten misforståelser knyttet til språk.
+
+**Uten utvikler: ingen teknisk buffer, men fungerte likevel.** I sesjon 1 var Nils-Christian til stede og kunne fange opp tvetydigheter. I sesjon 2 var PO alene. Resultatet var to velfungerende features og én korrigert feiltolkning — uten at PO måtte skrive en linje kode.
+
+**Iterasjonshastighet opprettholdt.** Fra "kan du lage mulighet til å eksportere en post?" til fungerende knapp i UI: under 5 minutter.
+
+### Begrensninger i sesjon 2
+
+- PO testet ikke den nye funksjonaliteten i nettleseren (kun bekreftet av kodeendringer).
+- Ingen commits ble gjort i denne sesjonen — endringene ligger som ucommitted changes.
+- Teknisk oppsett (Node.js-installasjon) tok uforholdsmessig lang tid relativt til selve feature-arbeidet.
+
+---
+
+## 7. Konklusjon
 
 En ikke-teknisk PO kan effektivt styre spesifikasjon og utvikling av en komplett applikasjon gjennom strukturert dialog med Claude Code — fra idé til fungerende produkt på ~2 timer. Nøklene er flervalg-spørsmål som senker terskelen, seksjonvis validering som gir kontroll, og rask iterasjon på ekte data som avslører reelle problemer. Den største risikoen er antakelser som ikke verifiseres mot virkeligheten (i vårt tilfelle: dataformatet).
+
+Sesjon 2 utvider konklusjonen: en PO kan også arbeide *direkte* med Claude Code uten utvikler som buffer, forutsatt at teknisk oppsett er på plass. PO evnet å oppdage og korrigere feiltolkninger, kommunisere krav presist på naturlig språk, og iterere på funksjonalitet i eget tempo. Den viktigste nye observasjonen er at terskelen for *selvstendig bruk* er lavere enn antatt — men at teknisk oppsett (installasjon, miljø) fortsatt er den primære barrieren for en ikke-teknisk bruker.
