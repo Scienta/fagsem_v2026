@@ -85,6 +85,37 @@ Forventet av agenten:
 
 ---
 
+## Oppgave 4 – Åpen (real-world issue)
+
+**Implementer Early Pruning-optimalisering for RAPTOR transfer relaxation i OpenTripPlanner.**
+
+Issue: [opentripplanner/OpenTripPlanner#7470](https://github.com/opentripplanner/OpenTripPlanner/issues/7470)
+Paper: https://arxiv.org/abs/2603.12592
+
+RAPTOR itererer over alle utgående transfer-kanter fra hvert oppdatert stopp. Ved tette grafer (lang max transfer-tid) dominerer dette query-tiden. Early Pruning kutter unødvendige iterasjoner ved å sortere kanter etter varighet og avbryte tidlig.
+
+**Hva som skal implementeres:**
+- **Preprocessing:** Sorter utgående transfer-kanter per stopp i ikke-synkende rekkefølge på varighet (én gang ved graph build)
+- **Query-time pruning:** Under transfer relaxation, avbryt loopen når `ankomsttid_ved_stopp + transfer_varighet ≥ beste_ankomsttid_til_destinasjon`
+- Gjelder både Standard RAPTOR (ankomsttid) og McRAPTOR
+- Systemparameter `otp.raptor.earlyPruning` (aktivert som standard)
+
+**Forventet gevinst:** 14–21% raskere transit-spørringer ved 30–90 min max transfer.
+
+Forventet av agenten:
+- Les og forstå RAPTOR transfer relaxation-koden i OTP
+- Foreslå hvor sortering og pruning skal legges til
+- Implementer endringene
+- Verifiser at eksisterende tester passerer
+
+**Hva dere observerer:**
+- Klarer modellen å navigere en stor, ukjent Java-kodebase?
+- Forstår den algoritmen godt nok til å plassere endringene riktig?
+- Hvor mye kontekst må gis manuelt?
+- Begynner flyten å svikte — og hvor?
+
+---
+
 ## Tips til gjennomføring
 
 - Kjør én oppgave av gangen
