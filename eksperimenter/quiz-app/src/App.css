@@ -129,3 +129,34 @@
   background: rgba(167, 139, 250, 0.1);
   box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
 }
+
+/* ── Lobby themes ─────────────────────────────────────────── */
+.lobby.theme-pop    { background: linear-gradient(135deg, #4a0060 0%, #c2185b 50%, #4a0060 100%); }
+.lobby.theme-pop    .lobby-title    { background: linear-gradient(135deg, #f472b6, #fbbf24); -webkit-background-clip: text; background-clip: text; }
+.lobby.theme-pop    .lobby-tagline,
+.lobby.theme-pop    .lobby-genre-label { color: #fbcfe8; }
+.lobby.theme-pop    .lobby-start    { background: linear-gradient(135deg, #be185d, #db2777); box-shadow: 0 4px 20px rgba(190,24,93,0.4); }
+
+.lobby.theme-rock   { background: linear-gradient(135deg, #1c0000 0%, #991b1b 50%, #1c0000 100%); }
+.lobby.theme-rock   .lobby-title    { background: linear-gradient(135deg, #f87171, #fb923c); -webkit-background-clip: text; background-clip: text; }
+.lobby.theme-rock   .lobby-tagline,
+.lobby.theme-rock   .lobby-genre-label { color: #fca5a5; }
+.lobby.theme-rock   .lobby-start    { background: linear-gradient(135deg, #b91c1c, #7f1d1d); box-shadow: 0 4px 20px rgba(185,28,28,0.4); }
+
+.lobby.theme-metal  { background: linear-gradient(135deg, #050505 0%, #1f1f1f 50%, #050505 100%); }
+.lobby.theme-metal  .lobby-title    { background: linear-gradient(135deg, #9ca3af, #e5e7eb); -webkit-background-clip: text; background-clip: text; }
+.lobby.theme-metal  .lobby-tagline,
+.lobby.theme-metal  .lobby-genre-label { color: #d1d5db; }
+.lobby.theme-metal  .lobby-start    { background: linear-gradient(135deg, #374151, #1f2937); box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+
+.lobby.theme-hiphop { background: linear-gradient(135deg, #0a0a0a 0%, #1c1600 50%, #0a0a0a 100%); }
+.lobby.theme-hiphop .lobby-title    { background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; background-clip: text; }
+.lobby.theme-hiphop .lobby-tagline,
+.lobby.theme-hiphop .lobby-genre-label { color: #fde68a; }
+.lobby.theme-hiphop .lobby-start    { background: linear-gradient(135deg, #92400e, #78350f); box-shadow: 0 4px 20px rgba(146,64,14,0.4); }
+
+.lobby.theme-rnb    { background: linear-gradient(135deg, #150020 0%, #5b21b6 50%, #150020 100%); }
+.lobby.theme-rnb    .lobby-title    { background: linear-gradient(135deg, #c084fc, #f0abfc); -webkit-background-clip: text; background-clip: text; }
+.lobby.theme-rnb    .lobby-tagline,
+.lobby.theme-rnb    .lobby-genre-label { color: #e9d5ff; }
+.lobby.theme-rnb    .lobby-start    { background: linear-gradient(135deg, #7e22ce, #6d28d9); box-shadow: 0 4px 20px rgba(126,34,206,0.4); }

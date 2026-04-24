@@ -13,9 +13,10 @@ const MIN_QUESTION_SCORE = 1000
 interface Props {
   genre: Genre
   onFinish: (score: number, total: number) => void
+  onQuit: () => void
 }
 
-export function MusicQuizPage({ genre, onFinish }: Props) {
+export function MusicQuizPage({ genre, onFinish, onQuit }: Props) {
   const { theme, terms } = GENRES[genre]
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [isGenerating, setIsGenerating] = useState(true)
@@ -165,6 +166,9 @@ export function MusicQuizPage({ genre, onFinish }: Props) {
     <main className={`quiz${themeClass}`}>
       <div className="quiz-progress">
         <div className="quiz-progress-header">
+          <button type="button" className="quit-button" onClick={onQuit}>
+            Avslutt
+          </button>
           <span className="quiz-counter">
             Spørsmål {currentIndex + 1} av {questions.length}
           </span>

@@ -20,7 +20,7 @@ function App() {
   }
 
   if (page === 'music-quiz') {
-    return <MusicQuizPage genre={genre} onFinish={(s, t) => handleFinish(s, t)} />
+    return <MusicQuizPage genre={genre} onFinish={(s, t) => handleFinish(s, t)} onQuit={() => setPage('lobby')} />
   }
   if (page === 'results') {
     return (

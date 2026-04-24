@@ -8,8 +8,10 @@ interface Props {
 export function LobbyPage({ onStart }: Props) {
   const [selectedGenre, setSelectedGenre] = useState<Genre>('mixed')
 
+  const theme = GENRES[selectedGenre].theme
+
   return (
-    <main className="lobby">
+    <main className={`lobby${theme ? ` ${theme}` : ''}`}>
       <div className="lobby-card">
         <span className="lobby-icon" aria-hidden="true">⚡</span>
         <h1 className="lobby-title">Øreprøven</h1>
