@@ -29,12 +29,12 @@
   background-size: cover;
   background-position: center;
   transform: scale(1.1);
-  animation: album-reveal 20s linear forwards;
+  animation: album-reveal 20s ease-in forwards;
 }
 
 @keyframes album-reveal {
-  0%, 50%  { filter: blur(20px); }
-  100%     { filter: blur(0px); }
+  0%   { filter: blur(20px); }
+  100% { filter: blur(0px); }
 }
 
 .audio-overlay {
