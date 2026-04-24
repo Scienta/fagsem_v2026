@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { api } from './api'
 
@@ -19,15 +19,10 @@ const mockApi = vi.mocked(api)
 
 describe('App', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
     mockApi.getGroups.mockResolvedValue([])
     mockApi.getFindings.mockResolvedValue([])
     mockApi.getSessions.mockResolvedValue([])
     mockApi.getStats.mockResolvedValue([])
-  })
-
-  afterEach(() => {
-    vi.useRealTimers()
   })
 
   it('viser "Ingen aktive sesjoner." når sesjons-listen er tom', async () => {
