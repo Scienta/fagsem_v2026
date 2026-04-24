@@ -79,7 +79,7 @@ ThemeStats {
 - [x] In-memory storage (ConcurrentHashMap per ressurstype)
 - [x] Returnerer 404 med beskjed ved ukjent id
 - [x] `StatsController` – `GET /stats` som returnerer aggregerte ThemeStats per tema
-- [ ] Bytt til H2-database med filpersistens via Spring Data JPA (erstatter ConcurrentHashMap)
+- [x] Bytt til H2-database med filpersistens via Spring Data JPA (erstatter ConcurrentHashMap)
 
 ### Frontend
 - [x] Hent og vis grupper fra `GET /api/groups`
