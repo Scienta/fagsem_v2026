@@ -69,3 +69,44 @@ Vegard er kontrollbetingelse: samme erfaringsnivå som Rune, men annet verktøy 
 - Gruppens vurdering: verktøyvalg forklarer ikke forskjellen – Vegard beskriver det som sin naturlige måte å tenke på, ikke et bevisst metodisk valg
 
 ---
+
+## Eksperiment 2 – Multisnake: 19 modeller, samme prompt
+
+### Oppsett – 2026-04-24
+
+- Prompt: *"Create a single self-contained HTML file with a fully playable Snake game."*
+- Verktøy: OpenCode med GitHub Copilot provider, kjørt parallelt via `run-all-models.sh`
+- 19 modeller testet: Claude (haiku/opus/sonnet, ulike versjoner), GPT-5.x, Gemini 2.5/3.x, Grok
+- Repo: `Gruppe_1_3/felix-multisnake/`
+
+### Resultater
+
+- 16/19 produserte spillbare spill
+- 2 feilet helt (gpt-4.1, gpt-4o – ingen `index.html`)
+- 1 ødelagt (grok-code-fast-1 – øyeblikkelig game over pga. self-collision bug)
+
+**Standouts:**
+
+| Kategori | Modell | Begrunnelse |
+|---|---|---|
+| Mest polert | gpt-5.2 | 841 linjer, ARIA, auto-pause, DPR-aware canvas |
+| Beste arkitektur | claude-opus-4.7 | State machine, rAF, pause, keyboard hints |
+| Mest kompakt | claude-opus-4.6 | 124 linjer, fullt spillbar |
+| Raskest | gemini-3-flash-preview | 27 sekunder |
+| Mest unik | gpt-5.2-codex | Wrap-around vegger, "Neon Serpent"-branding |
+
+### Viktige observasjoner
+
+- Modellene klustrer i tydelige stilgrupper – tyder på delt treningsdata eller felles mønstre
+- claude-sonnet-4 og sonnet-4.5 er nesten identiske (samme farger, samme bug)
+- GPT-5.x-familien deler arkitektur (rAF + localStorage) på tvers av varianter
+- Eldre GPT-modeller (4.1, 4o) feilet – klarte ikke å produsere output
+- Tokenbruk varierer mye: Gemini bruker mange input-tokens, Claude bruker cache effektivt
+
+### Tolkning
+
+- Samme enkle prompt gir svært ulike resultater på tvers av modeller
+- Snake som oppgave er kompleks nok til å skille modellene – i motsetning til eks. 1 der alle kom i mål likt
+- Verktøy/infrastruktur (OpenCode) fungerte godt for parallell kjøring
+
+---
