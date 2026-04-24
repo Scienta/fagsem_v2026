@@ -5,16 +5,16 @@ const SPOTIFY_API = 'https://api.spotify.com/v1'
 const ITUNES_API = 'https://itunes.apple.com/search'
 
 const SEARCH_QUERIES = [
-  'year:2020-2024 genre:pop',
-  'year:2015-2020 genre:pop',
-  'year:2010-2015 genre:pop',
-  'year:2000-2010 genre:pop',
-  'genre:rock',
-  'genre:hip-hop',
-  'genre:r-n-b',
-  'genre:indie',
-  'genre:dance',
-  'genre:soul',
+  'pop hits 2023',
+  'pop hits 2020',
+  'pop hits 2015',
+  'pop hits 2010',
+  'rock classics',
+  'hip hop hits',
+  'rnb hits',
+  'indie hits',
+  'dance hits',
+  'soul classics',
 ]
 
 export interface QuizQuestion {
@@ -48,7 +48,7 @@ interface SpotifyTrack {
 }
 
 async function searchTracks(query: string, token: string): Promise<SpotifyTrack[]> {
-  const params = new URLSearchParams({ q: query, type: 'track', limit: '50' })
+  const params = new URLSearchParams({ q: query, type: 'track', limit: '20' })
   const response = await fetch(`${SPOTIFY_API}/search?${params}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
