@@ -4,13 +4,13 @@ Basert på nåværende implementasjon – hva som gjenstår for å ligne origina
 
 ## Høy prioritet (kjerne-mekanikk)
 
-- [ ] **Spørsmålsblokker (? blokker)** – slås fra under, gir mynt eller power-up
+- [x] **Spørsmålsblokker (? blokker)** – slås fra under, gir mynt eller power-up
 - [ ] **Mursteinsblokker** – kan knuses av stor Mario, bumpes av liten
-- [ ] **Rør (grønne pipes)** – hindringer og plattformer
+- [x] **Rør (grønne pipes)** – hindringer og plattformer
 - [ ] **Koopa Troopa** – skilpadde-fiende som kan trampes til skall og sparkes
 - [ ] **Ildblomst (fire flower)** – andre power-up, gir evne til å skyte ildkuler
-- [ ] **Livssystem** – 3 liv, game over-skjerm ved tap av alle
-- [ ] **Nedtellingstimer** – per brett, tidsbonus ved flagg
+- [x] **Livssystem** – 3 liv, game over-skjerm ved tap av alle
+- [x] **Nedtellingstimer** – per brett, tidsbonus ved flagg
 
 ## Middels prioritet (autentisitet)
 
