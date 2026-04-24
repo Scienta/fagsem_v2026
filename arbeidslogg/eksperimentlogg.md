@@ -25,12 +25,13 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 
 ### Oppføring
 
-- Tidspunkt: 13:45
-- Hva ble testet:
-- Betingelse / variant:
-- Resultat / observasjon:
-- Måling / eksempel:
-- Tolkning / usikkerhet:
+- Tidspunkt: 14:15
+- Hva ble testet: Feeder kravspekk til Claude - genererer app
+- Betingelse / variant: Uten plan
+- Resultat / observasjon: Claude genererte komplett kodebase (74 filer) i én sekvens uten steg-for-steg-bekreftelser
+- Måling / eksempel: Backend: Spring Boot 3.3 + Flyway + JPA Specification. Frontend: React 19 + Vite + Tailwind. Full CRUD + bildeupload + menybygger + søk med debounce.
+- Tolkning / usikkerhet: Koden er ikke kjørt ennå – krever MySQL og `mvn`/`npm install`. Mulig det dukker opp kompileringsfeil ved første oppstart.
+- Brukte 14m 45s på oppgaven,  3703 lines, 2.84$
 
 ---
 
