@@ -36,3 +36,17 @@ Hold denne filen oppdatert underveis i arbeidet.
   - Respawn med kortvarig uovervinnelighet ved berøring av Goomba eller fall utenfor skjermen
   - Server sporer `deadGoombas` og `collectedCoins` for korrekt initialstate for nye spillere
 - **Lærte:** Deterministisk klient-simulering av fiender (alle klienter kjører samme AI) fungerer godt på LAN. Krever kun synkronisering av hendelser (fiende drept, mynt samlet), ikke løpende posisjoner for fiendene.
+
+### 2026-04-24 – 5 brett implementert
+
+- **Testet:** Utvidelse med 5 ulike brett og niveau-overgang via flagg
+- **Variant:** Flagg på høyre side, første spiller som treffer flagg trigger overgang for alle
+- **Hva skjedde:**
+  - Lagt til `LEVELS`-array med 5 brett: World 1-1 (lett) til World 1-5 (veldig vanskelig)
+  - Hvert brett har unikt bakgrunnsfarge, plattform-farger, layout, goombas og mynter
+  - Flagg tegnet med Phaser Graphics (stang + grønn flagg), trigger `flag_reached`-event til server
+  - Server håndterer overgang: nullstiller dead goombas/collected coins, sender `level_change` til alle klienter
+  - Klientene river ned og bygger opp nytt brett uten å laste siden på nytt
+  - `_destroyLevelObjects()` og `_addPlayerColliders()` rydder opp Phaser physics korrekt mellom brett
+  - Win-screen etter siste brett med total poengsum
+- **Lærte:** Dynamisk nivå-lasting i Phaser 3 krever eksplisitt sporring av colliders slik at de kan fjernes. `group.clear(true, true)` + `group.destroy()` er riktig måte å fullstendig rydde opp physics-grupper.

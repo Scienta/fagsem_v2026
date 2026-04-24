@@ -12,8 +12,10 @@ const players = new Map();
 let nextPlayerNumber = 1;
 const PLAYER_COLORS = { 1: 0xe74c3c, 2: 0x3498db, 3: 0x2ecc71, 4: 0xf39c12 };
 
-const deadGoombas = new Set();
-const collectedCoins = new Set();
+let currentLevel = 0;
+let transitioning = false;
+let deadGoombas = new Set();
+let collectedCoins = new Set();
 
 io.on('connection', (socket) => {
   if (players.size >= 4) {
@@ -23,14 +25,14 @@ io.on('connection', (socket) => {
   }
 
   const playerNumber = nextPlayerNumber++;
-  const spawnX = 100 + (playerNumber - 1) * 120;
+  const spawnX = 60 + (playerNumber - 1) * 100;
 
   const player = {
     id: socket.id,
     playerNumber,
     color: PLAYER_COLORS[playerNumber],
     x: spawnX,
-    y: 400,
+    y: 350,
     velocityX: 0,
     velocityY: 0,
     facing: 1
@@ -42,6 +44,7 @@ io.on('connection', (socket) => {
   socket.emit('init', {
     self: player,
     existingPlayers: [...players.values()].filter(p => p.id !== socket.id),
+    currentLevel,
     deadGoombas: [...deadGoombas],
     collectedCoins: [...collectedCoins]
   });
@@ -63,6 +66,23 @@ io.on('connection', (socket) => {
   socket.on('coin_collected', ({ id }) => {
     collectedCoins.add(id);
     socket.broadcast.emit('coin_collected', { id });
+  });
+
+  socket.on('flag_reached', () => {
+    if (transitioning) return;
+    transitioning = true;
+    deadGoombas = new Set();
+    collectedCoins = new Set();
+
+    if (currentLevel >= 4) {
+      io.emit('game_won');
+    } else {
+      currentLevel++;
+      console.log(`Advancing to level ${currentLevel}`);
+      io.emit('level_change', { level: currentLevel });
+    }
+
+    setTimeout(() => { transitioning = false; }, 2000);
   });
 
   socket.on('disconnect', () => {
