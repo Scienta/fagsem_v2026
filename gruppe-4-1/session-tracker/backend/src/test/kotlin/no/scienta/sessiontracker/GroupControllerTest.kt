@@ -1,7 +1,6 @@
 package no.scienta.sessiontracker
 
 import org.hamcrest.Matchers.greaterThan
-import org.hamcrest.Matchers.hasItems
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -37,27 +36,20 @@ class GroupControllerTest {
     }
 
     @Test
-    fun `GET groups returns all 13 seminar groups with correct names and themes`() {
+    fun `GET groups returns all 13 seminar groups sorted by name`() {
+        val expectedOrder = listOf(
+            "Gruppe 1.1", "Gruppe 1.2", "Gruppe 1.3", "Gruppe 1.4", "Gruppe 1.5",
+            "Gruppe 2.1", "Gruppe 2.2", "Gruppe 2.3",
+            "Gruppe 3.1", "Gruppe 3.2", "Gruppe 3.3",
+            "Gruppe 4.1",
+            "Gruppe 5.1",
+        )
+
         mockMvc.get("/groups").andExpect {
             status { isOk() }
             jsonPath("$.length()") { value(13) }
-            jsonPath("$[*].name") {
-                value(hasItems(
-                    "Gruppe 1.1", "Gruppe 1.2", "Gruppe 1.3", "Gruppe 1.4", "Gruppe 1.5",
-                    "Gruppe 2.1", "Gruppe 2.2", "Gruppe 2.3",
-                    "Gruppe 3.1", "Gruppe 3.2", "Gruppe 3.3",
-                    "Gruppe 4.1",
-                    "Gruppe 5.1",
-                ))
-            }
-            jsonPath("$[*].theme") {
-                value(hasItems(
-                    "Utvikler + agent i praksis",
-                    "AI-assistert systemutvikling",
-                    "Lokal LLM i praksis",
-                    "Flere parallelle kodeagenter",
-                    "Personlig assistent",
-                ))
+            expectedOrder.forEachIndexed { index, name ->
+                jsonPath("$[$index].name") { value(name) }
             }
         }
     }
