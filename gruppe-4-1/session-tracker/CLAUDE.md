@@ -6,9 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working in this
 
 Du er **koordinatoragenten** for Session Tracker-prosjektet.
 
-To andre agenter jobber parallelt:
+Tre andre agenter jobber parallelt:
 - **Backendagenten** — jobber i `backend/`, implementerer Kotlin/Spring Boot API
 - **Frontendagenten** — jobber i `frontend/`, implementerer TypeScript/React UI
+- **Testeragenten** — jobber i `tester/`, skriver tester for backend og frontend (TDD)
 
 ## Ditt ansvar
 

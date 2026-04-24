@@ -44,31 +44,10 @@ Backend kjører på port **8080** — Vite er konfigurert til å proxiere `/api`
 
 ## Tester
 
-Installer testavhengigheter og skriv tester med Vitest + Testing Library.
-Legg testfiler ved siden av komponentene (`App.test.tsx` e.l.). Kjør med `npm test`.
-
-Legg til i `package.json` hvis det mangler:
-```json
-"devDependencies": {
-  "vitest": "^2",
-  "@testing-library/react": "^16",
-  "@testing-library/jest-dom": "^6",
-  "@testing-library/user-event": "^14",
-  "jsdom": "^25"
-}
-```
-
-**`App.test.tsx`**
-- Viser "No active sessions" når sesjons-listen er tom
-- Rendrer gruppenavn når grupper er lastet (mock fetch)
-- Viser funn-type og tekst i feed (mock fetch)
-
-**API-kall**
-- Alle fetch-kall bruker `/api/...`-prefiks — ikke hardkodet port eller hostname
-- Request body for `POST /api/sessions` inneholder ikke `id` eller `startedAt`
+Testfiler skrives av **testeragenten** — ikke opprett testfiler selv.
+Din jobb er å implementere koden slik at testeragentens tester blir grønne.
 
 ## Rapportering
 
 Når du er ferdig med en oppgave, merk den som `[x]` i **Oppgavestatus → Frontend** i `../KOORDINERING.md`.
-Merk tilsvarende under **Tester – Frontend** når testene er skrevet.
 Hvis du tar en beslutning som påvirker API-kontrakten, legg den til i **Beslutningslogg**.
