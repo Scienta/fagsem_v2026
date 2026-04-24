@@ -4,7 +4,7 @@ tema: ""
 
 # Felles rapportmal
 
-> **Til gruppen:** Velg tema og eksperiment fra filene i `/eksperimenter`. Fyll ut alle seksjoner. Det strukturerte sammendraget nederst (YAML-blokken) kan brukes av en språkmodell for å lage felles presentasjon.
+> **Til gruppen:** Velg tema og eksperiment fra filene i `/eksperimenter`. Fyll ut alle seksjoner. 
 
 ---
 
@@ -72,23 +72,3 @@ tema: ""
 *(1-3 setninger: hva er det viktigste dere lærte?)*
 
 ---
-
-### 7. Strukturert sammendrag *(behandles av språkmodell)*
-
-> Fyll ut feltene nøyaktig. Bruk korte, faktaorienterte formuleringer.
-
-```yaml
-gruppe: ""
-tema: ""
-forskningsspørsmål: ""
-hypotese: ""
-metode_kort: ""
-hovedfunn:
-  - ""
-  - ""
-  - ""
-hypotese_bekreftet: ""   # "ja" / "nei" / "delvis"
-konklusjon_en_setning: ""
-overraskende_funn: ""
-anbefaling: ""
-```
