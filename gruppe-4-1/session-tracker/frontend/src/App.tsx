@@ -5,13 +5,223 @@ import { Finding, FindingType, Group, Session } from './types/api'
 const FINDING_TYPES: FindingType[] = ['OBSERVATION', 'RESULT', 'BLOCKER']
 const POLL_INTERVAL_MS = 5000
 
+const THEME_COLORS: Record<string, { bg: string; border: string; badge: string }> = {
+  'Utvikler + agent i praksis':   { bg: '#eff6ff', border: '#3b82f6', badge: '#3b82f6' },
+  'AI-assistert systemutvikling': { bg: '#f0fdf4', border: '#22c55e', badge: '#22c55e' },
+  'Lokal LLM i praksis':          { bg: '#fdf4ff', border: '#a855f7', badge: '#a855f7' },
+  'Flere parallelle kodeagenter': { bg: '#fff7ed', border: '#f97316', badge: '#f97316' },
+  'Personlig assistent':          { bg: '#fff1f2', border: '#f43f5e', badge: '#f43f5e' },
+}
+
+const FINDING_STYLES: Record<FindingType, { bg: string; color: string; label: string }> = {
+  OBSERVATION: { bg: '#dbeafe', color: '#1d4ed8', label: 'Observasjon' },
+  RESULT:      { bg: '#dcfce7', color: '#15803d', label: 'Resultat'    },
+  BLOCKER:     { bg: '#fee2e2', color: '#b91c1c', label: 'Blocker'     },
+}
+
+const s = {
+  page: {
+    fontFamily: "'Segoe UI', system-ui, sans-serif",
+    minHeight: '100vh',
+    background: '#f8fafc',
+    color: '#1e293b',
+  } as React.CSSProperties,
+  header: {
+    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+    color: '#fff',
+    padding: '1.5rem 2rem',
+    marginBottom: '2rem',
+    boxShadow: '0 4px 12px rgba(99,102,241,0.3)',
+  } as React.CSSProperties,
+  headerTitle: {
+    margin: 0,
+    fontSize: '1.75rem',
+    fontWeight: 700,
+    letterSpacing: '-0.5px',
+  } as React.CSSProperties,
+  headerSub: {
+    margin: '0.25rem 0 0',
+    opacity: 0.8,
+    fontSize: '0.9rem',
+  } as React.CSSProperties,
+  content: {
+    maxWidth: 860,
+    margin: '0 auto',
+    padding: '0 1.5rem 3rem',
+  } as React.CSSProperties,
+  error: {
+    background: '#fee2e2',
+    border: '1px solid #fca5a5',
+    borderRadius: 8,
+    padding: '0.75rem 1rem',
+    marginBottom: '1.5rem',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    color: '#b91c1c',
+  } as React.CSSProperties,
+  sectionTitle: {
+    fontSize: '1.1rem',
+    fontWeight: 700,
+    color: '#475569',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.05em',
+    marginBottom: '1rem',
+    marginTop: 0,
+  } as React.CSSProperties,
+  card: {
+    background: '#fff',
+    borderRadius: 12,
+    boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+    padding: '1.25rem',
+    marginBottom: '1rem',
+  } as React.CSSProperties,
+  themeHeader: (color: string) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginBottom: '0.5rem',
+  } as React.CSSProperties),
+  themeDot: (color: string) => ({
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    background: color,
+    flexShrink: 0,
+  } as React.CSSProperties),
+  themeLabel: {
+    fontWeight: 600,
+    fontSize: '0.9rem',
+    color: '#334155',
+  } as React.CSSProperties,
+  groupRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.75rem',
+    padding: '0.4rem 0',
+    borderBottom: '1px solid #f1f5f9',
+  } as React.CSSProperties,
+  groupName: {
+    fontWeight: 600,
+    minWidth: 100,
+    fontSize: '0.9rem',
+  } as React.CSSProperties,
+  groupMembers: {
+    color: '#64748b',
+    fontSize: '0.82rem',
+    flex: 1,
+  } as React.CSSProperties,
+  btnPrimary: {
+    background: '#6366f1',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 6,
+    padding: '0.35rem 0.85rem',
+    fontSize: '0.82rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+  } as React.CSSProperties,
+  btnDisabled: {
+    background: '#e2e8f0',
+    color: '#94a3b8',
+    border: 'none',
+    borderRadius: 6,
+    padding: '0.35rem 0.85rem',
+    fontSize: '0.82rem',
+    fontWeight: 600,
+    cursor: 'default',
+  } as React.CSSProperties,
+  btnDanger: {
+    background: '#f43f5e',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 6,
+    padding: '0.35rem 0.85rem',
+    fontSize: '0.82rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+  } as React.CSSProperties,
+  btnSecondary: {
+    background: '#6366f1',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 6,
+    padding: '0.35rem 0.75rem',
+    fontSize: '0.82rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    whiteSpace: 'nowrap' as const,
+  } as React.CSSProperties,
+  sessionCard: (borderColor: string) => ({
+    background: '#fff',
+    borderRadius: 12,
+    boxShadow: '0 1px 4px rgba(0,0,0,0.07)',
+    borderLeft: `4px solid ${borderColor}`,
+    padding: '1rem 1.25rem',
+    marginBottom: '1rem',
+  } as React.CSSProperties),
+  sessionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '0.75rem',
+  } as React.CSSProperties,
+  sessionTitle: {
+    fontWeight: 700,
+    fontSize: '1rem',
+  } as React.CSSProperties,
+  sessionTime: {
+    fontSize: '0.8rem',
+    color: '#94a3b8',
+    marginLeft: '0.5rem',
+  } as React.CSSProperties,
+  findingInput: {
+    flex: 1,
+    padding: '0.4rem 0.75rem',
+    borderRadius: 6,
+    border: '1px solid #e2e8f0',
+    fontSize: '0.85rem',
+    outline: 'none',
+  } as React.CSSProperties,
+  findingSelect: {
+    padding: '0.4rem 0.5rem',
+    borderRadius: 6,
+    border: '1px solid #e2e8f0',
+    fontSize: '0.82rem',
+    background: '#f8fafc',
+  } as React.CSSProperties,
+  badge: (type: FindingType) => ({
+    display: 'inline-block',
+    fontSize: '0.7rem',
+    fontWeight: 700,
+    padding: '0.15rem 0.5rem',
+    borderRadius: 20,
+    marginRight: '0.5rem',
+    background: FINDING_STYLES[type].bg,
+    color: FINDING_STYLES[type].color,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.04em',
+  } as React.CSSProperties),
+  feedItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    padding: '0.6rem 0',
+    borderBottom: '1px solid #f1f5f9',
+    fontSize: '0.9rem',
+  } as React.CSSProperties,
+  emptyState: {
+    color: '#94a3b8',
+    fontStyle: 'italic',
+    fontSize: '0.9rem',
+  } as React.CSSProperties,
+}
+
 export default function App() {
   const [groups, setGroups] = useState<Group[]>([])
   const [sessions, setSessions] = useState<Session[]>([])
   const [findings, setFindings] = useState<Finding[]>([])
   const [error, setError] = useState<string | null>(null)
 
-  // Per-session finding form state
   const [findingText, setFindingText] = useState<Record<string, string>>({})
   const [findingType, setFindingType] = useState<Record<string, FindingType>>({})
 
@@ -73,116 +283,124 @@ export default function App() {
   }, {})
 
   return (
-    <div style={{ fontFamily: 'sans-serif', maxWidth: 800, margin: '0 auto', padding: '1rem' }}>
-      <h1>Fagdag Session Tracker</h1>
-
-      {error && (
-        <div style={{ background: '#fee', border: '1px solid #f00', padding: '0.5rem', marginBottom: '1rem' }}>
-          {error} <button onClick={() => setError(null)}>×</button>
+    <div style={s.page}>
+      {/* Header */}
+      <header style={s.header}>
+        <div style={{ maxWidth: 860, margin: '0 auto' }}>
+          <h1 style={s.headerTitle}>Fagdag Session Tracker</h1>
+          <p style={s.headerSub}>Scienta Fagseminar 2026 · live oppdatering hvert {POLL_INTERVAL_MS / 1000}s</p>
         </div>
-      )}
+      </header>
 
-      {/* Groups by theme */}
-      <section style={{ marginBottom: '2rem' }}>
-        <h2>Grupper</h2>
-        {groups.length === 0 ? (
-          <p>Ingen grupper lastet (backend oppe?)</p>
-        ) : (
-          Object.entries(groupsByTheme).map(([theme, themeGroups]) => (
-            <div key={theme} style={{ marginBottom: '1.25rem' }}>
-              <h3 style={{ margin: '0 0 0.5rem', fontSize: '0.95rem', color: '#555' }}>{theme}</h3>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                {themeGroups.map(group => {
-                  const alreadyActive = activeSessions.some(s => s.groupId === group.id)
-                  return (
-                    <li key={group.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.4rem' }}>
-                      <span style={{ minWidth: 100 }}><strong>{group.name}</strong></span>
-                      <span style={{ color: '#777', fontSize: '0.85rem' }}>{group.members.join(', ')}</span>
-                      <button
-                        onClick={() => handleStartSession(group.id)}
-                        disabled={alreadyActive}
-                        style={{ marginLeft: 'auto' }}
-                      >
-                        {alreadyActive ? 'Aktiv' : 'Start sesjon'}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-          ))
+      <div style={s.content}>
+        {error && (
+          <div style={s.error}>
+            <span>{error}</span>
+            <button onClick={() => setError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#b91c1c', fontSize: '1.1rem' }}>×</button>
+          </div>
         )}
-      </section>
 
-      {/* Active Sessions */}
-      <section style={{ marginBottom: '2rem' }}>
-        <h2>Aktive sesjoner</h2>
-        {activeSessions.length === 0 ? (
-          <p>Ingen aktive sesjoner.</p>
-        ) : (
-          activeSessions.map(session => {
-            const group = groupById[session.groupId]
-            return (
-              <div key={session.id} style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: 4 }}>
-                <strong>{group?.name ?? session.groupId}</strong>
-                {' — startet '}
-                {new Date(session.startedAt).toLocaleTimeString('no-NO')}
-                <button
-                  onClick={() => handleEndSession(session.id)}
-                  style={{ marginLeft: '1rem' }}
-                >
-                  Merk som ferdig
-                </button>
-
-                <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem' }}>
-                  <input
-                    type="text"
-                    placeholder="Logg et funn..."
-                    value={findingText[session.id] ?? ''}
-                    onChange={e => setFindingText(prev => ({ ...prev, [session.id]: e.target.value }))}
-                    onKeyDown={e => { if (e.key === 'Enter') handleLogFinding(session.id) }}
-                    style={{ flex: 1, padding: '0.25rem' }}
-                  />
-                  <select
-                    value={findingType[session.id] ?? 'OBSERVATION'}
-                    onChange={e => setFindingType(prev => ({ ...prev, [session.id]: e.target.value as FindingType }))}
-                  >
-                    {FINDING_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                  <button onClick={() => handleLogFinding(session.id)}>Logg</button>
+        {/* Groups by theme */}
+        <section style={{ marginBottom: '2.5rem' }}>
+          <h2 style={s.sectionTitle}>Grupper</h2>
+          {groups.length === 0 ? (
+            <p style={s.emptyState}>Ingen grupper lastet — er backend oppe?</p>
+          ) : (
+            Object.entries(groupsByTheme).map(([theme, themeGroups]) => {
+              const colors = THEME_COLORS[theme] ?? { bg: '#f8fafc', border: '#94a3b8', badge: '#94a3b8' }
+              return (
+                <div key={theme} style={{ ...s.card, background: colors.bg, borderTop: `3px solid ${colors.border}` }}>
+                  <div style={s.themeHeader(colors.border)}>
+                    <div style={s.themeDot(colors.border)} />
+                    <span style={s.themeLabel}>{theme}</span>
+                  </div>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {themeGroups.map((group, i) => {
+                      const alreadyActive = activeSessions.some(s => s.groupId === group.id)
+                      return (
+                        <li key={group.id} style={{ ...s.groupRow, borderBottom: i === themeGroups.length - 1 ? 'none' : '1px solid #e2e8f0' }}>
+                          <span style={s.groupName}>{group.name}</span>
+                          <span style={s.groupMembers}>{group.members.join(', ')}</span>
+                          <button
+                            onClick={() => handleStartSession(group.id)}
+                            disabled={alreadyActive}
+                            style={alreadyActive ? s.btnDisabled : { ...s.btnPrimary, background: colors.badge }}
+                          >
+                            {alreadyActive ? '✓ Aktiv' : 'Start sesjon'}
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
                 </div>
-              </div>
-            )
-          })
-        )}
-      </section>
+              )
+            })
+          )}
+        </section>
 
-      {/* Live Findings Feed */}
-      <section>
-        <h2>Live funn-feed</h2>
-        <p style={{ color: '#666', fontSize: '0.85rem' }}>Oppdateres hvert {POLL_INTERVAL_MS / 1000}. sekund</p>
-        {findings.length === 0 ? (
-          <p>Ingen funn ennå.</p>
-        ) : (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {findings.map(finding => (
-              <li key={finding.id} style={{ marginBottom: '0.4rem' }}>
-                <span style={{
-                  display: 'inline-block',
-                  fontSize: '0.75rem',
-                  padding: '0.1rem 0.4rem',
-                  borderRadius: 3,
-                  marginRight: '0.5rem',
-                  background: finding.type === 'BLOCKER' ? '#fdd' : finding.type === 'RESULT' ? '#dfd' : '#ddf',
-                }}>
-                  {finding.type}
-                </span>
-                {finding.text}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+        {/* Active Sessions */}
+        <section style={{ marginBottom: '2.5rem' }}>
+          <h2 style={s.sectionTitle}>Aktive sesjoner ({activeSessions.length})</h2>
+          {activeSessions.length === 0 ? (
+            <p style={s.emptyState}>Ingen aktive sesjoner.</p>
+          ) : (
+            activeSessions.map(session => {
+              const group = groupById[session.groupId]
+              const colors = group ? (THEME_COLORS[group.theme] ?? { border: '#6366f1' }) : { border: '#6366f1' }
+              return (
+                <div key={session.id} style={s.sessionCard(colors.border)}>
+                  <div style={s.sessionHeader}>
+                    <div>
+                      <span style={s.sessionTitle}>{group?.name ?? session.groupId}</span>
+                      <span style={s.sessionTime}>startet {new Date(session.startedAt).toLocaleTimeString('no-NO')}</span>
+                    </div>
+                    <button onClick={() => handleEndSession(session.id)} style={s.btnDanger}>
+                      Merk som ferdig
+                    </button>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                      type="text"
+                      placeholder="Logg et funn..."
+                      value={findingText[session.id] ?? ''}
+                      onChange={e => setFindingText(prev => ({ ...prev, [session.id]: e.target.value }))}
+                      onKeyDown={e => { if (e.key === 'Enter') handleLogFinding(session.id) }}
+                      style={s.findingInput}
+                    />
+                    <select
+                      value={findingType[session.id] ?? 'OBSERVATION'}
+                      onChange={e => setFindingType(prev => ({ ...prev, [session.id]: e.target.value as FindingType }))}
+                      style={s.findingSelect}
+                    >
+                      {FINDING_TYPES.map(t => <option key={t} value={t}>{FINDING_STYLES[t].label}</option>)}
+                    </select>
+                    <button onClick={() => handleLogFinding(session.id)} style={s.btnSecondary}>Logg</button>
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </section>
+
+        {/* Live Findings Feed */}
+        <section>
+          <h2 style={s.sectionTitle}>Live funn-feed ({findings.length})</h2>
+          <div style={s.card}>
+            {findings.length === 0 ? (
+              <p style={{ ...s.emptyState, margin: 0 }}>Ingen funn ennå.</p>
+            ) : (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {findings.map((finding, i) => (
+                  <li key={finding.id} style={{ ...s.feedItem, borderBottom: i === findings.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
+                    <span style={s.badge(finding.type)}>{FINDING_STYLES[finding.type].label}</span>
+                    <span>{finding.text}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+      </div>
     </div>
   )
 }
