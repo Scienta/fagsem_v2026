@@ -1,57 +1,57 @@
 export interface MusicQuestion {
-  spotifyTrackId: string
+  searchQuery: string
   correctArtist: string
   options: string[]
 }
 
 export const musicQuestions: MusicQuestion[] = [
   {
-    spotifyTrackId: '7qiZfU4dY1lWllzX7mPBI3', // Shape of You
+    searchQuery: 'Shape of You Ed Sheeran',
     correctArtist: 'Ed Sheeran',
     options: ['Ed Sheeran', 'Justin Bieber', 'Sam Smith', 'Charlie Puth'],
   },
   {
-    spotifyTrackId: '0VjIjW4GlUZAMYd2vXMi3b', // Blinding Lights
+    searchQuery: 'Blinding Lights The Weeknd',
     correctArtist: 'The Weeknd',
     options: ['The Weeknd', 'Drake', 'Post Malone', 'Bruno Mars'],
   },
   {
-    spotifyTrackId: '2Fxmhks0live0CHinLkiSr', // bad guy
+    searchQuery: 'bad guy Billie Eilish',
     correctArtist: 'Billie Eilish',
     options: ['Billie Eilish', 'Dua Lipa', 'Ariana Grande', 'Doja Cat'],
   },
   {
-    spotifyTrackId: '1zi7xx7UVEFkmKfv06H8x0', // Someone Like You
+    searchQuery: 'Someone Like You Adele',
     correctArtist: 'Adele',
     options: ['Adele', 'Amy Winehouse', 'Beyoncé', 'Lana Del Rey'],
   },
   {
-    spotifyTrackId: '32OlwWuMpZ6b0aN2RZOeMS', // Uptown Funk
+    searchQuery: 'Uptown Funk Mark Ronson Bruno Mars',
     correctArtist: 'Mark Ronson ft. Bruno Mars',
     options: ['Mark Ronson ft. Bruno Mars', 'Pharrell Williams', 'Justin Timberlake', 'Daft Punk'],
   },
   {
-    spotifyTrackId: '3z8h0TU7ReDPLIbEnYhWZb', // Bohemian Rhapsody
+    searchQuery: 'Bohemian Rhapsody Queen',
     correctArtist: 'Queen',
     options: ['Queen', 'David Bowie', 'Elton John', 'Led Zeppelin'],
   },
   {
-    spotifyTrackId: '3n3Ppam7vgaVa1iaRUIOKE', // Mr. Brightside
+    searchQuery: 'Mr. Brightside The Killers',
     correctArtist: 'The Killers',
     options: ['The Killers', 'Arctic Monkeys', 'Arcade Fire', 'Franz Ferdinand'],
   },
   {
-    spotifyTrackId: '4cOdK2wGLETKBW3PvgPWqT', // Rockstar
+    searchQuery: 'Rockstar Post Malone 21 Savage',
     correctArtist: 'Post Malone',
     options: ['Post Malone', 'Travis Scott', 'Lil Uzi Vert', 'Juice WRLD'],
   },
   {
-    spotifyTrackId: '0e7ipj03S05BNilyu5bRzt', // Umbrella
+    searchQuery: 'Umbrella Rihanna',
     correctArtist: 'Rihanna',
     options: ['Rihanna', 'Beyoncé', 'Nicki Minaj', 'Cardi B'],
   },
   {
-    spotifyTrackId: '40riOy7x9W7GXjyGp4pjAv', // Hotel California
+    searchQuery: 'Hotel California Eagles',
     correctArtist: 'Eagles',
     options: ['Eagles', 'Fleetwood Mac', 'The Doors', 'Lynyrd Skynyrd'],
   },

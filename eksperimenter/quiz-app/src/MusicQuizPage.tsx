@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { musicQuestions } from './quiz/musicQuestions'
-import { fetchPreviewUrl } from './spotify/spotifyClient'
+import { searchPreviewUrl } from './spotify/spotifyClient'
 import './QuizPage.css'
 import './MusicQuizPage.css'
 
@@ -30,7 +30,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     setPreviewUrl(null)
     setIsPlaying(false)
 
-    fetchPreviewUrl(question.spotifyTrackId)
+    searchPreviewUrl(question.searchQuery)
       .then(url => {
         if (!cancelled) {
           setPreviewUrl(url)
@@ -42,7 +42,7 @@ export function MusicQuizPage({ onFinish }: Props) {
       })
 
     return () => { cancelled = true }
-  }, [question.spotifyTrackId])
+  }, [question.searchQuery])
 
   function togglePlay() {
     const audio = audioRef.current
