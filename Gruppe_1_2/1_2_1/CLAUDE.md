@@ -62,3 +62,11 @@ Hold denne filen oppdatert underveis i arbeidet.
   - **Leaderboard:** Alle spilleres poengsum vises øverst til høyre i sanntid. Klienter sender `score_update` til server som relayer til alle. Sortert etter poengsum.
   - **Deploy:** Dockerfile lagt til og deployet til Railway. Spillet er live på https://mario-multiplayer-production.up.railway.app
 - **Lærte:** Web Audio API er et kraftig verktøy for prosedyrale 8-bit lyder uten assets. Separate tekstur-frames per animasjonsstilstand er enklere enn Phaser spritesheet-API ved runtime-generering.
+
+### 2026-04-24 – Bugfikser: duplikate spillere og slot-reuse
+
+- **Testet:** Feilsøking av duplikate spillere rapportert under live-testing
+- **Feil 1 — Player slot overflow:** `nextPlayerNumber` talte bare oppover, så etter disconnect/reconnect fikk nye spillere slot 5+ med `undefined` farge og tekstur. Løsning: `nextAvailableSlot()` finner alltid det laveste ledige slot (1–4).
+- **Feil 2 — Ghost remote players:** Ved socket-reconnect kjørte `init`-handleren på nytt og spawnet nye remote sprites oppå de gamle. Løsning: nullstill `remoteSprites` i `init`-handler, og gjør `spawnRemotePlayer` idempotent (destroyer eksisterende sprite for samme socket-ID).
+- **Feil 3 — Duplikat lokal spiller (rotårsak):** `spawnLocalPlayer` destroyet aldri det forrige sprite-objektet. Ved reconnect (vanlig på cloud-plattformer pga. automatisk WebSocket-reconnect) ble ny lokal spiller laget oppå den gamle, som mistet sine fysikk-kolliders og falt gjennom brettet. Løsning: destroy `localPlayer` og `localLabel` i starten av `spawnLocalPlayer` om de eksisterer.
+- **Lærte:** Cloud WebSocket-reconnect er vanlig og må håndteres eksplisitt — alle spawn-funksjoner må være idempotente.
