@@ -169,6 +169,10 @@ export function MusicQuizPage({ onFinish }: Props) {
             className="album-cover-blur"
             style={{ backgroundImage: `url(${question.artworkUrl})` }}
           />
+          <div
+            className={`album-cover-sharp${isAnswered ? ' visible' : ''}`}
+            style={{ backgroundImage: `url(${question.artworkUrl})` }}
+          />
           <div className="audio-overlay">
             <audio
               ref={audioRef}
