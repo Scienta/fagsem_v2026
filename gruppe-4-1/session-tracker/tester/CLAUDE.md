@@ -11,16 +11,16 @@ Ikke rør implementasjonskode i `backend/src/main/` eller `frontend/src/` (unnta
 
 ## Før du starter
 
-1. Kjør `git pull` for å hente siste versjon av KOORDINERING.md og kontrakten
-2. Les `../KOORDINERING.md` — det er den autoritative API-kontrakten du skal teste mot
-3. Les stub-koden i `../backend/src/main/` og `../frontend/src/` for å forstå strukturen
+1. Kjør `git pull` for å hente siste kode
+2. Les `../KOORDINERING.md` for å forstå kontrakt og status
+3. Les faktisk implementasjonskode i `../backend/src/main/` og `../frontend/src/` — testene skal dekke det som faktisk er bygget
 
-## TDD — tester skrives før implementasjonen er ferdig
+## Arbeidsmetode — tester skrives etter implementasjonen
 
-Du skriver tester **før** backend og frontend er implementert. Det betyr:
-- Testene vil feile når du skriver dem — det er forventet og riktig
-- Skriv tester som beskriver **forventet oppførsel fra kontrakten**, ikke faktisk oppførsel
-- Ikke tilpass testene til stubber med `TODO()` — testene skal drive implementasjonen
+Du skriver tester **etter** at backend og frontend er implementert. Det betyr:
+- Les koden først — forstå hva den faktisk gjør
+- Skriv tester som verifiserer faktisk oppførsel, ikke spekulativ oppførsel fra kontrakten
+- Testene skal bestå når du kjører dem — feilende tester er en bug i testen eller i koden, ikke en forventet tilstand
 
 ## Backend-tester
 
@@ -30,22 +30,8 @@ Du skriver tester **før** backend og frontend er implementert. Det betyr:
 
 **Kjør:** `cd ../backend && ./gradlew test`
 
-Skriv én testklasse per controller:
-
-### `GroupControllerTest`
-- `GET /groups` returnerer 200 og ikke-tom liste
-- Hvert Group-objekt har feltene `id`, `name`, `theme`, `members`
-
-### `SessionControllerTest`
-- `POST /sessions` med gyldig `groupId` → 200, Session har server-generert `id` og `startedAt`
-- `PATCH /sessions/{id}` med `{"status":"DONE"}` → 200, status er DONE i responsen
-- `PATCH /sessions/{id}` med ukjent id → **404**
-
-### `FindingControllerTest`
-- `POST /sessions/{id}/findings` med `text` og `type` → 200, Finding returnert med riktige felter
-- `GET /sessions/{id}/findings` → returnerer kun funn tilknyttet riktig sesjon (ikke andre sesjoners funn)
-- `GET /findings` uten parameter → returnerer alle funn
-- `GET /findings?type=BLOCKER` → returnerer kun BLOCKER-funn, ikke OBSERVATION eller RESULT
+Skriv én testklasse per controller. Bruk `@BeforeEach` til å rydde in-memory state mellom tester
+(injiser controllerne og kall `.clear()` på deres maps).
 
 ## Frontend-tester
 
@@ -55,7 +41,7 @@ Skriv én testklasse per controller:
 
 **Kjør:** `cd ../frontend && npm test`
 
-Legg til testavhengigheter i `../frontend/package.json` hvis de mangler:
+Testavhengigheter som skal være i `../frontend/package.json`:
 ```json
 "devDependencies": {
   "vitest": "^2",
@@ -66,7 +52,7 @@ Legg til testavhengigheter i `../frontend/package.json` hvis de mangler:
 }
 ```
 
-Legg også til i `../frontend/vite.config.ts`:
+Og i `../frontend/vite.config.ts`:
 ```ts
 test: {
   environment: 'jsdom',
@@ -75,17 +61,11 @@ test: {
 }
 ```
 
-### `App.test.tsx`
-- Viser "No active sessions" når sesjons-listen er tom (mock fetch returnerer `[]`)
-- Rendrer gruppenavn når grupper er lastet (mock `GET /api/groups`)
-- Viser funn-type og tekst i feed (mock `GET /api/findings`)
-
-### API-kall
-- Alle fetch-kall bruker `/api/...`-prefiks — ikke hardkodet port
-- Request body for `POST /api/sessions` inneholder ikke `id` eller `startedAt`
+Mock `api`-modulen med `vi.mock('./api')` i komponenttester. Bruk `vi.useFakeTimers()` i `beforeEach`
+for å unngå at polling-intervallet forstyrrer testene.
 
 ## Rapportering
 
 Når en testklasse/-fil er ferdigskrevet, merk tilhørende oppgave som `[x]` i
 **Oppgavestatus → Tester – Backend** eller **Tester – Frontend** i `../KOORDINERING.md`.
-Hvis du oppdager avvik mellom kontrakten og stub-koden, legg det til under **Åpne spørsmål**.
+Hvis du oppdager avvik mellom kontrakten og faktisk implementasjon, legg det til under **Åpne spørsmål**.
