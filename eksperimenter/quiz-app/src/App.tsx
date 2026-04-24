@@ -2,35 +2,45 @@ import { useState } from 'react'
 import './App.css'
 import { LobbyPage } from './LobbyPage'
 import { QuizPage } from './QuizPage'
+import { MusicQuizPage } from './MusicQuizPage'
 import { ResultsPage } from './ResultsPage'
 import { questions } from './quiz/questions'
+import { musicQuestions } from './quiz/musicQuestions'
 
-type Page = 'lobby' | 'quiz' | 'results'
+type Page = 'lobby' | 'general-quiz' | 'music-quiz' | 'results'
 
 function App() {
   const [page, setPage] = useState<Page>('lobby')
   const [score, setScore] = useState(0)
+  const [total, setTotal] = useState(0)
 
-  if (page === 'quiz') {
+  function handleFinish(finalScore: number, quizTotal: number) {
+    setScore(finalScore)
+    setTotal(quizTotal)
+    setPage('results')
+  }
+
+  if (page === 'general-quiz') {
     return (
-      <QuizPage
-        onFinish={(finalScore) => {
-          setScore(finalScore)
-          setPage('results')
-        }}
-      />
+      <QuizPage onFinish={(s) => handleFinish(s, questions.length)} />
+    )
+  }
+  if (page === 'music-quiz') {
+    return (
+      <MusicQuizPage onFinish={(s) => handleFinish(s, musicQuestions.length)} />
     )
   }
   if (page === 'results') {
     return (
-      <ResultsPage
-        score={score}
-        total={questions.length}
-        onPlayAgain={() => setPage('lobby')}
-      />
+      <ResultsPage score={score} total={total} onPlayAgain={() => setPage('lobby')} />
     )
   }
-  return <LobbyPage onStart={() => setPage('quiz')} />
+  return (
+    <LobbyPage
+      onStartGeneral={() => setPage('general-quiz')}
+      onStartMusic={() => setPage('music-quiz')}
+    />
+  )
 }
 
 export default App

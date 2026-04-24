@@ -41,6 +41,13 @@
   margin: 0 0 2.5rem;
 }
 
+.lobby-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .lobby-start {
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
   color: white;
@@ -61,4 +68,15 @@
 
 .lobby-start:active {
   transform: translateY(0);
+}
+
+.lobby-start.secondary {
+  background: transparent;
+  border: 2px solid rgba(167, 139, 250, 0.6);
+  box-shadow: none;
+}
+
+.lobby-start.secondary:hover {
+  background: rgba(167, 139, 250, 0.1);
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
 }
