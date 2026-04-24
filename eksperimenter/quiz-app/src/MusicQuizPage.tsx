@@ -6,6 +6,8 @@ import './MusicQuizPage.css'
 
 const TIMER_START = 30
 const URGENCY_THRESHOLD = 10
+const MAX_QUESTION_SCORE = 30000
+const MIN_QUESTION_SCORE = 1000
 
 interface Props {
   onFinish: (score: number, total: number) => void
@@ -14,6 +16,7 @@ interface Props {
 export function MusicQuizPage({ onFinish }: Props) {
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [isGenerating, setIsGenerating] = useState(true)
+  const [isError, setIsError] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<(string | null)[]>([])
   const [roundScores, setRoundScores] = useState<number[]>([])
@@ -23,12 +26,17 @@ export function MusicQuizPage({ onFinish }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    generateQuizQuestions().then(qs => {
-      setQuestions(qs)
-      setAnswers(new Array(qs.length).fill(null))
-      setRoundScores(new Array(qs.length).fill(0))
-      setIsGenerating(false)
-    })
+    generateQuizQuestions()
+      .then(qs => {
+        setQuestions(qs)
+        setAnswers(new Array(qs.length).fill(null))
+        setRoundScores(new Array(qs.length).fill(0))
+        setIsGenerating(false)
+      })
+      .catch(() => {
+        setIsGenerating(false)
+        setIsError(true)
+      })
   }, [])
 
   const question = questions[currentIndex]
@@ -47,8 +55,9 @@ export function MusicQuizPage({ onFinish }: Props) {
 
     const audio = audioRef.current
     if (!audio) return
-    audio.play().catch(() => {})
-    setIsPlaying(true)
+    audio.play()
+      .then(() => setIsPlaying(true))
+      .catch(() => setIsPlaying(false))
   }, [currentIndex, question])
 
   useEffect(() => {
@@ -72,7 +81,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     const advance = setTimeout(() => {
       if (isLastQuestion) {
         const totalPoints = roundScores.reduce((a, b) => a + b, 0)
-        onFinish(totalPoints, questions.length * 30000)
+        onFinish(totalPoints, questions.length * MAX_QUESTION_SCORE)
       } else {
         setCurrentIndex(prev => prev + 1)
       }
@@ -88,7 +97,8 @@ export function MusicQuizPage({ onFinish }: Props) {
       setIsPlaying(false)
     } else {
       audio.play()
-      setIsPlaying(true)
+        .then(() => setIsPlaying(true))
+        .catch(() => {})
     }
   }
 
@@ -97,7 +107,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     audioRef.current?.pause()
     setIsPlaying(false)
     const points = option === question.correctArtist
-      ? Math.round(1000 + (timeLeft / TIMER_START) * 29000)
+      ? Math.round(MIN_QUESTION_SCORE + (timeLeft / TIMER_START) * (MAX_QUESTION_SCORE - MIN_QUESTION_SCORE))
       : 0
     setRoundScores(prev => {
       const next = [...prev]
@@ -114,7 +124,7 @@ export function MusicQuizPage({ onFinish }: Props) {
   function handleNext() {
     if (isLastQuestion) {
       const totalPoints = roundScores.reduce((a, b) => a + b, 0)
-      onFinish(totalPoints, questions.length * 30000)
+      onFinish(totalPoints, questions.length * MAX_QUESTION_SCORE)
     } else {
       setCurrentIndex(prev => prev + 1)
     }
@@ -131,6 +141,14 @@ export function MusicQuizPage({ onFinish }: Props) {
     return (
       <main className="quiz generating">
         <p className="generating-text">Genererer quiz...</p>
+      </main>
+    )
+  }
+
+  if (isError) {
+    return (
+      <main className="quiz generating">
+        <p className="generating-text">Kunne ikke laste quiz. Sjekk internettforbindelsen og prøv igjen.</p>
       </main>
     )
   }

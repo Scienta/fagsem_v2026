@@ -42,10 +42,10 @@ export async function generateQuizQuestions(count = 10): Promise<QuizQuestion[]>
     (data.results as ItunesTrack[]).filter(t => t.previewUrl)
   ).slice(0, count)
 
-  const artistNames = tracks.map(t => t.artistName)
+  const uniqueArtists = [...new Set(tracks.map(t => t.artistName))]
 
-  return tracks.map((track, i) => {
-    const distractors = shuffle(artistNames.filter((_, j) => j !== i)).slice(0, 3)
+  return tracks.map((track) => {
+    const distractors = shuffle(uniqueArtists.filter(name => name !== track.artistName)).slice(0, 3)
     return {
       correctArtist: track.artistName,
       options: shuffle([track.artistName, ...distractors]),
