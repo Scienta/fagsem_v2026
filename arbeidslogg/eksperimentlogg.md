@@ -12,6 +12,7 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 ---
 
 - Dato: 2026-04-24
+- Forfatter: Anders
 - Oppgave: Dokumentere maskinvare for gruppe 3.3 for Anders (Lokal LLM i praksis)
 - Handling: Innhentet systemspesifikasjoner via `lscpu`, `free`, `lspci`, `lsblk`, `hostnamectl`
 - Resultat: Spesifikasjonsrapport lagret i [`arbeidslogg/maskinvare-spesifikasjon.md`](./maskinvare-spesifikasjon.md)
@@ -20,6 +21,7 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 ---
 
 - Dato: 2026-04-24
+- Forfatter: Anders
 - Oppgave: Research på gjeldende modellandskap for Ollama (april 2026)
 - Handling: Søk på ollama.com/library, lokalaimaster.com, aimadetools.com og ollama GitHub
 - Resultat: Anbefalte modeller oppdatert i `maskinvare-spesifikasjon.md` under "Anbefalte Ollama-modeller"
@@ -32,6 +34,7 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 ---
 
 - Dato: 2026-04-24
+- Forfatter: Anders
 - Oppgave: Opprette måleverktøy for ressursbruk og tokens/sek (gruppe 3.3)
 - Handling: Implementerte `benchmarks/observer.py` — live observer som sampler CPU/RAM fra Ollama-prosessen og extraherer tokens/sek fra server-loggen. Kjøres i eget terminalvindu ved siden av Claude Code + Ollama.
 - Resultat: `benchmarks/observer.py` og `benchmarks/README.md` opprettet. Resultat-CSV lagres i `arbeidslogg/benchmarks.csv`. Output er en klar Markdown-blokk for lim-inn i "Måling / eksempel:"-feltet.
@@ -47,6 +50,7 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 - Tema: Tema 3 – Lokal LLM i praksis
 - Eksperiment: Eksperiment 4 – Lokal LLM med agentarbeidsform
 - Dato: 2026-04-24
+- Forfatter: Anders
 - Verktøy/modeller: Claude Code + Ollama (modeller lastes ned)
 - Repo / case: `demo/` – Blackjack i Python (24 tester, grønt)
 
@@ -76,6 +80,7 @@ Se `benchmarks/README.md` for full dokumentasjon.
 ### Oppføring
 
 - Tidspunkt:
+- Forfatter:
 - Hva ble testet:
 - Betingelse / variant:
 - Resultat / observasjon:
@@ -87,6 +92,7 @@ Se `benchmarks/README.md` for full dokumentasjon.
 ### Oppføring
 
 - Tidspunkt:
+- Forfatter:
 - Hva ble testet:
 - Betingelse / variant:
 - Resultat / observasjon:
