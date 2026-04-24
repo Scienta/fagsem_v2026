@@ -8,8 +8,8 @@ tema: "Tema 2 – AI-assistert systemutvikling"
 
 | Felt | Verdi |
 |---|---|
-| Gruppenummer | 2.3 |
-| Deltakere | Haakon, Nils-Christian, Tobias |
+| Gruppenummer | 2.1 (omorganisert) |
+| Deltakere | Nils-Christian Haugen, Stein Grimstad (PO), Ingvild Hardeng, Fredrik Meyer |
 | Tema | Tema 2 – AI-assistert systemutvikling |
 | Dato(er) for eksperiment | 2026-04-24 |
 | Verktøy/modeller brukt | Claude Code (Claude Opus 4.6), superpowers-skills for brainstorming, plan og subagent-drevet utvikling |
@@ -32,7 +32,7 @@ En strukturert samtaleprosess — der agenten stiller ett spørsmål om gangen m
 ### Hva ble testet
 Vi bygget en komplett nettapplikasjon ("Konro Content Tool") fra idé til fungerende produkt i én sesjon. Appen lar brukeren laste inn en Instagram-dataeksport, bla gjennom og velge innlegg, omskrive bildetekster til engasjerende engelsk via Claude API, og eksportere alt som en ZIP klar for manuell posting.
 
-PO (steingriller-eieren) hadde et reelt behov: hente ut konro-grilling-poster fra sin norske Instagram-konto for å fylle en ny internasjonal konto. PO hadde ingen erfaring med AI-assistert utvikling eller Claude Code.
+PO (Stein) hadde et reelt behov: hente ut konro-grilling-poster fra sin norske Instagram-konto for å fylle en ny internasjonal konto. PO hadde ingen erfaring med AI-assistert utvikling eller Claude Code.
 
 ### Betingelser
 
