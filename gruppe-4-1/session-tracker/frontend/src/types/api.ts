@@ -22,3 +22,13 @@ export interface Finding {
   text: string
   type: FindingType
 }
+
+export interface ThemeStats {
+  theme: string
+  groups: number
+  sessionsActive: number
+  sessionsDone: number
+  findingsObservation: number
+  findingsResult: number
+  findingsBlocker: number
+}

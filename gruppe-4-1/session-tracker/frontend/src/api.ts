@@ -1,4 +1,4 @@
-import { Finding, FindingType, Group, Session } from './types/api'
+import { Finding, FindingType, Group, Session, ThemeStats } from './types/api'
 
 const BASE = '/api'
 
@@ -42,4 +42,7 @@ export const api = {
     const query = type ? `?type=${type}` : ''
     return request(`/findings${query}`)
   },
+
+  getStats: (): Promise<ThemeStats[]> =>
+    request('/stats'),
 }

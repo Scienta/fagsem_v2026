@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { api } from './api'
-import { Finding, FindingType, Group, Session } from './types/api'
+import { Finding, FindingType, Group, Session, ThemeStats } from './types/api'
 
 const FINDING_TYPES: FindingType[] = ['OBSERVATION', 'RESULT', 'BLOCKER']
 const POLL_INTERVAL_MS = 5000
@@ -220,6 +220,7 @@ export default function App() {
   const [groups, setGroups] = useState<Group[]>([])
   const [sessions, setSessions] = useState<Session[]>([])
   const [findings, setFindings] = useState<Finding[]>([])
+  const [stats, setStats] = useState<ThemeStats[]>([])
   const [error, setError] = useState<string | null>(null)
 
   const [findingText, setFindingText] = useState<Record<string, string>>({})
@@ -227,6 +228,7 @@ export default function App() {
 
   const sessionsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const findingsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const statsIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     api.getGroups()
@@ -251,6 +253,15 @@ export default function App() {
     fetchFindings()
     findingsIntervalRef.current = setInterval(fetchFindings, POLL_INTERVAL_MS)
     return () => { if (findingsIntervalRef.current) clearInterval(findingsIntervalRef.current) }
+  }, [])
+
+  useEffect(() => {
+    const fetchStats = () => {
+      api.getStats().then(setStats).catch(() => {})
+    }
+    fetchStats()
+    statsIntervalRef.current = setInterval(fetchStats, POLL_INTERVAL_MS)
+    return () => { if (statsIntervalRef.current) clearInterval(statsIntervalRef.current) }
   }, [])
 
   const activeSessions = sessions.filter(s => s.status === 'ACTIVE')
@@ -390,6 +401,33 @@ export default function App() {
                 </div>
               )
             })
+          )}
+        </section>
+
+        {/* Stats */}
+        <section style={{ marginBottom: '2.5rem' }}>
+          <h2 style={s.sectionTitle}>Statistikk per tema</h2>
+          {stats.length === 0 ? (
+            <p style={s.emptyState}>Ingen statistikk ennå — start en sesjon.</p>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
+              {stats.map(t => {
+                const colors = THEME_COLORS[t.theme] ?? { bg: '#f8fafc', border: '#94a3b8', badge: '#94a3b8' }
+                return (
+                  <div key={t.theme} style={{ ...s.card, background: colors.bg, borderTop: `3px solid ${colors.border}`, marginBottom: 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.6rem' }}>{t.theme}</div>
+                    <div style={{ fontSize: '0.82rem', color: '#475569', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.2rem 0.5rem' }}>
+                      <span>Grupper</span>       <span style={{ fontWeight: 600 }}>{t.groups}</span>
+                      <span>Aktive</span>         <span style={{ fontWeight: 600, color: '#22c55e' }}>{t.sessionsActive}</span>
+                      <span>Fullførte</span>      <span style={{ fontWeight: 600 }}>{t.sessionsDone}</span>
+                      <span>Observasjoner</span>  <span style={{ fontWeight: 600, color: '#1d4ed8' }}>{t.findingsObservation}</span>
+                      <span>Resultater</span>     <span style={{ fontWeight: 600, color: '#15803d' }}>{t.findingsResult}</span>
+                      <span>Blockere</span>       <span style={{ fontWeight: 600, color: '#b91c1c' }}>{t.findingsBlocker}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           )}
         </section>
 
