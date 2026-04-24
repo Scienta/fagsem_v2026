@@ -8,7 +8,7 @@ interface Props {
 
 function feedbackMessage(score: number, total: number): string {
   const ratio = score / total
-  if (ratio === 1) return 'Perfekt! Du er en ekte Quizzard!'
+  if (ratio === 1) return 'Perfekt! Du bestod Øreprøven!'
   if (ratio >= 0.8) return 'Imponerende! Du kan fagene dine.'
   if (ratio >= 0.6) return 'Bra jobbet! Litt mer øving, så er du der.'
   if (ratio >= 0.4) return 'Ikke verst! Prøv igjen for en bedre score.'
