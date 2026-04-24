@@ -26,8 +26,8 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 ### Oppføring
 
 - Tidspunkt: 13:45
-- Hva ble testet: Enkel prompt: " lag en web applikasjon for vedlikhold av matoppskrifter"
-- Betingelse / variant:
+- Hva ble testet: Enkel prompt: "lag en web applikasjon for vedlikhold av matoppskrifter"
+- Betingelse / variant: Claude bestemmer rammeverk, database, oppskriftstruktur og fubksjoalitet
 - Resultat / observasjon:
   Her er hva som ble bygget:
 
