@@ -1,0 +1,12 @@
+# Backend build output
+backend/build/
+backend/.gradle/
+backend/.kotlin/
+
+# Frontend build output
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.idea/
+*.iml
