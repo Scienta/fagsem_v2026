@@ -88,6 +88,7 @@ ThemeStats {
 - [x] Mulighet til å logge funn i en sesjon (POST)
 - [x] Mulighet til å markere sesjon som done (PATCH)
 - [ ] Statistikk-seksjon: hent og vis `GET /api/stats` (polling hvert 5s), ett kort per tema
+- [ ] Gruppe 4.1 fremheves visuelt i gruppelisten (badge, gullkant e.l.) — hardkod `name === "Gruppe 4.1"`
 
 ### Tester – Backend (JUnit 5 + MockMvc) — testeragenten skriver disse FØR backend implementerer
 - [x] `StatsControllerTest` – `GET /stats` returnerer 200 og liste med 5 elementer (ett per tema)
