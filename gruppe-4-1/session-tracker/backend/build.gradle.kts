@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("org.springframework.boot") version "3.4.3"
+    id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("jvm") version "2.3.21"
     kotlin("plugin.spring") version "2.3.21"
@@ -31,12 +31,8 @@ dependencies {
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
-        jvmTarget.set(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.JVM_25)
     }
-}
-
-tasks.withType<JavaCompile> {
-    options.release.set(21)
 }
 
 springBoot {
