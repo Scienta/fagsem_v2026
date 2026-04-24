@@ -12,10 +12,11 @@ const players = new Map();
 let nextPlayerNumber = 1;
 const PLAYER_COLORS = { 1: 0xe74c3c, 2: 0x3498db, 3: 0x2ecc71, 4: 0xf39c12 };
 
-let currentLevel = 0;
-let transitioning = false;
-let deadGoombas = new Set();
-let collectedCoins = new Set();
+let currentLevel     = 0;
+let transitioning    = false;
+let deadGoombas      = new Set();
+let collectedCoins   = new Set();
+let collectedMushrooms = new Set();
 
 io.on('connection', (socket) => {
   if (players.size >= 4) {
@@ -31,11 +32,10 @@ io.on('connection', (socket) => {
     id: socket.id,
     playerNumber,
     color: PLAYER_COLORS[playerNumber],
-    x: spawnX,
-    y: 350,
-    velocityX: 0,
-    velocityY: 0,
-    facing: 1
+    x: spawnX, y: 350,
+    velocityX: 0, velocityY: 0,
+    facing: 1,
+    score: 0
   };
 
   players.set(socket.id, player);
@@ -45,8 +45,9 @@ io.on('connection', (socket) => {
     self: player,
     existingPlayers: [...players.values()].filter(p => p.id !== socket.id),
     currentLevel,
-    deadGoombas: [...deadGoombas],
-    collectedCoins: [...collectedCoins]
+    deadGoombas:       [...deadGoombas],
+    collectedCoins:    [...collectedCoins],
+    collectedMushrooms:[...collectedMushrooms]
   });
 
   socket.broadcast.emit('player_joined', player);
@@ -56,6 +57,13 @@ io.on('connection', (socket) => {
     if (!p) return;
     Object.assign(p, data);
     socket.broadcast.emit('player_moved', { id: socket.id, ...data });
+  });
+
+  socket.on('score_update', ({ score }) => {
+    const p = players.get(socket.id);
+    if (!p) return;
+    p.score = score;
+    socket.broadcast.emit('score_updated', { id: socket.id, playerNumber: p.playerNumber, score });
   });
 
   socket.on('goomba_killed', ({ id }) => {
@@ -68,11 +76,17 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('coin_collected', { id });
   });
 
+  socket.on('mushroom_collected', ({ id }) => {
+    collectedMushrooms.add(id);
+    socket.broadcast.emit('mushroom_collected', { id });
+  });
+
   socket.on('flag_reached', () => {
     if (transitioning) return;
     transitioning = true;
-    deadGoombas = new Set();
-    collectedCoins = new Set();
+    deadGoombas.clear();
+    collectedCoins.clear();
+    collectedMushrooms.clear();
 
     if (currentLevel >= 4) {
       io.emit('game_won');
@@ -81,7 +95,6 @@ io.on('connection', (socket) => {
       console.log(`Advancing to level ${currentLevel}`);
       io.emit('level_change', { level: currentLevel });
     }
-
     setTimeout(() => { transitioning = false; }, 2000);
   });
 

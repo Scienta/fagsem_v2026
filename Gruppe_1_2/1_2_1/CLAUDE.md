@@ -50,3 +50,15 @@ Hold denne filen oppdatert underveis i arbeidet.
   - `_destroyLevelObjects()` og `_addPlayerColliders()` rydder opp Phaser physics korrekt mellom brett
   - Win-screen etter siste brett med total poengsum
 - **Lærte:** Dynamisk nivå-lasting i Phaser 3 krever eksplisitt sporring av colliders slik at de kan fjernes. `group.clear(true, true)` + `group.destroy()` er riktig måte å fullstendig rydde opp physics-grupper.
+
+### 2026-04-24 – Lydeffekter, animasjoner, power-ups, leaderboard og deploy
+
+- **Testet:** Implementert alle fire gjenstående features + deploy-oppsett i én sammenhengende runde
+- **Variant:** Alt client-side generert, ingen filer/assets lastet fra nett (utenom Phaser CDN)
+- **Hva skjedde:**
+  - **Lyd (Web Audio API):** SoundManager-klasse genererer 8-bit lyder prosedyralt – hopp, mynt, tramping, sopp, flagg, nivå-overgang, death. Ingen lydfiler nødvendig.
+  - **Animasjoner:** Fire tekstur-frames per spiller (idle, walk0, walk1, jump) tegnet med Phaser Graphics. Animasjons-state machine i update(): idle/gå/hopp basert på velocity og onGround. Gå-animasjon veksler mellom frames hvert 100ms.
+  - **Power-ups (sopp):** Sopp plassert i hvert brett (1–2 per brett). Samling gir 500p og dobbel størrelse (setScale(1.5)). Goomba-treff mens powered = mister power i stedet for å dø. Synkronisert mellom klienter via server.
+  - **Leaderboard:** Alle spilleres poengsum vises øverst til høyre i sanntid. Klienter sender `score_update` til server som relayer til alle. Sortert etter poengsum.
+  - **Deploy (Dockerfile):** Dockerfile lagt til for enkel deploy til Railway, Render, Fly.io m.fl. Server bruker allerede `process.env.PORT`.
+- **Lærte:** Web Audio API er et kraftig verktøy for prosedyrale 8-bit lyder uten assets. Separate tekstur-frames per animasjonsstilstand er enklere enn Phaser spritesheet-API ved runtime-generering.
