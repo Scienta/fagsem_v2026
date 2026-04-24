@@ -106,7 +106,44 @@ Forventet av agenten:
 - Les og forstå RAPTOR transfer relaxation-koden i OTP
 - Foreslå hvor sortering og pruning skal legges til
 - Implementer endringene
-- Verifiser at eksisterende tester passerer
+- Verifiser at eksisterende enhetstester passerer
+- Kjør SpeedTest for å måle ytelseseffekten
+
+**Forutsetninger:**
+- Klonet OTP-repo: `git clone https://github.com/opentripplanner/OpenTripPlanner.git`
+- En ferdigbygd OTP-graf (`.obj`-fil) tilgjengelig lokalt
+- Oppdater `test/performance/vestfold/speed-test-config.json` med sti til grafen din:
+  ```json
+  { "testDate": "2026-04-24", "feedId": "RB", "graph": "/sti/til/din/graph.obj" }
+  ```
+
+**Kjøre enhetstester:**
+```bash
+cd OpenTripPlanner
+mvn test --projects raptor,application -Dtest="*Raptor*,*Transfer*" -q
+```
+
+**Sette opp SpeedTest (første gang — genererer expected results):**
+```bash
+cd OpenTripPlanner
+mvn --projects application test-compile -q
+mvn --projects application exec:java \
+  -Dexec.mainClass="org.opentripplanner.transit.speed_test.SpeedTest" \
+  -Dexec.classpathScope=test \
+  -Dexec.args="--dir=test/performance/vestfold -p md -n 4 -i 3 -R"
+```
+`-R` erstatter `travelSearch-expected-results.csv` med faktiske resultater fra første kjøring.
+
+**Kjøre SpeedTest for ytelsessammenligning (baseline vs. endring):**
+```bash
+mvn --projects application exec:java \
+  -Dexec.mainClass="org.opentripplanner.transit.speed_test.SpeedTest" \
+  -Dexec.classpathScope=test \
+  -Dexec.args="--dir=test/performance/vestfold -p md -n 4 -i 5"
+```
+Kjør dette **før** og **etter** implementasjonen og sammenlign query-tider i output.
+
+Testdata: 15 reisesøk mellom tilfeldige stopp i Vestfold, testdato `2026-04-24`.
 
 **Hva dere observerer:**
 - Klarer modellen å navigere en stor, ukjent Java-kodebase?
