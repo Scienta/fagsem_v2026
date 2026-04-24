@@ -21,13 +21,14 @@ export function MusicQuizPage({ onFinish }: Props) {
   const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
   const [timeLeft, setTimeLeft] = useState(TIMER_START)
+  const [timedOut, setTimedOut] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const question = musicQuestions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isAnswered = selectedOption !== null
   const isLastQuestion = currentIndex === musicQuestions.length - 1
-  const isUrgent = timeLeft <= URGENCY_THRESHOLD
+  const isUrgent = timeLeft <= URGENCY_THRESHOLD && !isAnswered
 
   useEffect(() => {
     let cancelled = false
@@ -37,6 +38,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     setArtworkUrl(null)
     setIsPlaying(false)
     setTimeLeft(TIMER_START)
+    setTimedOut(false)
     audioRef.current?.pause()
 
     searchTrack(question.searchQuery)
@@ -62,23 +64,27 @@ export function MusicQuizPage({ onFinish }: Props) {
     setIsPlaying(true)
   }, [previewUrl])
 
+  // Count down while question is unanswered
   useEffect(() => {
-    if (isAnswered || timeLeft === 0) {
-      if (timeLeft === 0 && !isAnswered) {
-        setAnswers(prev => {
-          const next = [...prev]
-          next[currentIndex] = ''
-          return next
-        })
-      }
-      return
-    }
+    if (isAnswered || timedOut || timeLeft <= 0) return
     const tick = setTimeout(() => setTimeLeft(prev => prev - 1), 1000)
     return () => clearTimeout(tick)
-  }, [timeLeft, isAnswered, currentIndex])
+  }, [timeLeft, isAnswered, timedOut])
 
+  // When timer hits 0, mark question as timed out and reveal correct answer
   useEffect(() => {
-    if (timeLeft !== 0 || !isAnswered) return
+    if (timeLeft !== 0 || timedOut || isAnswered) return
+    setTimedOut(true)
+    setAnswers(prev => {
+      const next = [...prev]
+      next[currentIndex] = ''
+      return next
+    })
+  }, [timeLeft, timedOut, isAnswered, currentIndex])
+
+  // Auto-advance 1.5s after timeout
+  useEffect(() => {
+    if (!timedOut) return
     const advance = setTimeout(() => {
       if (isLastQuestion) {
         const score = musicQuestions.filter((q, i) => answers[i] === q.correctArtist).length
@@ -88,7 +94,7 @@ export function MusicQuizPage({ onFinish }: Props) {
       }
     }, 1500)
     return () => clearTimeout(advance)
-  }, [timeLeft, isAnswered, isLastQuestion, answers, onFinish])
+  }, [timedOut, isLastQuestion, answers, onFinish])
 
   function togglePlay() {
     const audio = audioRef.current
@@ -192,7 +198,7 @@ export function MusicQuizPage({ onFinish }: Props) {
           ))}
         </div>
 
-        {isAnswered && (
+        {isAnswered && !timedOut && (
           <button type="button" className="next-button" onClick={handleNext}>
             {isLastQuestion ? 'Se resultat' : 'Neste spørsmål'}
           </button>
