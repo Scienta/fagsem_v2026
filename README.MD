@@ -1,5 +1,3 @@
-
-=======
 # Program fagseminar 
 
 ## TLDR; 
