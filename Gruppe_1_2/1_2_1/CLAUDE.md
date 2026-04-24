@@ -70,3 +70,28 @@ Hold denne filen oppdatert underveis i arbeidet.
 - **Feil 2 — Ghost remote players:** Ved socket-reconnect kjørte `init`-handleren på nytt og spawnet nye remote sprites oppå de gamle. Løsning: nullstill `remoteSprites` i `init`-handler, og gjør `spawnRemotePlayer` idempotent (destroyer eksisterende sprite for samme socket-ID).
 - **Feil 3 — Duplikat lokal spiller (rotårsak):** `spawnLocalPlayer` destroyet aldri det forrige sprite-objektet. Ved reconnect (vanlig på cloud-plattformer pga. automatisk WebSocket-reconnect) ble ny lokal spiller laget oppå den gamle, som mistet sine fysikk-kolliders og falt gjennom brettet. Løsning: destroy `localPlayer` og `localLabel` i starten av `spawnLocalPlayer` om de eksisterer.
 - **Lærte:** Cloud WebSocket-reconnect er vanlig og må håndteres eksplisitt — alle spawn-funksjoner må være idempotente.
+
+### 2026-04-24 – Konsolidert review og rettet 19 funn
+
+- **Testet:** To uavhengige Claude-reviews (Sonnet og Opus) av samme codebase, slått sammen til én konsolidert liste, og deretter rettet alle funn i ett pass.
+- **Variant:** Sonnet og Opus produserte overlappende men ikke identiske funn (4 duplikater, 6 + 9 unike). Konsolidert review listet 19 saker; alle ble adressert.
+- **Hva skjedde:**
+  - **Delt modul:** `LEVELS`, `PLAYER_COLORS`, `PLAYER_COLOR_NAMES` flyttet til ny `public/levels.js` med UMD-stil eksport. Lastes både av `index.html` (`<script>`) og `server.js` (`require`). Fjerner duplisering mellom server og klient.
+  - **Server-validering:** Pre-beregnet `LEVEL_IDS` (Set per nivå for goombas/coins/mushrooms). `goomba_killed` / `coin_collected` / `mushroom_collected` valideres mot gyldige IDs + idempotens-sjekk (allerede død/samlet). `flag_reached` krever fortsatt aktiv socket.
+  - **Whitelist:** `position_update` plukker kun `x, y, velocityX, velocityY, facing, powered, animFrame` — klient kan ikke lenger overskrive `id`, `playerNumber`, `color`, `score` på serverens player-record.
+  - **Rate limit:** server avviser `position_update` oftere enn 20 ms.
+  - **CORS:** lest fra `process.env.CORS_ORIGIN`, defaulter til `*` for dev-bekvemmelighet.
+  - **Disconnect:** early-return hvis socket aldri ble lagt til (avviste connections fra `server_full` slipper å sende fantom `player_left`).
+  - **Score-feedback-loop:** `_updateScoreDisplay` splittet i `_refreshScoreDisplay` (display) og `_onLocalScoreChanged` (display + emit). Server-relayed `score_updated` trigger ikke lenger ny emit.
+  - **`this.sound` → `this.sfx`:** unngår navnekollisjon med Phaser SoundManager-plugin.
+  - **Sopp/mynt-overlap World 1-1:** sopp flyttet fra `(480,288)` (lå på mynt 4) til `(820,368)` (på platformen til høyre).
+  - **Slot-reuse-leak:** `player_left` sletter nå `remoteScores`-entry slik at neste spiller i slot ikke arver poeng.
+  - **`sendAccumulator -= 50`:** rest-ms carryes til neste tick i stedet for å droppes.
+  - **Remote-animasjon:** `position_update` carrier nå `animFrame`; remote-spillere settes til riktig tekstur (idle/walk/jump).
+  - **Interpolasjon:** remote sprites lerper mot `targetX/targetY` per tick (lerp-faktor `delta/80`) i stedet for å hoppe rett til ny posisjon.
+  - **Død kode fjernet:** `wasOnGround`, `void pn`, tom `preload()`.
+  - **`.dockerignore`:** lagt til (node_modules, .git, *.md osv.).
+- **Lærte:**
+  - To AI-reviews av samme codebase finner overlappende men forskjellige funn — verdt å kjøre flere parallelt før man rangerer.
+  - Når server skal validere events, er det enklere å eksportere `LEVELS` som delt modul enn å duplisere ID-data — UMD-mønsteret (`if (typeof module !== 'undefined') module.exports = ...`) lar én fil bli brukt fra både browser og Node uten build-step.
+  - Klient-autoritativ score lar seg verifisere noe (typesjekk `Number.isFinite`) uten at server må kjøre full spillsimulering.

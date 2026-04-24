@@ -1,22 +1,31 @@
 const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const { LEVELS, PLAYER_COLORS } = require('./public/levels');
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: '*' } });
+const corsOrigin = process.env.CORS_ORIGIN || '*';
+const io = new Server(httpServer, { cors: { origin: corsOrigin } });
 
 app.use(express.static('public'));
 
 const players = new Map();
-const PLAYER_COLORS = { 1: 0xe74c3c, 2: 0x3498db, 3: 0x2ecc71, 4: 0xf39c12 };
 const MAX_PLAYERS = 4;
+const POSITION_UPDATE_MIN_INTERVAL_MS = 20;
 
-let currentLevel     = 0;
-let transitioning    = false;
-let deadGoombas      = new Set();
-let collectedCoins   = new Set();
-let collectedMushrooms = new Set();
+// Pre-compute valid IDs per level so event validation is O(1).
+const LEVEL_IDS = LEVELS.map(lvl => ({
+  goombas:   new Set(lvl.goombas.map(g => g.id)),
+  coins:     new Set(lvl.coins.map(c => c.id)),
+  mushrooms: new Set((lvl.mushrooms || []).map(m => m.id)),
+}));
+
+let currentLevel       = 0;
+let transitioning      = false;
+const deadGoombas        = new Set();
+const collectedCoins     = new Set();
+const collectedMushrooms = new Set();
 
 function nextAvailableSlot() {
   const used = new Set([...players.values()].map(p => p.playerNumber));
@@ -49,7 +58,8 @@ io.on('connection', (socket) => {
     x: spawnX, y: 350,
     velocityX: 0, velocityY: 0,
     facing: 1,
-    score: 0
+    score: 0,
+    lastPositionUpdate: 0,
   };
 
   players.set(socket.id, player);
@@ -68,41 +78,64 @@ io.on('connection', (socket) => {
 
   socket.on('position_update', (data) => {
     const p = players.get(socket.id);
-    if (!p) return;
-    Object.assign(p, data);
-    socket.broadcast.emit('player_moved', { id: socket.id, ...data });
+    if (!p || !data) return;
+
+    const now = Date.now();
+    if (now - p.lastPositionUpdate < POSITION_UPDATE_MIN_INTERVAL_MS) return;
+    p.lastPositionUpdate = now;
+
+    // Whitelist: never trust client-sent id, playerNumber, color, score.
+    const { x, y, velocityX, velocityY, facing, powered, animFrame } = data;
+    Object.assign(p, { x, y, velocityX, velocityY, facing, powered });
+
+    socket.broadcast.emit('player_moved', {
+      id: socket.id,
+      x, y, velocityX, velocityY, facing, powered, animFrame,
+    });
   });
 
-  socket.on('score_update', ({ score }) => {
+  // Score remains client-authoritative — acceptable for a prototype, trivially
+  // spoofable. Server only relays so the leaderboard stays in sync.
+  socket.on('score_update', ({ score } = {}) => {
     const p = players.get(socket.id);
-    if (!p) return;
+    if (!p || typeof score !== 'number' || !Number.isFinite(score)) return;
     p.score = score;
     socket.broadcast.emit('score_updated', { id: socket.id, playerNumber: p.playerNumber, score });
   });
 
-  socket.on('goomba_killed', ({ id }) => {
+  socket.on('goomba_killed', ({ id } = {}) => {
+    if (!players.has(socket.id)) return;
+    if (!LEVEL_IDS[currentLevel].goombas.has(id)) return;
+    if (deadGoombas.has(id)) return;
     deadGoombas.add(id);
     socket.broadcast.emit('goomba_killed', { id });
   });
 
-  socket.on('coin_collected', ({ id }) => {
+  socket.on('coin_collected', ({ id } = {}) => {
+    if (!players.has(socket.id)) return;
+    if (!LEVEL_IDS[currentLevel].coins.has(id)) return;
+    if (collectedCoins.has(id)) return;
     collectedCoins.add(id);
     socket.broadcast.emit('coin_collected', { id });
   });
 
-  socket.on('mushroom_collected', ({ id }) => {
+  socket.on('mushroom_collected', ({ id } = {}) => {
+    if (!players.has(socket.id)) return;
+    if (!LEVEL_IDS[currentLevel].mushrooms.has(id)) return;
+    if (collectedMushrooms.has(id)) return;
     collectedMushrooms.add(id);
     socket.broadcast.emit('mushroom_collected', { id });
   });
 
   socket.on('flag_reached', () => {
+    if (!players.has(socket.id)) return;
     if (transitioning) return;
     transitioning = true;
     deadGoombas.clear();
     collectedCoins.clear();
     collectedMushrooms.clear();
 
-    if (currentLevel >= 4) {
+    if (currentLevel >= LEVELS.length - 1) {
       io.emit('game_won');
     } else {
       currentLevel++;
@@ -113,6 +146,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
+    // Guards against rejected connections (server_full / no slot) where the
+    // player was never added and we'd otherwise broadcast a phantom player_left.
+    if (!players.has(socket.id)) return;
     players.delete(socket.id);
     console.log(`Player ${playerNumber} disconnected, total: ${players.size}`);
     io.emit('player_left', { id: socket.id });

@@ -29,188 +29,8 @@ class SoundManager {
   levelUp()  { [400,500,600,800].forEach((f,i) => setTimeout(() => this._tone(f, 0.12, 'square', 0.2), i*80)); }
 }
 
-// ── Level definitions ─────────────────────────────────────────────────────────
-
-const LEVELS = [
-  {
-    name: 'World 1-1', background: '#5c94fc',
-    groundColor: 0x3a7d44, platformColor: 0x8B4513,
-    spawnY: 360,
-    platforms: [
-      { x: 0,   y: 500, w: 720, h: 40 },
-      { x: 820, y: 500, w: 140, h: 40 },
-      { x: 100, y: 380, w: 180, h: 20 },
-      { x: 380, y: 310, w: 180, h: 20 },
-      { x: 640, y: 250, w: 160, h: 20 },
-      { x: 820, y: 390, w: 140, h: 20 },
-    ],
-    goombas: [
-      { id:0, x:200, y:480, minX:20,  maxX:700, speed:70 },
-      { id:1, x:500, y:480, minX:20,  maxX:700, speed:60 },
-      { id:2, x:860, y:480, minX:825, maxX:955, speed:70 },
-    ],
-    coins: [
-      {id:0,x:150,y:358},{id:1,x:200,y:358},{id:2,x:250,y:358},
-      {id:3,x:430,y:288},{id:4,x:480,y:288},{id:5,x:530,y:288},
-      {id:6,x:670,y:228},{id:7,x:720,y:228},{id:8,x:770,y:228},
-      {id:9,x:200,y:472},{id:10,x:400,y:472},{id:11,x:600,y:472},
-    ],
-    mushrooms: [{ id:0, x:480, y:288 }],
-    flag: { x:930, y:500 },
-  },
-  {
-    name: 'World 1-2', background: '#3d6b8a',
-    groundColor: 0x4a5568, platformColor: 0x2d3748,
-    spawnY: 360,
-    platforms: [
-      { x:0,   y:500, w:280, h:40 },
-      { x:420, y:500, w:220, h:40 },
-      { x:730, y:500, w:230, h:40 },
-      { x:220, y:420, w:120, h:20 },
-      { x:370, y:360, w:130, h:20 },
-      { x:60,  y:340, w:140, h:20 },
-      { x:250, y:260, w:170, h:20 },
-      { x:480, y:280, w:140, h:20 },
-      { x:660, y:210, w:160, h:20 },
-      { x:820, y:140, w:140, h:20 },
-    ],
-    goombas: [
-      { id:0, x:130, y:480, minX:10,  maxX:260, speed:70 },
-      { id:1, x:530, y:480, minX:425, maxX:630, speed:80 },
-      { id:2, x:800, y:480, minX:735, maxX:950, speed:70 },
-      { id:3, x:100, y:318, minX:65,  maxX:185, speed:65 },
-    ],
-    coins: [
-      {id:0,x:80,y:318},{id:1,x:130,y:318},{id:2,x:170,y:318},
-      {id:3,x:390,y:338},{id:4,x:450,y:338},
-      {id:5,x:510,y:258},{id:6,x:560,y:258},{id:7,x:600,y:258},
-      {id:8,x:700,y:188},{id:9,x:750,y:188},{id:10,x:800,y:188},
-      {id:11,x:840,y:118},{id:12,x:890,y:118},
-      {id:13,x:150,y:472},{id:14,x:560,y:472},
-    ],
-    mushrooms: [{ id:0, x:560, y:258 }],
-    flag: { x:930, y:140 },
-  },
-  {
-    name: 'World 1-3', background: '#87ceeb',
-    groundColor: 0x6db33f, platformColor: 0xe0e0e0,
-    spawnY: 360,
-    platforms: [
-      { x:0,   y:500, w:160, h:40 },
-      { x:140, y:440, w:120, h:20 },
-      { x:300, y:385, w:120, h:20 },
-      { x:460, y:325, w:120, h:20 },
-      { x:620, y:265, w:120, h:20 },
-      { x:790, y:205, w:170, h:20 },
-      { x:240, y:480, w:80,  h:20 },
-      { x:400, y:440, w:80,  h:20 },
-      { x:550, y:415, w:80,  h:20 },
-    ],
-    goombas: [
-      { id:0, x:70,  y:480, minX:5,   maxX:145, speed:70 },
-      { id:1, x:180, y:418, minX:145, maxX:250, speed:80 },
-      { id:2, x:345, y:363, minX:305, maxX:415, speed:85 },
-      { id:3, x:510, y:303, minX:465, maxX:575, speed:90 },
-      { id:4, x:670, y:243, minX:625, maxX:735, speed:95 },
-    ],
-    coins: [
-      {id:0,x:170,y:418},{id:1,x:210,y:418},
-      {id:2,x:330,y:363},{id:3,x:380,y:363},
-      {id:4,x:490,y:303},{id:5,x:540,y:303},
-      {id:6,x:650,y:243},{id:7,x:710,y:243},
-      {id:8,x:820,y:183},{id:9,x:870,y:183},{id:10,x:920,y:183},
-      {id:11,x:70,y:472},{id:12,x:270,y:458},{id:13,x:440,y:418},
-    ],
-    mushrooms: [{ id:0, x:540, y:303 }],
-    flag: { x:930, y:205 },
-  },
-  {
-    name: 'World 1-4', background: '#1a1a2e',
-    groundColor: 0x3d2b1f, platformColor: 0x5a3e28,
-    spawnY: 360,
-    platforms: [
-      { x:0,   y:500, w:180, h:40 },
-      { x:320, y:500, w:160, h:40 },
-      { x:650, y:500, w:180, h:40 },
-      { x:120, y:420, w:120, h:20 },
-      { x:280, y:360, w:100, h:20 },
-      { x:150, y:290, w:120, h:20 },
-      { x:330, y:230, w:190, h:20 },
-      { x:540, y:290, w:120, h:20 },
-      { x:420, y:430, w:100, h:20 },
-      { x:570, y:420, w:100, h:20 },
-      { x:690, y:230, w:140, h:20 },
-      { x:830, y:155, w:130, h:20 },
-    ],
-    goombas: [
-      { id:0, x:80,  y:480, minX:5,   maxX:170, speed:85 },
-      { id:1, x:390, y:480, minX:325, maxX:470, speed:85 },
-      { id:2, x:720, y:480, minX:655, maxX:820, speed:90 },
-      { id:3, x:310, y:338, minX:285, maxX:370, speed:75 },
-      { id:4, x:390, y:208, minX:335, maxX:510, speed:85 },
-      { id:5, x:745, y:208, minX:695, maxX:820, speed:85 },
-    ],
-    coins: [
-      {id:0,x:145,y:398},{id:1,x:195,y:398},
-      {id:2,x:300,y:338},{id:3,x:345,y:338},
-      {id:4,x:185,y:268},{id:5,x:235,y:268},
-      {id:6,x:390,y:208},{id:7,x:450,y:208},{id:8,x:500,y:208},
-      {id:9,x:575,y:268},{id:10,x:625,y:268},
-      {id:11,x:725,y:208},{id:12,x:780,y:208},
-      {id:13,x:855,y:133},{id:14,x:915,y:133},
-      {id:15,x:100,y:472},{id:16,x:460,y:408},
-    ],
-    mushrooms: [{ id:0, x:450, y:208 }, { id:1, x:725, y:208 }],
-    flag: { x:920, y:155 },
-  },
-  {
-    name: 'World 1-5', background: '#7f0000',
-    groundColor: 0x5a1a1a, platformColor: 0x8b2020,
-    spawnY: 370,
-    platforms: [
-      { x:0,   y:500, w:110, h:40 },
-      { x:150, y:445, w:90,  h:20 },
-      { x:300, y:390, w:90,  h:20 },
-      { x:200, y:330, w:90,  h:20 },
-      { x:360, y:280, w:100, h:20 },
-      { x:500, y:330, w:90,  h:20 },
-      { x:630, y:270, w:100, h:20 },
-      { x:760, y:330, w:90,  h:20 },
-      { x:880, y:260, w:80,  h:20 },
-      { x:690, y:195, w:100, h:20 },
-      { x:550, y:205, w:90,  h:20 },
-      { x:410, y:185, w:90,  h:20 },
-      { x:270, y:235, w:90,  h:20 },
-      { x:790, y:125, w:170, h:20 },
-    ],
-    goombas: [
-      { id:0, x:175, y:423, minX:155, maxX:230, speed:95 },
-      { id:1, x:325, y:368, minX:305, maxX:380, speed:95 },
-      { id:2, x:395, y:258, minX:365, maxX:445, speed:100 },
-      { id:3, x:525, y:308, minX:505, maxX:580, speed:95 },
-      { id:4, x:655, y:248, minX:635, maxX:720, speed:100 },
-      { id:5, x:785, y:308, minX:765, maxX:840, speed:95 },
-      { id:6, x:715, y:173, minX:695, maxX:780, speed:105 },
-    ],
-    coins: [
-      {id:0,x:180,y:423},{id:1,x:325,y:368},
-      {id:2,x:225,y:308},{id:3,x:390,y:258},
-      {id:4,x:525,y:308},{id:5,x:655,y:248},
-      {id:6,x:785,y:308},{id:7,x:905,y:238},
-      {id:8,x:715,y:173},{id:9,x:755,y:173},
-      {id:10,x:570,y:183},{id:11,x:615,y:183},
-      {id:12,x:430,y:163},{id:13,x:475,y:163},
-      {id:14,x:820,y:103},{id:15,x:870,y:103},{id:16,x:920,y:103},
-    ],
-    mushrooms: [{ id:0, x:390, y:258 }, { id:1, x:715, y:173 }],
-    flag: { x:930, y:125 },
-  },
-];
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-
-const PLAYER_COLORS     = { 1: 0xe74c3c, 2: 0x3498db, 3: 0x2ecc71, 4: 0xf39c12 };
-const PLAYER_COLOR_NAMES = { 1: 'Red',   2: 'Blue',  3: 'Green',  4: 'Orange' };
+// LEVELS, PLAYER_COLORS, PLAYER_COLOR_NAMES come from levels.js (loaded before
+// this script in index.html) and are also require()d by server.js.
 
 // ── Scene ─────────────────────────────────────────────────────────────────────
 
@@ -229,7 +49,6 @@ class GameScene extends Phaser.Scene {
     this.currentLevel       = 0;
     this.walkFrame          = 0;
     this.walkTimer          = 0;
-    this.wasOnGround        = true;
     this.remoteSprites      = new Map();
     this.remoteScores       = new Map();
     this.platformGroup      = null;
@@ -252,13 +71,13 @@ class GameScene extends Phaser.Scene {
     this.leaderboardText    = null;
     this.levelText          = null;
     this.bannerText         = null;
-    this.sound              = null;
+    // Renamed from `this.sound` — Phaser.Scene already has a `sound` property
+    // (the SoundManager plugin) and overwriting it is fragile.
+    this.sfx                = null;
   }
 
-  preload() {}
-
   create() {
-    this.sound = new SoundManager();
+    this.sfx = new SoundManager();
     this._generateTextures();
     this._setupInput();
     this._setupHUD();
@@ -439,7 +258,6 @@ class GameScene extends Phaser.Scene {
   }
 
   _addPlayerColliders() {
-    const pn = this.selfData.playerNumber;
     this.levelColliders.push(
       this.physics.add.collider(this.localPlayer, this.platformGroup),
       this.physics.add.overlap(this.localPlayer, this.goombas,      this._onGoombaOverlap,   null, this),
@@ -448,13 +266,11 @@ class GameScene extends Phaser.Scene {
       this.physics.add.overlap(this.localPlayer, this.flagZone, () => {
         if (!this.flagReached) {
           this.flagReached = true;
-          this.sound.flag();
+          this.sfx.flag();
           this.socket.emit('flag_reached');
         }
       })
     );
-    // Use _ to suppress unused-var; playerNumber baked into closure
-    void pn;
   }
 
   // ── Input & HUD ───────────────────────────────────────────────────────────
@@ -477,15 +293,19 @@ class GameScene extends Phaser.Scene {
     }).setOrigin(1, 0).setDepth(10);
   }
 
-  _updateScoreDisplay() {
+  // Display-only — safe to call from remote score updates without re-broadcasting.
+  _refreshScoreDisplay() {
     this.scoreText.setText(`Score: ${this.score}`);
-    this.socket.emit('score_update', { score: this.score });
-
-    // Build leaderboard
     const entries = [{ pn: this.selfData.playerNumber, score: this.score }];
     for (const [pn, s] of this.remoteScores) entries.push({ pn, score: s });
     entries.sort((a, b) => b.score - a.score);
     this.leaderboardText.setText(entries.map(e => `P${e.pn}: ${e.score}`).join('\n'));
+  }
+
+  // Call only when the local score actually changes.
+  _onLocalScoreChanged() {
+    this._refreshScoreDisplay();
+    this.socket.emit('score_update', { score: this.score });
   }
 
   _showBanner(text, color = '#FFD700') {
@@ -527,34 +347,40 @@ class GameScene extends Phaser.Scene {
         this.spawnRemotePlayer(p);
         this.remoteScores.set(p.playerNumber, p.score || 0);
       }
-      this._updateScoreDisplay();
+      this._onLocalScoreChanged();
     });
 
     this.socket.on('player_joined', p => {
       this.spawnRemotePlayer(p);
       this.remoteScores.set(p.playerNumber, 0);
-      this._updateScoreDisplay();
+      this._refreshScoreDisplay();
     });
 
-    this.socket.on('player_moved', ({ id, x, y, facing, powered }) => {
+    this.socket.on('player_moved', ({ id, x, y, velocityX, velocityY, facing, powered, animFrame }) => {
       const r = this.remoteSprites.get(id);
       if (!r) return;
-      r.sprite.setPosition(x, y);
-      r.sprite.setFlipX(facing < 0);
-      r.sprite.setScale(powered ? 1.5 : 1.0);
-      r.label.setPosition(x, y - 36);
+      r.targetX     = x;
+      r.targetY     = y;
+      r.velocityX   = velocityX || 0;
+      r.velocityY   = velocityY || 0;
+      r.facing      = facing;
+      r.powered     = !!powered;
+      r.animFrame   = animFrame || 'idle';
     });
 
     this.socket.on('player_left', ({ id }) => {
       const r = this.remoteSprites.get(id);
       if (!r) return;
+      // Clear leaderboard entry so a reused slot doesn't inherit the old score.
+      this.remoteScores.delete(r.playerNumber);
       r.sprite.destroy(); r.label.destroy();
       this.remoteSprites.delete(id);
+      this._refreshScoreDisplay();
     });
 
     this.socket.on('score_updated', ({ playerNumber, score }) => {
       this.remoteScores.set(playerNumber, score);
-      this._updateScoreDisplay();
+      this._refreshScoreDisplay();
     });
 
     this.socket.on('goomba_killed',    ({ id }) => this._killGoomba(id));
@@ -571,7 +397,7 @@ class GameScene extends Phaser.Scene {
 
     this.socket.on('level_change', ({ level }) => {
       this._showBanner(LEVELS[level].name);
-      this.sound.levelUp();
+      this.sfx.levelUp();
       this.deadGoombaIds = new Set(); this.collectedCoinIds = new Set(); this.collectedMushroomIds = new Set();
       this.flagReached = false; this.powered = false;
       this._loadLevel(level);
@@ -637,7 +463,15 @@ class GameScene extends Phaser.Scene {
       fontSize: '11px', fontFamily: 'monospace',
       color: '#ffffff', stroke: '#000000', strokeThickness: 3
     }).setOrigin(0.5, 0.5).setDepth(3);
-    this.remoteSprites.set(p.id, { sprite, label });
+    this.remoteSprites.set(p.id, {
+      sprite, label,
+      playerNumber: p.playerNumber,
+      targetX: p.x, targetY: p.y,
+      velocityX: 0, velocityY: 0,
+      facing: p.facing || 1,
+      powered: false,
+      animFrame: 'idle',
+    });
   }
 
   // ── Game mechanics ────────────────────────────────────────────────────────
@@ -650,8 +484,8 @@ class GameScene extends Phaser.Scene {
       this._killGoomba(goomba.goombaDef.id);
       player.body.setVelocityY(-420);
       this.score += 100;
-      this._updateScoreDisplay();
-      this.sound.stomp();
+      this._onLocalScoreChanged();
+      this.sfx.stomp();
       this.socket.emit('goomba_killed', { id: goomba.goombaDef.id });
     } else {
       if (this.powered) {
@@ -673,8 +507,8 @@ class GameScene extends Phaser.Scene {
     if (!this.coinSprites.has(id)) return;
     coin.destroy(); this.coinSprites.delete(id);
     this.score += 200;
-    this._updateScoreDisplay();
-    this.sound.coin();
+    this._onLocalScoreChanged();
+    this.sfx.coin();
     this.socket.emit('coin_collected', { id });
   }
 
@@ -685,8 +519,8 @@ class GameScene extends Phaser.Scene {
     this.powered = true;
     this.localPlayer.setScale(1.5);
     this.score += 500;
-    this._updateScoreDisplay();
-    this.sound.mushroom();
+    this._onLocalScoreChanged();
+    this.sfx.mushroom();
     this.socket.emit('mushroom_collected', { id });
   }
 
@@ -694,7 +528,7 @@ class GameScene extends Phaser.Scene {
     this.powered = false;
     this.localPlayer.setScale(1.0);
     this._startInvincibility(1500);
-    this.sound.die();
+    this.sfx.die();
   }
 
   _respawn() {
@@ -703,7 +537,7 @@ class GameScene extends Phaser.Scene {
     this.localPlayer.setScale(1.0);
     this.localPlayer.setPosition(this.selfData.x, LEVELS[this.currentLevel].spawnY);
     this.localPlayer.body.setVelocity(0, 0);
-    this.sound.die();
+    this.sfx.die();
     this._startInvincibility(2000);
   }
 
@@ -734,23 +568,25 @@ class GameScene extends Phaser.Scene {
 
     if ((this.cursors.up.isDown || this.spaceKey.isDown) && onGround) {
       body.setVelocityY(-560);
-      this.sound.jump();
+      this.sfx.jump();
     }
 
     this.localPlayer.setFlipX(this.facing < 0);
 
     // Animation state
     const moving = Math.abs(body.velocity.x) > 10;
+    let animFrame;
     if (!onGround) {
-      this.localPlayer.setTexture(`player_${pn}_jump`);
+      animFrame = 'jump';
     } else if (moving) {
       this.walkTimer += delta;
       if (this.walkTimer >= 100) { this.walkTimer = 0; this.walkFrame = 1 - this.walkFrame; }
-      this.localPlayer.setTexture(`player_${pn}_walk${this.walkFrame}`);
+      animFrame = `walk${this.walkFrame}`;
     } else {
       this.walkTimer = 0; this.walkFrame = 0;
-      this.localPlayer.setTexture(`player_${pn}_idle`);
+      animFrame = 'idle';
     }
+    this.localPlayer.setTexture(`player_${pn}_${animFrame}`);
 
     this.localLabel.setPosition(this.localPlayer.x, this.localPlayer.y - (this.powered ? 42 : 32));
 
@@ -766,14 +602,28 @@ class GameScene extends Phaser.Scene {
       goomba.setFlipX(goomba.direction < 0);
     }
 
-    // Network sync (20/s)
+    // Remote players: interpolate toward last reported position and pick anim frame
+    // from the synced state. Lerp factor tuned for 20 Hz updates over a 60 Hz tick.
+    const lerp = Math.min(1, delta / 80);
+    for (const [, r] of this.remoteSprites) {
+      const sx = r.sprite.x + (r.targetX - r.sprite.x) * lerp;
+      const sy = r.sprite.y + (r.targetY - r.sprite.y) * lerp;
+      r.sprite.setPosition(sx, sy);
+      r.sprite.setFlipX(r.facing < 0);
+      r.sprite.setScale(r.powered ? 1.5 : 1.0);
+      r.sprite.setTexture(`player_${r.playerNumber}_${r.animFrame}`);
+      r.label.setPosition(sx, sy - (r.powered ? 42 : 36));
+    }
+
+    // Network sync (20/s) — subtract the interval so leftover ms carry to the next tick.
     this.sendAccumulator += delta;
     if (this.sendAccumulator >= 50) {
-      this.sendAccumulator = 0;
+      this.sendAccumulator -= 50;
       this.socket.emit('position_update', {
         x: this.localPlayer.x, y: this.localPlayer.y,
         velocityX: body.velocity.x, velocityY: body.velocity.y,
-        facing: this.facing, powered: this.powered
+        facing: this.facing, powered: this.powered,
+        animFrame,
       });
     }
   }
