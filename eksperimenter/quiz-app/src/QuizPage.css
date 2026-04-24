@@ -15,24 +15,26 @@
 .quiz-progress-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   margin-bottom: 0.5rem;
 }
 
 .quit-button {
+  display: block;
+  margin: 2rem auto 0;
   background: transparent;
   color: rgba(255, 255, 255, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 0.25rem 0.65rem;
-  font-size: 0.8rem;
-  border-radius: 9999px;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition: color 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .quit-button:hover {
-  color: rgba(255, 255, 255, 0.75);
-  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .quiz-counter {

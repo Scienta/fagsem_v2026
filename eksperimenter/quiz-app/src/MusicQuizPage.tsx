@@ -166,9 +166,6 @@ export function MusicQuizPage({ genre, onFinish, onQuit }: Props) {
     <main className={`quiz${themeClass}`}>
       <div className="quiz-progress">
         <div className="quiz-progress-header">
-          <button type="button" className="quit-button" onClick={onQuit}>
-            Avslutt
-          </button>
           <span className="quiz-counter">
             Spørsmål {currentIndex + 1} av {questions.length}
           </span>
@@ -241,6 +238,10 @@ export function MusicQuizPage({ genre, onFinish, onQuit }: Props) {
             {isLastQuestion ? 'Se resultat' : 'Neste spørsmål'}
           </button>
         )}
+
+        <button type="button" className="quit-button" onClick={onQuit}>
+          Avslutt quiz
+        </button>
       </div>
     </main>
   )
