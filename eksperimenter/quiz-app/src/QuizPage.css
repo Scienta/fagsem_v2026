@@ -12,11 +12,34 @@
   margin: 0 auto 3rem;
 }
 
+.quiz-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
 .quiz-counter {
   color: #c4b5fd;
   font-size: 0.9rem;
-  display: block;
-  margin-bottom: 0.5rem;
+}
+
+.timer {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #c4b5fd;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s;
+}
+
+.timer--urgent {
+  color: #ef4444;
+  animation: timer-pulse 0.7s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
 }
 
 .progress-bar {

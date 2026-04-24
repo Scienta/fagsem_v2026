@@ -4,6 +4,9 @@ import { searchTrack } from './spotify/spotifyClient'
 import './QuizPage.css'
 import './MusicQuizPage.css'
 
+const TIMER_START = 30
+const URGENCY_THRESHOLD = 10
+
 interface Props {
   onFinish: (score: number) => void
 }
@@ -17,12 +20,14 @@ export function MusicQuizPage({ onFinish }: Props) {
   const [artworkUrl, setArtworkUrl] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(TIMER_START)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const question = musicQuestions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isAnswered = selectedOption !== null
   const isLastQuestion = currentIndex === musicQuestions.length - 1
+  const isUrgent = timeLeft <= URGENCY_THRESHOLD
 
   useEffect(() => {
     let cancelled = false
@@ -31,6 +36,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     setPreviewUrl(null)
     setArtworkUrl(null)
     setIsPlaying(false)
+    setTimeLeft(TIMER_START)
     audioRef.current?.pause()
 
     searchTrack(question.searchQuery)
@@ -55,6 +61,21 @@ export function MusicQuizPage({ onFinish }: Props) {
     audio.play().catch(() => {})
     setIsPlaying(true)
   }, [previewUrl])
+
+  useEffect(() => {
+    if (isAnswered || timeLeft === 0) {
+      if (timeLeft === 0 && !isAnswered) {
+        setAnswers(prev => {
+          const next = [...prev]
+          next[currentIndex] = ''
+          return next
+        })
+      }
+      return
+    }
+    const tick = setTimeout(() => setTimeLeft(prev => prev - 1), 1000)
+    return () => clearTimeout(tick)
+  }, [timeLeft, isAnswered, currentIndex])
 
   function togglePlay() {
     const audio = audioRef.current
@@ -100,9 +121,14 @@ export function MusicQuizPage({ onFinish }: Props) {
   return (
     <main className="quiz">
       <div className="quiz-progress">
-        <span className="quiz-counter">
-          Spørsmål {currentIndex + 1} av {musicQuestions.length}
-        </span>
+        <div className="quiz-progress-header">
+          <span className="quiz-counter">
+            Spørsmål {currentIndex + 1} av {musicQuestions.length}
+          </span>
+          <span className={`timer${isUrgent ? ' timer--urgent' : ''}`}>
+            {timeLeft}s
+          </span>
+        </div>
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${progress}%` }} />
         </div>
