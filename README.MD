@@ -3,6 +3,10 @@
 # Program fagseminar 
 
 ## TLDR; 
+```text
+WIFI: scandic_easy
+```text
+
 Målet med denne helgen er å ekserimentere med språkmodeller. Under seminaret skal vi skrive kode, kanskje gjøre noen administrative oppgaver og skrive litt tekst. Poenget er å skrive minst mulig direkte, OG MEST MULIG VED HJELP AV SPRÅKMODELL.
 
 Streik: Foreløpig ser det ut til at arrangementet går som planlagt, til tross for streik! I verste fall har vi en backup-plan :-) 
@@ -66,7 +70,7 @@ Vi har delt inn i grupper a +-4 innenfor de temaene
 4.1 Are Fossli Viberg, Maria Selivanova 
 
 ## Personlig assistent 
-5.1  Nina Olsen, Vibeke Corneliussen, Stian Meuche,Hege Leite Størvold, Cathrine Dannevig 
+5.1  Nina Olsen, Vibeke Corneliussen, Stian Meuche, Cathrine Dannevig 
 
 # slack 
 Hvis man lurer på noe kan spørsmålet stilles til Nils-Christian, Haakon eller Tobias, aller helst på slack så alle ser svaret. Vi bruker
