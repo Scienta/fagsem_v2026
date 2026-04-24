@@ -76,6 +76,7 @@ Det er bare såvidt det funker med lokale modeller:
 #### Hva funket
 
 Claude.
+glm-4.7-flash:q4_K_M fungerte forsåvidt, men brukte 1 time og 45  minutter. Avik på 1.- i forhold til fasit må vel være innafor :D 
 
 #### Hva funket ikke
 
