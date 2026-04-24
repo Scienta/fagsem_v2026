@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { generateQuizQuestions } from './spotify/spotifyClient'
-import type { QuizQuestion } from './spotify/spotifyClient'
+import { generateQuizQuestions } from './spotify/musicClient'
+import type { QuizQuestion } from './spotify/musicClient'
 import './QuizPage.css'
 import './MusicQuizPage.css'
 
