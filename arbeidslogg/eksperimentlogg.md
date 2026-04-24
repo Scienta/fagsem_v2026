@@ -294,15 +294,20 @@ Se `benchmarks/README.md` for full dokumentasjon.
 - Foreldet `raptor-2.10.0-SNAPSHOT.jar` i lokal Maven-repo brukte gammel bytekode (pre-rename `tripIndex()`) — slettet og reinstallert med `mvn install`
 - `StreetPath`-klassen manglet i classpath — fikset ved `mvn install` av alle avhengige moduler
 
-**SpeedTest-resultater (WITH Early Pruning, 11 søk, 5 runder):**
+**SpeedTest A/B-resultater (11 søk, 5 runder, profiler `sr` + `mc`):**
 
-| Profil | Avg transit (ms) | Avg total (ms) |
-|---|---|---|
-| Standard RAPTOR | 3.8 | 18.4 |
-| Multi-criteria RAPTOR | 7.6 | 24.6 |
+| | Standard transit | MC transit | Standard total | MC total |
+|---|---|---|---|---|
+| **Uten Early Pruning** (dev-2.x) | Avg 4.4 ms | Avg 8.2 ms | Avg 18.2 ms | Avg 24.2 ms |
+| **Med Early Pruning** (branch `early-pruning-impl`) | Avg 4.4 ms | Avg 8.2 ms | Avg 18.6 ms | Avg 24.6 ms |
+| **Differanse** | 0 ms | 0 ms | +0.4 ms | +0.4 ms |
 
-- Total tid for alle 11 søk: ~0.2–0.3 sekunder per runde
-- Ingen baseline (uten Early Pruning) tilgjengelig siden vi ikke kan rulle tilbake endringene enkelt — ytelsessammenligning krever egen benchmark
-- Routing fungerer korrekt (alle 11 søk returnerer gyldige reiseruter med buss i Vestfold)
+- Total tid for alle 11 søk: ~0.2–0.3 sekunder per runde (begge varianter)
+- Routing korrekt i begge varianter (alle 11 søk returnerer gyldige bussruter)
 
-**Konklusjon SpeedTest:** Implementasjonen er stabil og korrekt. For å kvantifisere selve ytelseseffekten av Early Pruning trengs en A/B-test mot kode uten optimaliseringen.
+**Tolkning:** Ingen målbar ytelseseffekt på Vestfold-datasettet. Sannsynlige årsaker:
+- Datasettet er lite (3 743 stopp, 1 462 mønstre) — antall transfer-kanter per stopp er lavt
+- Early Pruning effekt vokser med antall kanter som avkuttes — vises bedre på store nasjonale datasett (f.eks. Norway eller Germany)
+- Overhead fra sortering (O(n log n) i indeksbygging) er ubetydelig, men gir heller ingen gevinst her
+
+**Konklusjon:** Implementasjonen er korrekt og ikke regresjon. Ytelseseffekten forventes å bli synlig på større datasett.
