@@ -77,6 +77,19 @@ export function MusicQuizPage({ onFinish }: Props) {
     return () => clearTimeout(tick)
   }, [timeLeft, isAnswered, currentIndex])
 
+  useEffect(() => {
+    if (timeLeft !== 0 || !isAnswered) return
+    const advance = setTimeout(() => {
+      if (isLastQuestion) {
+        const score = musicQuestions.filter((q, i) => answers[i] === q.correctArtist).length
+        onFinish(score)
+      } else {
+        setCurrentIndex(prev => prev + 1)
+      }
+    }, 1500)
+    return () => clearTimeout(advance)
+  }, [timeLeft, isAnswered, isLastQuestion, answers, onFinish])
+
   function togglePlay() {
     const audio = audioRef.current
     if (!audio) return
