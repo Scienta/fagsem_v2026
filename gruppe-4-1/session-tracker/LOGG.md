@@ -80,4 +80,27 @@ Finding { id, sessionId, text, type: OBSERVATION|RESULT|BLOCKER }
 - `.gitignore` lagt til i `gruppe-4-1/session-tracker/` for å holde build-output ute av repoet
 - `./gradlew clean build` kjører grønt
 
+## 2026-04-24 – GroupController implementert
+
+- Implementerte `GET /groups` i `GroupController.kt`
+- Bruker `ConcurrentHashMap<String, Group>` som in-memory store, initialisert med 3 hardkodede grupper ved oppstart
+- Grupper seed-es i en `also`-blokk på map-initialiseringen
+- Kompilering OK med `./gradlew compileKotlin`
+- Oppgave markert som `[x]` i KOORDINERING.md
+
+## 2026-04-24 – SessionController implementert
+
+- Implementerte `POST /sessions` — oppretter ny sesjon med UUID og `startedAt` satt av server, lagrer i `ConcurrentHashMap`
+- Implementerte `PATCH /sessions/:id` — oppdaterer status med `session.copy()`; kaster `ResponseStatusException(404)` ved ukjent id
+- `SessionStatus.valueOf(request.status)` brukes for å parse status-streng til enum — kaster `IllegalArgumentException` ved ugyldig verdi (Spring returnerer 500, akseptabelt for nå)
+- Kompilering OK
+
+## 2026-04-24 – FindingController implementert
+
+- Implementerte alle tre endepunkter: `POST /sessions/:id/findings`, `GET /sessions/:id/findings`, `GET /findings?type=`
+- `FindingController` injecter `SessionController` for å validere at sesjon eksisterer — returnerer 404 ved ukjent id
+- `GET /findings` uten `?type=` returnerer alle funn; med `?type=` filtreres på `FindingType`-enum
+- `FindingType` parses direkte av Spring fra query-param til enum — ugyldig verdi gir 400 automatisk
+- Alle backend-oppgaver ferdig, kompilering OK
+
 <!-- Legg til nye oppføringer under her etter hvert som arbeidet skrider frem -->

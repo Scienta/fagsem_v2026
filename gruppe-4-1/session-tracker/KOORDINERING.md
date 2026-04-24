@@ -54,19 +54,19 @@ Finding {
 ## Oppgavestatus
 
 ### Backend
-- [ ] `GroupController` – `GET /groups` med seed-data (hardkod 2–3 grupper ved oppstart)
-- [ ] `SessionController` – `POST /sessions`, `PATCH /sessions/:id`
-- [ ] `FindingController` – `POST /sessions/:id/findings`, `GET /sessions/:id/findings`, `GET /findings`
-- [ ] In-memory storage (ConcurrentHashMap per ressurstype)
-- [ ] Returnerer 404 med beskjed ved ukjent id
+- [x] `GroupController` – `GET /groups` med seed-data (hardkod 2–3 grupper ved oppstart)
+- [x] `SessionController` – `POST /sessions`, `PATCH /sessions/:id`
+- [x] `FindingController` – `POST /sessions/:id/findings`, `GET /sessions/:id/findings`, `GET /findings`
+- [x] In-memory storage (ConcurrentHashMap per ressurstype)
+- [x] Returnerer 404 med beskjed ved ukjent id
 
 ### Frontend
-- [ ] Hent og vis grupper fra `GET /api/groups`
-- [ ] Hent og vis aktive sesjoner
-- [ ] Hent og vis live funn-feed fra `GET /api/findings`
-- [ ] Mulighet til å starte sesjon for en gruppe (POST)
-- [ ] Mulighet til å logge funn i en sesjon (POST)
-- [ ] Mulighet til å markere sesjon som done (PATCH)
+- [x] Hent og vis grupper fra `GET /api/groups`
+- [x] Hent og vis aktive sesjoner (lokal state — se åpne spørsmål)
+- [x] Hent og vis live funn-feed fra `GET /api/findings` (polling hvert 5s)
+- [x] Mulighet til å starte sesjon for en gruppe (POST)
+- [x] Mulighet til å logge funn i en sesjon (POST)
+- [x] Mulighet til å markere sesjon som done (PATCH)
 
 ### Tester – Backend (JUnit 5 + MockMvc)
 - [ ] `GroupControllerTest` – `GET /groups` returnerer 200 og ikke-tom liste med gyldige felter
@@ -101,7 +101,7 @@ Finding {
 
 *(Agenter: legg til spørsmål her dersom noe er uklart — ikke anta, ikke gjett)*
 
-- [ ] *(ingen åpne spørsmål ennå)*
+- [ ] **Mangler `GET /sessions`** — Frontend trenger dette for å vise sesjoner som andre brukere har startet (og ved refresh). Nåværende løsning: sesjoner holdes i lokal React-state etter `POST /sessions`. Bør backend legge til `GET /sessions` (evt. med `?status=ACTIVE`)? — *Lagt til av frontendagent 2026-04-24*
 
 ---
 
