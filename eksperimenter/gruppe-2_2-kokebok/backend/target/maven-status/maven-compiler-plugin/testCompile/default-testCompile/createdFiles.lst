@@ -1,0 +1,6 @@
+no/scienta/kokebok/service/RecipeServiceTest.class
+no/scienta/kokebok/controller/MenuControllerTest.class
+no/scienta/kokebok/controller/ImageControllerTest.class
+no/scienta/kokebok/service/ImageServiceTest.class
+no/scienta/kokebok/controller/RecipeControllerTest.class
+no/scienta/kokebok/repository/RecipeRepositoryTest.class

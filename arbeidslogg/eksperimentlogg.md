@@ -56,9 +56,40 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 
 ### Oppføring
 
-- Tidspunkt:
-- Hva ble testet:
+- Tidspunkt: 15:40
+- Hva ble testet: kjør inn prompten, i planned mode
 - Betingelse / variant:
 - Resultat / observasjon:
 - Måling / eksempel:
 - Tolkning / usikkerhet:
+
+- Tidspunkt: 15:40
+- Hva ble testet: spesifiser TDD apprach, tester for all kode
+- Betingelse / variant: planned
+- Resultat / observasjon:
+- Måling / eksempel:
+- Tolkning / usikkerhet:
+
+- Tidspunkt: 16:25
+- Hva ble testet: App ferdig ✻ Baked for 23m 31s
+- Betingelse / variant: planned
+- Resultat / observasjon: Det var mange trivielle spørsmål underveis
+- Måling / eksempel:
+- Tolkning / usikkerhet:
+
+Summary Table
+
+Tidspunkt: 16:25
+- Hva ble testet: Ba claude om å evaluere appen
+- Betingelse / variant: planned
+┌───────────────────────────────┬───────┬────────────────────────────────────────────────────────┐
+│           Severity            │ Count │                       Top items                        │
+├───────────────────────────────┼───────┼────────────────────────────────────────────────────────┤
+│ Critical (security/data loss) │ 6     │ Credentials in config, path traversal, ddl-auto=update │
+├───────────────────────────────┼───────┼────────────────────────────────────────────────────────┤
+│ High (correctness bugs)       │ 8     │ Missing @Valid, bad enum handling, index-as-key        │
+├───────────────────────────────┼───────┼────────────────────────────────────────────────────────┤
+│ Medium (robustness/perf)      │ 8     │ N+1 queries, no debounce, silent failures              │
+├───────────────────────────────┼───────┼────────────────────────────────────────────────────────┤
+│ Low (style/minor)             │ 5     │ CORS headers, broken image fallback                    │
+└───────────────────────────────┴───────┴────────────────────────────────────────────────────────┘
