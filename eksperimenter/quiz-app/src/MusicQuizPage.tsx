@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { musicQuestions } from './quiz/musicQuestions'
-import { searchTrack } from './spotify/spotifyClient'
+import { generateQuizQuestions } from './spotify/spotifyClient'
+import type { QuizQuestion } from './spotify/spotifyClient'
 import './QuizPage.css'
 import './MusicQuizPage.css'
 
@@ -12,66 +12,49 @@ interface Props {
 }
 
 export function MusicQuizPage({ onFinish }: Props) {
+  const [questions, setQuestions] = useState<QuizQuestion[]>([])
+  const [isGenerating, setIsGenerating] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [answers, setAnswers] = useState<(string | null)[]>(
-    () => new Array(musicQuestions.length).fill(null)
-  )
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [artworkUrl, setArtworkUrl] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [answers, setAnswers] = useState<(string | null)[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [timeLeft, setTimeLeft] = useState(TIMER_START)
   const [timedOut, setTimedOut] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
 
-  const question = musicQuestions[currentIndex]
+  useEffect(() => {
+    generateQuizQuestions().then(qs => {
+      setQuestions(qs)
+      setAnswers(new Array(qs.length).fill(null))
+      setIsGenerating(false)
+    })
+  }, [])
+
+  const question = questions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isAnswered = selectedOption !== null
-  const isLastQuestion = currentIndex === musicQuestions.length - 1
+  const isLastQuestion = currentIndex === questions.length - 1
   const isUrgent = timeLeft <= URGENCY_THRESHOLD && !isAnswered
 
+  // Autoplay and reset timer when question changes
   useEffect(() => {
-    let cancelled = false
-
-    setIsLoading(true)
-    setPreviewUrl(null)
-    setArtworkUrl(null)
+    if (!question) return
     setIsPlaying(false)
     setTimeLeft(TIMER_START)
     setTimedOut(false)
     audioRef.current?.pause()
 
-    searchTrack(question.searchQuery)
-      .then(track => {
-        if (cancelled) return
-        setIsLoading(false)
-        if (track) {
-          setPreviewUrl(track.previewUrl)
-          setArtworkUrl(track.artworkUrl)
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setIsLoading(false)
-      })
-
-    return () => { cancelled = true }
-  }, [question.searchQuery])
-
-  useEffect(() => {
     const audio = audioRef.current
-    if (!audio || !previewUrl) return
+    if (!audio) return
     audio.play().catch(() => {})
     setIsPlaying(true)
-  }, [previewUrl])
+  }, [currentIndex, question])
 
-  // Count down while question is unanswered
   useEffect(() => {
     if (isAnswered || timedOut || timeLeft <= 0) return
     const tick = setTimeout(() => setTimeLeft(prev => prev - 1), 1000)
     return () => clearTimeout(tick)
   }, [timeLeft, isAnswered, timedOut])
 
-  // When timer hits 0, mark question as timed out and reveal correct answer
   useEffect(() => {
     if (timeLeft !== 0 || timedOut || isAnswered) return
     setTimedOut(true)
@@ -82,19 +65,18 @@ export function MusicQuizPage({ onFinish }: Props) {
     })
   }, [timeLeft, timedOut, isAnswered, currentIndex])
 
-  // Auto-advance 1.5s after timeout
   useEffect(() => {
     if (!timedOut) return
     const advance = setTimeout(() => {
       if (isLastQuestion) {
-        const score = musicQuestions.filter((q, i) => answers[i] === q.correctArtist).length
+        const score = questions.filter((q, i) => answers[i] === q.correctArtist).length
         onFinish(score)
       } else {
         setCurrentIndex(prev => prev + 1)
       }
     }, 1500)
     return () => clearTimeout(advance)
-  }, [timedOut, isLastQuestion, answers, onFinish])
+  }, [timedOut, isLastQuestion, questions, answers, onFinish])
 
   function togglePlay() {
     const audio = audioRef.current
@@ -121,7 +103,7 @@ export function MusicQuizPage({ onFinish }: Props) {
 
   function handleNext() {
     if (isLastQuestion) {
-      const score = musicQuestions.filter((q, i) => answers[i] === q.correctArtist).length
+      const score = questions.filter((q, i) => answers[i] === q.correctArtist).length
       onFinish(score)
     } else {
       setCurrentIndex(prev => prev + 1)
@@ -135,14 +117,22 @@ export function MusicQuizPage({ onFinish }: Props) {
     return 'option'
   }
 
-  const progress = ((currentIndex + 1) / musicQuestions.length) * 100
+  if (isGenerating) {
+    return (
+      <main className="quiz generating">
+        <p className="generating-text">Genererer quiz...</p>
+      </main>
+    )
+  }
+
+  const progress = ((currentIndex + 1) / questions.length) * 100
 
   return (
     <main className="quiz">
       <div className="quiz-progress">
         <div className="quiz-progress-header">
           <span className="quiz-counter">
-            Spørsmål {currentIndex + 1} av {musicQuestions.length}
+            Spørsmål {currentIndex + 1} av {questions.length}
           </span>
           <span className={`timer${isUrgent ? ' timer--urgent' : ''}`}>
             {timeLeft}s
@@ -157,30 +147,25 @@ export function MusicQuizPage({ onFinish }: Props) {
         <p className="question-text">Hvem er artisten?</p>
 
         <div className="audio-visual">
-          {artworkUrl && (
-            <div
-              className="album-cover-blur"
-              style={{ backgroundImage: `url(${artworkUrl})` }}
-            />
-          )}
+          <div
+            key={currentIndex}
+            className="album-cover-blur"
+            style={{ backgroundImage: `url(${question.artworkUrl})` }}
+          />
           <div className="audio-overlay">
-            {isLoading && <p className="audio-status">Laster inn sang...</p>}
-            {!isLoading && !previewUrl && (
-              <p className="audio-status">Forhåndsvisning ikke tilgjengelig</p>
-            )}
-            {previewUrl && (
-              <>
-                <audio ref={audioRef} src={previewUrl} onEnded={() => setIsPlaying(false)} />
-                <button
-                  type="button"
-                  className={`play-button${isPlaying ? ' playing' : ''}`}
-                  onClick={togglePlay}
-                  aria-label={isPlaying ? 'Pause' : 'Spill av'}
-                >
-                  {isPlaying ? '⏸' : '▶'}
-                </button>
-              </>
-            )}
+            <audio
+              ref={audioRef}
+              src={question.previewUrl}
+              onEnded={() => setIsPlaying(false)}
+            />
+            <button
+              type="button"
+              className={`play-button${isPlaying ? ' playing' : ''}`}
+              onClick={togglePlay}
+              aria-label={isPlaying ? 'Pause' : 'Spill av'}
+            >
+              {isPlaying ? '⏸' : '▶'}
+            </button>
           </div>
         </div>
 

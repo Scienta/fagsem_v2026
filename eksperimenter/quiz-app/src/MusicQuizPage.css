@@ -1,3 +1,14 @@
+.generating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generating-text {
+  color: #c4b5fd;
+  font-size: 1.25rem;
+}
+
 .audio-visual {
   position: relative;
   width: 100%;
