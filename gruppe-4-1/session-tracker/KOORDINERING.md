@@ -95,6 +95,7 @@ Finding {
 | 2026-04-24 | Server genererer id og startedAt, sendes ikke fra klient                | Unngår synkroniseringsproblemer          |
 | 2026-04-24 | Frontend proxier /api til backend, ikke hardkodet URL                   | Fungerer uten CORS-konfig                |
 | 2026-04-24 | Seed-data i GroupController oppdateres til faktiske seminargrupper (13 grupper, 5 temaer) fra README.MD | Applikasjonen skal reflektere virkeligheten |
+| 2026-04-24 | `GET /groups` returnerer grupper sortert etter `name` (alfanumerisk) | Gruppenavn er "Gruppe 1.1" osv. — sortering på backend gir riktig rekkefølge for alle klienter uten ekstra logikk i frontend |
 
 ---
 
