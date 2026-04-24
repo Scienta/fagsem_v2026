@@ -69,21 +69,21 @@ Finding {
 - [x] Mulighet til å markere sesjon som done (PATCH)
 
 ### Tester – Backend (JUnit 5 + MockMvc)
-- [ ] `GroupControllerTest` – `GET /groups` returnerer 200 og ikke-tom liste med gyldige felter
-- [ ] `SessionControllerTest` – `POST /sessions` returnerer Session med server-generert `id` og `startedAt`
-- [ ] `SessionControllerTest` – `PATCH /sessions/{id}` oppdaterer status til DONE
-- [ ] `SessionControllerTest` – `PATCH /sessions/{id}` med ukjent id returnerer 404
-- [ ] `FindingControllerTest` – `POST /sessions/{id}/findings` returnerer Finding
-- [ ] `FindingControllerTest` – `GET /sessions/{id}/findings` returnerer funn for riktig sesjon
-- [ ] `FindingControllerTest` – `GET /findings` uten parameter returnerer alle funn
-- [ ] `FindingControllerTest` – `GET /findings?type=BLOCKER` returnerer kun BLOCKER-funn
+- [x] `GroupControllerTest` – `GET /groups` returnerer 200 og ikke-tom liste med gyldige felter
+- [x] `SessionControllerTest` – `POST /sessions` returnerer Session med server-generert `id` og `startedAt`
+- [x] `SessionControllerTest` – `PATCH /sessions/{id}` oppdaterer status til DONE
+- [x] `SessionControllerTest` – `PATCH /sessions/{id}` med ukjent id returnerer 404
+- [x] `FindingControllerTest` – `POST /sessions/{id}/findings` returnerer Finding
+- [x] `FindingControllerTest` – `GET /sessions/{id}/findings` returnerer funn for riktig sesjon
+- [x] `FindingControllerTest` – `GET /findings` uten parameter returnerer alle funn
+- [x] `FindingControllerTest` – `GET /findings?type=BLOCKER` returnerer kun BLOCKER-funn
 
 ### Tester – Frontend (Vitest + Testing Library)
-- [ ] `App.test.tsx` – viser "No active sessions" når listen er tom
-- [ ] `App.test.tsx` – rendrer gruppenavn når grupper er lastet
-- [ ] `App.test.tsx` – viser funn-type og tekst i feed
-- [ ] API-kall bruker `/api/...`-prefiks (ikke hardkodet port)
-- [ ] Request body for POST inneholder ikke `id` eller `startedAt`
+- [x] `App.test.tsx` – viser "Ingen aktive sesjoner." når listen er tom
+- [x] `App.test.tsx` – rendrer gruppenavn når grupper er lastet
+- [x] `App.test.tsx` – viser funn-type og tekst i feed
+- [x] API-kall bruker `/api/...`-prefiks (ikke hardkodet port) — `api.test.ts`
+- [x] Request body for POST inneholder ikke `id` eller `startedAt` — `api.test.ts`
 
 ---
 
@@ -94,6 +94,7 @@ Finding {
 | 2026-04-24 | In-memory storage, ingen database                                       | Holder det enkelt for seminar-kontekst   |
 | 2026-04-24 | Server genererer id og startedAt, sendes ikke fra klient                | Unngår synkroniseringsproblemer          |
 | 2026-04-24 | Frontend proxier /api til backend, ikke hardkodet URL                   | Fungerer uten CORS-konfig                |
+| 2026-04-24 | Seed-data i GroupController oppdateres til faktiske seminargrupper (13 grupper, 5 temaer) fra README.MD | Applikasjonen skal reflektere virkeligheten |
 
 ---
 
