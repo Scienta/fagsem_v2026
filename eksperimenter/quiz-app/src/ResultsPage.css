@@ -76,3 +76,24 @@
 .play-again-button:active {
   transform: translateY(0);
 }
+
+/* ── Theme overrides ──────────────────────────────────────── */
+.results.theme-pop    { background: linear-gradient(135deg, #4a0060 0%, #c2185b 50%, #4a0060 100%); }
+.results.theme-pop    .score-number { background: linear-gradient(135deg, #f472b6, #fbbf24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.results.theme-pop    .play-again-button { background: linear-gradient(135deg, #be185d, #db2777); box-shadow: 0 4px 20px rgba(190,24,93,0.4); }
+
+.results.theme-rock   { background: linear-gradient(135deg, #1c0000 0%, #991b1b 50%, #1c0000 100%); }
+.results.theme-rock   .score-number { background: linear-gradient(135deg, #f87171, #fb923c); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.results.theme-rock   .play-again-button { background: linear-gradient(135deg, #b91c1c, #7f1d1d); box-shadow: 0 4px 20px rgba(185,28,28,0.4); }
+
+.results.theme-metal  { background: linear-gradient(135deg, #050505 0%, #1f1f1f 50%, #050505 100%); }
+.results.theme-metal  .score-number { background: linear-gradient(135deg, #6b7280, #9ca3af); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.results.theme-metal  .play-again-button { background: linear-gradient(135deg, #374151, #1f2937); box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+
+.results.theme-hiphop { background: linear-gradient(135deg, #0a0a0a 0%, #1c1600 50%, #0a0a0a 100%); }
+.results.theme-hiphop .score-number { background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.results.theme-hiphop .play-again-button { background: linear-gradient(135deg, #92400e, #78350f); box-shadow: 0 4px 20px rgba(146,64,14,0.4); }
+
+.results.theme-rnb    { background: linear-gradient(135deg, #150020 0%, #5b21b6 50%, #150020 100%); }
+.results.theme-rnb    .score-number { background: linear-gradient(135deg, #c084fc, #e879f9); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.results.theme-rnb    .play-again-button { background: linear-gradient(135deg, #7e22ce, #6d28d9); box-shadow: 0 4px 20px rgba(126,34,206,0.4); }

@@ -2,29 +2,6 @@ import { shuffle } from '../utils/shuffle'
 
 const ITUNES_API = 'https://itunes.apple.com/search'
 
-const SEARCH_TERMS = [
-  'pop hits 2023',
-  'pop hits 2022',
-  'pop hits 2020',
-  'pop hits 2015',
-  'pop hits 2010',
-  'rock hits',
-  'hip hop hits',
-  'rnb hits',
-  'indie pop hits',
-  'dance hits',
-  'soul classics',
-  'classic rock',
-  '80s rock hits',
-  '80s metal hits',
-  'heavy metal 80s',
-  'hair metal 80s',
-  'hard rock 80s',
-  'glam metal',
-  'thrash metal classics',
-  '80s arena rock',
-]
-
 export interface QuizQuestion {
   correctArtist: string
   options: string[]
@@ -38,8 +15,8 @@ interface ItunesTrack {
   artworkUrl100?: string
 }
 
-export async function generateQuizQuestions(count = 10): Promise<QuizQuestion[]> {
-  const term = SEARCH_TERMS[Math.floor(Math.random() * SEARCH_TERMS.length)]
+export async function generateQuizQuestions(terms: string[], count = 10): Promise<QuizQuestion[]> {
+  const term = terms[Math.floor(Math.random() * terms.length)]
   const params = new URLSearchParams({ term, entity: 'song', limit: '25' })
 
   const response = await fetch(`${ITUNES_API}?${params}`)

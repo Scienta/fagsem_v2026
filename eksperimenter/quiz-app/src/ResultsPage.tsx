@@ -3,6 +3,7 @@ import './ResultsPage.css'
 interface Props {
   score: number
   total: number
+  theme?: string
   onPlayAgain: () => void
 }
 
@@ -15,9 +16,10 @@ function feedbackMessage(score: number, total: number): string {
   return 'Bedre lykke neste gang!'
 }
 
-export function ResultsPage({ score, total, onPlayAgain }: Props) {
+export function ResultsPage({ score, total, theme, onPlayAgain }: Props) {
+  const themeClass = theme ? ` ${theme}` : ''
   return (
-    <main className="results">
+    <main className={`results${themeClass}`}>
       <div className="results-card">
         <span className="results-icon" aria-hidden="true">🏆</span>
         <h1 className="results-title">Quiz fullført!</h1>

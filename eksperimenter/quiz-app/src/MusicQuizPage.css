@@ -110,3 +110,16 @@
   animation: badge-appear 0.5s ease-out;
   text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
 }
+
+/* ── Theme overrides ──────────────────────────────────────── */
+.theme-pop    .play-button { border-color: rgba(244, 114, 182, 0.6); }
+.theme-rock   .play-button { border-color: rgba(248, 113, 113, 0.6); }
+.theme-metal  .play-button { border-color: rgba(156, 163, 175, 0.4); background: rgba(255,255,255,0.08); }
+.theme-hiphop .play-button { border-color: rgba(251, 191,  36, 0.6); }
+.theme-rnb    .play-button { border-color: rgba(192, 132, 252, 0.6); }
+
+.theme-pop    .points-badge { color: #f472b6; text-shadow: 0 0 20px rgba(244,114,182,0.5); }
+.theme-rock   .points-badge { color: #fb923c; text-shadow: 0 0 20px rgba(251,146, 60,0.5); }
+.theme-metal  .points-badge { color: #9ca3af; text-shadow: 0 0 20px rgba(156,163,175,0.5); }
+.theme-hiphop .points-badge { color: #fbbf24; text-shadow: 0 0 20px rgba(251,191, 36,0.5); }
+.theme-rnb    .points-badge { color: #c084fc; text-shadow: 0 0 20px rgba(192,132,252,0.5); }

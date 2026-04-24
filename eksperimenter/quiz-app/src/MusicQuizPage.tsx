@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { generateQuizQuestions } from './spotify/musicClient'
 import type { QuizQuestion } from './spotify/musicClient'
+import { GENRES, type Genre } from './genres'
 import './QuizPage.css'
 import './MusicQuizPage.css'
 
@@ -10,10 +11,12 @@ const MAX_QUESTION_SCORE = 30000
 const MIN_QUESTION_SCORE = 1000
 
 interface Props {
+  genre: Genre
   onFinish: (score: number, total: number) => void
 }
 
-export function MusicQuizPage({ onFinish }: Props) {
+export function MusicQuizPage({ genre, onFinish }: Props) {
+  const { theme, terms } = GENRES[genre]
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [isGenerating, setIsGenerating] = useState(true)
   const [isError, setIsError] = useState(false)
@@ -26,7 +29,7 @@ export function MusicQuizPage({ onFinish }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    generateQuizQuestions()
+    generateQuizQuestions(terms)
       .then(qs => {
         setQuestions(qs)
         setAnswers(new Array(qs.length).fill(null))
@@ -137,9 +140,11 @@ export function MusicQuizPage({ onFinish }: Props) {
     return 'option'
   }
 
+  const themeClass = theme ? ` ${theme}` : ''
+
   if (isGenerating) {
     return (
-      <main className="quiz generating">
+      <main className={`quiz generating${themeClass}`}>
         <p className="generating-text">Genererer quiz...</p>
       </main>
     )
@@ -147,7 +152,7 @@ export function MusicQuizPage({ onFinish }: Props) {
 
   if (isError) {
     return (
-      <main className="quiz generating">
+      <main className={`quiz generating${themeClass}`}>
         <p className="generating-text">Kunne ikke laste quiz. Sjekk internettforbindelsen og prøv igjen.</p>
       </main>
     )
@@ -157,7 +162,7 @@ export function MusicQuizPage({ onFinish }: Props) {
   const currentTotal = roundScores.reduce((a, b) => a + b, 0)
 
   return (
-    <main className="quiz">
+    <main className={`quiz${themeClass}`}>
       <div className="quiz-progress">
         <div className="quiz-progress-header">
           <span className="quiz-counter">

@@ -157,6 +157,47 @@
   transform: translateY(0);
 }
 
+/* ── Pop ──────────────────────────────────────────────────── */
+.quiz.theme-pop { background: linear-gradient(135deg, #4a0060 0%, #c2185b 50%, #4a0060 100%); }
+.quiz.theme-pop .progress-fill  { background: linear-gradient(90deg, #f472b6, #fb7185); }
+.quiz.theme-pop .timer-bar      { background: linear-gradient(90deg, #f472b6, #fb7185); }
+.quiz.theme-pop .quiz-counter,
+.quiz.theme-pop .quiz-score     { color: #fbcfe8; }
+.quiz.theme-pop .next-button    { background: linear-gradient(135deg, #be185d, #db2777); box-shadow: 0 4px 20px rgba(190,24,93,0.4); }
+
+/* ── Rock ─────────────────────────────────────────────────── */
+.quiz.theme-rock { background: linear-gradient(135deg, #1c0000 0%, #991b1b 50%, #1c0000 100%); }
+.quiz.theme-rock .progress-fill { background: linear-gradient(90deg, #f87171, #fb923c); }
+.quiz.theme-rock .timer-bar     { background: linear-gradient(90deg, #f87171, #fb923c); }
+.quiz.theme-rock .quiz-counter,
+.quiz.theme-rock .quiz-score    { color: #fca5a5; }
+.quiz.theme-rock .next-button   { background: linear-gradient(135deg, #b91c1c, #7f1d1d); box-shadow: 0 4px 20px rgba(185,28,28,0.4); }
+
+/* ── Metal ────────────────────────────────────────────────── */
+.quiz.theme-metal { background: linear-gradient(135deg, #050505 0%, #1f1f1f 50%, #050505 100%); }
+.quiz.theme-metal .progress-fill { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+.quiz.theme-metal .timer-bar     { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+.quiz.theme-metal .quiz-counter,
+.quiz.theme-metal .quiz-score    { color: #d1d5db; }
+.quiz.theme-metal .next-button   { background: linear-gradient(135deg, #374151, #1f2937); box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+.quiz.theme-metal .option        { border-color: rgba(255,255,255,0.08); }
+
+/* ── Hip Hop ──────────────────────────────────────────────── */
+.quiz.theme-hiphop { background: linear-gradient(135deg, #0a0a0a 0%, #1c1600 50%, #0a0a0a 100%); }
+.quiz.theme-hiphop .progress-fill { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+.quiz.theme-hiphop .timer-bar     { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+.quiz.theme-hiphop .quiz-counter,
+.quiz.theme-hiphop .quiz-score    { color: #fde68a; }
+.quiz.theme-hiphop .next-button   { background: linear-gradient(135deg, #92400e, #78350f); box-shadow: 0 4px 20px rgba(146,64,14,0.4); }
+
+/* ── R&B ──────────────────────────────────────────────────── */
+.quiz.theme-rnb { background: linear-gradient(135deg, #150020 0%, #5b21b6 50%, #150020 100%); }
+.quiz.theme-rnb .progress-fill { background: linear-gradient(90deg, #c084fc, #e879f9); }
+.quiz.theme-rnb .timer-bar     { background: linear-gradient(90deg, #c084fc, #e879f9); }
+.quiz.theme-rnb .quiz-counter,
+.quiz.theme-rnb .quiz-score    { color: #e9d5ff; }
+.quiz.theme-rnb .next-button   { background: linear-gradient(135deg, #7e22ce, #6d28d9); box-shadow: 0 4px 20px rgba(126,34,206,0.4); }
+
 @media (max-width: 600px) {
   .options {
     grid-template-columns: 1fr;
