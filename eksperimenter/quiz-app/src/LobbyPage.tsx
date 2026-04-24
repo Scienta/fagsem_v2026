@@ -1,42 +1,111 @@
 import { useState } from 'react'
-import { GENRES, GENRE_ORDER, type Genre } from './genres'
 
 interface Props {
-  onStart: (genre: Genre) => void
+  onCreateRoom: (playerName: string) => void
+  onJoinRoom: (roomCode: string, playerName: string) => void
+  error: string | null
 }
 
-export function LobbyPage({ onStart }: Props) {
-  const [selectedGenre, setSelectedGenre] = useState<Genre>('mixed')
+type Mode = 'home' | 'create' | 'join'
 
-  const theme = GENRES[selectedGenre].theme
+export function LobbyPage({ onCreateRoom, onJoinRoom, error }: Props) {
+  const [mode, setMode] = useState<Mode>('home')
+  const [playerName, setPlayerName] = useState('')
+  const [roomCode, setRoomCode] = useState('')
+
+  if (mode === 'create') {
+    return (
+      <main className="lobby">
+        <div className="lobby-card">
+          <span className="lobby-icon" aria-hidden="true">⚡</span>
+          <h1 className="lobby-title">Øreprøven</h1>
+          <p className="lobby-tagline">Opprett et nytt rom</p>
+          <input
+            className="lobby-input"
+            type="text"
+            placeholder="Ditt navn"
+            value={playerName}
+            onChange={e => setPlayerName(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && playerName.trim()) onCreateRoom(playerName.trim()) }}
+            maxLength={20}
+            autoFocus
+          />
+          {error && <p className="lobby-error">{error}</p>}
+          <button
+            className="lobby-start"
+            type="button"
+            onClick={() => onCreateRoom(playerName.trim())}
+            disabled={!playerName.trim()}
+          >
+            Opprett rom
+          </button>
+          <button className="lobby-back" type="button" onClick={() => setMode('home')}>
+            Tilbake
+          </button>
+        </div>
+      </main>
+    )
+  }
+
+  if (mode === 'join') {
+    return (
+      <main className="lobby">
+        <div className="lobby-card">
+          <span className="lobby-icon" aria-hidden="true">⚡</span>
+          <h1 className="lobby-title">Øreprøven</h1>
+          <p className="lobby-tagline">Bli med i et rom</p>
+          <input
+            className="lobby-input"
+            type="text"
+            placeholder="Ditt navn"
+            value={playerName}
+            onChange={e => setPlayerName(e.target.value)}
+            maxLength={20}
+            autoFocus
+          />
+          <input
+            className="lobby-input lobby-input--code"
+            type="text"
+            placeholder="Romkode (f.eks. ABCD)"
+            value={roomCode}
+            onChange={e => setRoomCode(e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4))}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && playerName.trim() && roomCode.length === 4)
+                onJoinRoom(roomCode, playerName.trim())
+            }}
+            maxLength={4}
+          />
+          {error && <p className="lobby-error">{error}</p>}
+          <button
+            className="lobby-start"
+            type="button"
+            onClick={() => onJoinRoom(roomCode, playerName.trim())}
+            disabled={!playerName.trim() || roomCode.length !== 4}
+          >
+            Bli med
+          </button>
+          <button className="lobby-back" type="button" onClick={() => setMode('home')}>
+            Tilbake
+          </button>
+        </div>
+      </main>
+    )
+  }
 
   return (
-    <main className={`lobby${theme ? ` ${theme}` : ''}`}>
+    <main className="lobby">
       <div className="lobby-card">
         <span className="lobby-icon" aria-hidden="true">⚡</span>
         <h1 className="lobby-title">Øreprøven</h1>
         <p className="lobby-tagline">Test your knowledge. Prove your mastery.</p>
-        <p className="lobby-genre-label">Velg sjanger</p>
-        <div className="genre-grid">
-          {GENRE_ORDER.map(key => {
-            const genre = GENRES[key]
-            return (
-              <button
-                key={key}
-                type="button"
-                data-genre={key}
-                className={`genre-button${selectedGenre === key ? ' selected' : ''}`}
-                onClick={() => setSelectedGenre(key)}
-              >
-                <span className="genre-emoji">{genre.emoji}</span>
-                {genre.label}
-              </button>
-            )
-          })}
+        <div className="lobby-buttons">
+          <button className="lobby-start" type="button" onClick={() => setMode('create')}>
+            Opprett rom
+          </button>
+          <button className="lobby-start secondary" type="button" onClick={() => setMode('join')}>
+            Bli med i rom
+          </button>
         </div>
-        <button className="lobby-start" type="button" onClick={() => onStart(selectedGenre)}>
-          Start quiz
-        </button>
       </div>
     </main>
   )

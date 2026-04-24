@@ -160,3 +160,206 @@
 .lobby.theme-rnb    .lobby-tagline,
 .lobby.theme-rnb    .lobby-genre-label { color: #e9d5ff; }
 .lobby.theme-rnb    .lobby-start    { background: linear-gradient(135deg, #7e22ce, #6d28d9); box-shadow: 0 4px 20px rgba(126,34,206,0.4); }
+
+/* ── Lobby inputs & navigation ────────────────────────────── */
+.lobby-input {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.07);
+  color: white;
+  margin-bottom: 0.75rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.lobby-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.lobby-input:focus {
+  border-color: rgba(167, 139, 250, 0.7);
+}
+
+.lobby-input--code {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.lobby-error {
+  color: #f87171;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+}
+
+.lobby-back {
+  display: block;
+  margin: 0.75rem auto 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.lobby-back:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.lobby-start {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.lobby-start:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Waiting room ─────────────────────────────────────────── */
+.room-code-block {
+  margin-bottom: 1.5rem;
+}
+
+.room-code-label {
+  color: #a78bfa;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.3rem;
+}
+
+.room-code {
+  font-size: 3rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.25em;
+  margin: 0;
+  background: linear-gradient(135deg, #a78bfa, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.waiting-players {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.waiting-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  margin-bottom: 0.4rem;
+}
+
+.waiting-player-name {
+  color: white;
+  font-weight: 500;
+}
+
+.host-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.waiting-message {
+  color: #c4b5fd;
+  font-size: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+/* ── Leaderboard (in quiz and results) ────────────────────── */
+.mid-leaderboard {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.final-leaderboard {
+  width: 100%;
+  margin: 0 0 2rem;
+  min-width: 280px;
+}
+
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  margin-bottom: 0.4rem;
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 0.2s;
+}
+
+.leaderboard-row--me {
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+.leaderboard-row--winner {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.leaderboard-rank {
+  font-size: 1.1rem;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.leaderboard-name {
+  flex: 1;
+  color: white;
+  font-weight: 500;
+  text-align: left;
+}
+
+.leaderboard-score {
+  color: #a78bfa;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.leaderboard-delta {
+  color: #4ade80;
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-width: 4rem;
+  text-align: right;
+}
+
+/* ── Quiz: waiting indicator ──────────────────────────────── */
+.waiting-for-players {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.points-badge--zero {
+  color: #f87171 !important;
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.4) !important;
+}

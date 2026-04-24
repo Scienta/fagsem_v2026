@@ -1,97 +1,48 @@
 import { useState, useEffect, useRef } from 'react'
-import { generateQuizQuestions } from './spotify/musicClient'
-import type { QuizQuestion } from './spotify/musicClient'
-import { GENRES, type Genre } from './genres'
+import { GENRES } from './genres'
+import type { GameState } from './party/types'
 import './QuizPage.css'
 import './MusicQuizPage.css'
 
 const TIMER_START = 30
-const URGENCY_THRESHOLD = 10
-const MAX_QUESTION_SCORE = 30000
-const MIN_QUESTION_SCORE = 1000
 
 interface Props {
-  genre: Genre
-  onFinish: (score: number, total: number) => void
+  gameState: GameState
+  myId: string
+  onAnswer: (answer: string) => void
   onQuit: () => void
 }
 
-export function MusicQuizPage({ genre, onFinish, onQuit }: Props) {
-  const { theme, terms } = GENRES[genre]
-  const [questions, setQuestions] = useState<QuizQuestion[]>([])
-  const [isGenerating, setIsGenerating] = useState(true)
-  const [isError, setIsError] = useState(false)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [answers, setAnswers] = useState<(string | null)[]>([])
-  const [roundScores, setRoundScores] = useState<number[]>([])
+export function MusicQuizPage({ gameState, myId, onAnswer, onQuit }: Props) {
+  const [myAnswer, setMyAnswer] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(TIMER_START)
-  const [timedOut, setTimedOut] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
 
-  useEffect(() => {
-    generateQuizQuestions(terms)
-      .then(qs => {
-        setQuestions(qs)
-        setAnswers(new Array(qs.length).fill(null))
-        setRoundScores(new Array(qs.length).fill(0))
-        setIsGenerating(false)
-      })
-      .catch(() => {
-        setIsGenerating(false)
-        setIsError(true)
-      })
-  }, [])
+  const { phase, currentQuestion, timeLeft, correctAnswer, currentQuestionIndex, totalQuestions, players, genre } = gameState
+  const { theme } = GENRES[genre]
+  const themeClass = theme ? ` ${theme}` : ''
+  const myPlayer = players.find(p => p.id === myId)
+  const isUrgent = timeLeft <= 10 && phase === 'question' && myAnswer === null
 
-  const question = questions[currentIndex]
-  const selectedOption = answers[currentIndex]
-  const isAnswered = selectedOption !== null
-  const isLastQuestion = currentIndex === questions.length - 1
-  const isUrgent = timeLeft <= URGENCY_THRESHOLD && !isAnswered
-
-  // Autoplay and reset timer when question changes
   useEffect(() => {
-    if (!question) return
-    setIsPlaying(false)
-    setTimeLeft(TIMER_START)
-    setTimedOut(false)
-    audioRef.current?.pause()
+    if (phase !== 'question') return
+    setMyAnswer(null)
 
     const audio = audioRef.current
-    if (!audio) return
+    if (!audio || !currentQuestion) return
+    audio.pause()
+    audio.load()
     audio.play()
       .then(() => setIsPlaying(true))
       .catch(() => setIsPlaying(false))
-  }, [currentIndex, question])
+  }, [currentQuestionIndex, phase])
 
   useEffect(() => {
-    if (isAnswered || timedOut || timeLeft <= 0) return
-    const tick = setTimeout(() => setTimeLeft(prev => prev - 1), 1000)
-    return () => clearTimeout(tick)
-  }, [timeLeft, isAnswered, timedOut])
-
-  useEffect(() => {
-    if (timeLeft !== 0 || timedOut || isAnswered) return
-    setTimedOut(true)
-    setAnswers(prev => {
-      const next = [...prev]
-      next[currentIndex] = ''
-      return next
-    })
-  }, [timeLeft, timedOut, isAnswered, currentIndex])
-
-  useEffect(() => {
-    if (!timedOut) return
-    const advance = setTimeout(() => {
-      if (isLastQuestion) {
-        const totalPoints = roundScores.reduce((a, b) => a + b, 0)
-        onFinish(totalPoints, questions.length * MAX_QUESTION_SCORE)
-      } else {
-        setCurrentIndex(prev => prev + 1)
-      }
-    }, 1500)
-    return () => clearTimeout(advance)
-  }, [timedOut, isLastQuestion, questions, roundScores, onFinish])
+    if (phase === 'question-result' || phase === 'game-over') {
+      audioRef.current?.pause()
+      setIsPlaying(false)
+    }
+  }, [phase])
 
   function togglePlay() {
     const audio = audioRef.current
@@ -100,78 +51,91 @@ export function MusicQuizPage({ genre, onFinish, onQuit }: Props) {
       audio.pause()
       setIsPlaying(false)
     } else {
-      audio.play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {})
+      audio.play().then(() => setIsPlaying(true)).catch(() => {})
     }
   }
 
   function handleSelect(option: string) {
-    if (isAnswered) return
+    if (myAnswer !== null || phase !== 'question') return
     audioRef.current?.pause()
     setIsPlaying(false)
-    const points = option === question.correctArtist
-      ? Math.round(MIN_QUESTION_SCORE + (timeLeft / TIMER_START) * (MAX_QUESTION_SCORE - MIN_QUESTION_SCORE))
-      : 0
-    setRoundScores(prev => {
-      const next = [...prev]
-      next[currentIndex] = points
-      return next
-    })
-    setAnswers(prev => {
-      const next = [...prev]
-      next[currentIndex] = option
-      return next
-    })
-  }
-
-  function handleNext() {
-    if (isLastQuestion) {
-      const totalPoints = roundScores.reduce((a, b) => a + b, 0)
-      onFinish(totalPoints, questions.length * MAX_QUESTION_SCORE)
-    } else {
-      setCurrentIndex(prev => prev + 1)
-    }
+    setMyAnswer(option)
+    onAnswer(option)
   }
 
   function optionClass(option: string): string {
-    if (!isAnswered) return 'option'
-    if (option === question.correctArtist) return 'option correct'
-    if (option === selectedOption) return 'option wrong'
+    if (phase === 'question') {
+      if (myAnswer === null) return 'option'
+      return option === myAnswer ? 'option selected' : 'option'
+    }
+    if (option === correctAnswer) return 'option correct'
+    if (option === myAnswer && option !== correctAnswer) return 'option wrong'
     return 'option'
   }
 
-  const themeClass = theme ? ` ${theme}` : ''
-
-  if (isGenerating) {
+  if (!currentQuestion) {
     return (
       <main className={`quiz generating${themeClass}`}>
-        <p className="generating-text">Genererer quiz...</p>
+        <p className="generating-text">Laster spørsmål...</p>
       </main>
     )
   }
 
-  if (isError) {
+  const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100
+  const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
+  const unanswered = players.filter(p => !p.answered)
+
+  if (phase === 'question-result') {
     return (
-      <main className={`quiz generating${themeClass}`}>
-        <p className="generating-text">Kunne ikke laste quiz. Sjekk internettforbindelsen og prøv igjen.</p>
+      <main className={`quiz${themeClass}`}>
+        <div className="quiz-progress">
+          <div className="quiz-progress-header">
+            <span className="quiz-counter">Spørsmål {currentQuestionIndex + 1} av {totalQuestions}</span>
+            <span className="quiz-score">{(myPlayer?.score ?? 0).toLocaleString('nb-NO')} poeng</span>
+          </div>
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+
+        <div className="quiz-content">
+          <p className="question-text">
+            Riktig svar: <strong>{correctAnswer}</strong>
+          </p>
+
+          {myPlayer && myPlayer.lastScore > 0 && (
+            <p className="points-badge">+{myPlayer.lastScore.toLocaleString('nb-NO')} poeng</p>
+          )}
+          {myPlayer && myAnswer !== null && myPlayer.lastScore === 0 && (
+            <p className="points-badge points-badge--zero">+0 poeng</p>
+          )}
+
+          <div className="mid-leaderboard">
+            {sortedPlayers.map((player, i) => (
+              <div
+                key={player.id}
+                className={`leaderboard-row${player.id === myId ? ' leaderboard-row--me' : ''}`}
+              >
+                <span className="leaderboard-rank">#{i + 1}</span>
+                <span className="leaderboard-name">{player.name}</span>
+                <span className="leaderboard-score">{player.score.toLocaleString('nb-NO')}</span>
+                {player.lastScore > 0 && (
+                  <span className="leaderboard-delta">+{player.lastScore.toLocaleString('nb-NO')}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
     )
   }
-
-  const progress = ((currentIndex + 1) / questions.length) * 100
-  const currentTotal = roundScores.reduce((a, b) => a + b, 0)
 
   return (
     <main className={`quiz${themeClass}`}>
       <div className="quiz-progress">
         <div className="quiz-progress-header">
-          <span className="quiz-counter">
-            Spørsmål {currentIndex + 1} av {questions.length}
-          </span>
-          <span className="quiz-score">
-            {currentTotal.toLocaleString('nb-NO')} poeng
-          </span>
+          <span className="quiz-counter">Spørsmål {currentQuestionIndex + 1} av {totalQuestions}</span>
+          <span className="quiz-score">{(myPlayer?.score ?? 0).toLocaleString('nb-NO')} poeng</span>
         </div>
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${progress}%` }} />
@@ -189,19 +153,19 @@ export function MusicQuizPage({ genre, onFinish, onQuit }: Props) {
 
         <div className="audio-visual">
           <div
-            key={currentIndex}
+            key={currentQuestionIndex}
             className="album-cover-blur"
-            style={{ backgroundImage: `url(${question.artworkUrl})` }}
+            style={{ backgroundImage: `url(${currentQuestion.artworkUrl})` }}
           />
           <div
-            key={`sharp-${currentIndex}`}
-            className={`album-cover-sharp${isAnswered ? ' visible' : ''}`}
-            style={{ backgroundImage: `url(${question.artworkUrl})` }}
+            key={`sharp-${currentQuestionIndex}`}
+            className={`album-cover-sharp${myAnswer !== null ? ' visible' : ''}`}
+            style={{ backgroundImage: `url(${currentQuestion.artworkUrl})` }}
           />
           <div className="audio-overlay">
             <audio
               ref={audioRef}
-              src={question.previewUrl}
+              src={currentQuestion.previewUrl}
               onEnded={() => setIsPlaying(false)}
             />
             <button
@@ -216,27 +180,25 @@ export function MusicQuizPage({ genre, onFinish, onQuit }: Props) {
         </div>
 
         <div className="options">
-          {question.options.map((option) => (
+          {currentQuestion.options.map(option => (
             <button
               key={option}
               type="button"
               className={optionClass(option)}
               onClick={() => handleSelect(option)}
-              disabled={isAnswered}
+              disabled={myAnswer !== null}
             >
               {option}
             </button>
           ))}
         </div>
 
-        {isAnswered && roundScores[currentIndex] > 0 && (
-          <p className="points-badge">+{roundScores[currentIndex].toLocaleString('nb-NO')} poeng</p>
-        )}
-
-        {isAnswered && !timedOut && (
-          <button type="button" className="next-button" onClick={handleNext}>
-            {isLastQuestion ? 'Se resultat' : 'Neste spørsmål'}
-          </button>
+        {myAnswer !== null && (
+          <p className="waiting-for-players">
+            {unanswered.length > 0
+              ? `Venter på ${unanswered.length} spiller${unanswered.length === 1 ? '' : 'e'}...`
+              : 'Alle har svart!'}
+          </p>
         )}
 
         <button type="button" className="quit-button" onClick={onQuit}>
