@@ -609,6 +609,10 @@ class GameScene extends Phaser.Scene {
   }
 
   spawnLocalPlayer(self) {
+    // Destroy previous instance — happens on socket reconnect when init fires again
+    if (this.localPlayer) { this.localPlayer.destroy(); this.localPlayer = null; }
+    if (this.localLabel)  { this.localLabel.destroy();  this.localLabel = null; }
+
     const lvl = LEVELS[this.currentLevel];
     this.localPlayer = this.physics.add.sprite(self.x, lvl.spawnY, `player_${self.playerNumber}_idle`);
     this.localPlayer.setOrigin(0.5, 0.5);
