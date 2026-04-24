@@ -17,8 +17,13 @@
   inset: -20px;
   background-size: cover;
   background-position: center;
-  filter: blur(20px);
   transform: scale(1.1);
+  animation: album-reveal 20s linear forwards;
+}
+
+@keyframes album-reveal {
+  0%, 50%  { filter: blur(20px); }
+  100%     { filter: blur(0px); }
 }
 
 .audio-overlay {
