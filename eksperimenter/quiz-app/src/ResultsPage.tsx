@@ -3,7 +3,6 @@ import './ResultsPage.css'
 interface Props {
   score: number
   total: number
-  mode?: 'points' | 'count'
   onPlayAgain: () => void
 }
 
@@ -16,25 +15,15 @@ function feedbackMessage(score: number, total: number): string {
   return 'Bedre lykke neste gang!'
 }
 
-export function ResultsPage({ score, total, mode = 'count', onPlayAgain }: Props) {
+export function ResultsPage({ score, total, onPlayAgain }: Props) {
   return (
     <main className="results">
       <div className="results-card">
         <span className="results-icon" aria-hidden="true">🏆</span>
         <h1 className="results-title">Quiz fullført!</h1>
         <div className="score-display">
-          {mode === 'points' ? (
-            <>
-              <span className="score-number">{score.toLocaleString('nb-NO')}</span>
-              <span className="score-total">poeng</span>
-            </>
-          ) : (
-            <>
-              <span className="score-number">{score}</span>
-              <span className="score-separator">/</span>
-              <span className="score-total">{total}</span>
-            </>
-          )}
+          <span className="score-number">{score.toLocaleString('nb-NO')}</span>
+          <span className="score-total">poeng</span>
         </div>
         <p className="results-feedback">{feedbackMessage(score, total)}</p>
         <button className="play-again-button" type="button" onClick={onPlayAgain}>
