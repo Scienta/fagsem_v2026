@@ -31,6 +31,18 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 
 ---
 
+- Dato: 2026-04-24
+- Oppgave: Opprette måleverktøy for ressursbruk og tokens/sek (gruppe 3.3)
+- Handling: Implementerte `benchmarks/observer.py` — live observer som sampler CPU/RAM fra Ollama-prosessen og extraherer tokens/sek fra server-loggen. Kjøres i eget terminalvindu ved siden av Claude Code + Ollama.
+- Resultat: `benchmarks/observer.py` og `benchmarks/README.md` opprettet. Resultat-CSV lagres i `arbeidslogg/benchmarks.csv`. Output er en klar Markdown-blokk for lim-inn i "Måling / eksempel:"-feltet.
+- Viktigste beslutninger:
+  - PEP 723 inline-deps (`uv run`) — ingen virtualenv-oppsett nødvendig
+  - To tokens/sek-tall: `gen_tokens_per_sec` (ren modell-throughput) og `e2e_tokens_per_sec` (inkl. vente-tid)
+  - Hardware-kontekst fanges automatisk per kjøring (host, CPU, tråder, RAM) — nødvendig fordi Thomas og Bartas har annen maskinvare enn Anders
+  - Krever `OLLAMA_DEBUG=1` for token-statistikk; CPU/RAM fanges alltid
+
+---
+
 - Gruppe: 3.3
 - Tema: Tema 3 – Lokal LLM i praksis
 - Eksperiment: Eksperiment 4 – Lokal LLM med agentarbeidsform
@@ -41,6 +53,21 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 - Demo-kodebase opprettet: `demo/blackjack/` med `card.py`, `hand.py`, `game.py`, `main.py`
 - Tre oppgaver definert i `demo/oppgaver.md` (enkel → middels → kompleks)
 - Alle 24 tester grønne før eksperimentet starter
+
+---
+
+## Måling av ressursbruk
+
+Kjør `benchmarks/observer.py` i et eget terminalvindu mens agenten jobber:
+
+```bash
+uv run benchmarks/observer.py --label "qwen3:8b – oppgave 1"
+```
+
+Trykk Ctrl-C når oppgaven er ferdig. Skriptet printer en ferdig Markdown-blokk
+som limes inn i **"Måling / eksempel:"**-feltet under, og lagrer en rad i
+`arbeidslogg/benchmarks.csv` for tverrmodell-sammenligning.  
+Se `benchmarks/README.md` for full dokumentasjon.
 
 ---
 
