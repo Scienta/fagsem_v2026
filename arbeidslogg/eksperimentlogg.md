@@ -46,3 +46,24 @@ Bruk denne filen til korte notater underveis i eksperimentet.
   - Mangler dialog for å legge til bilde - som det sto i prompten. Det ble også addressert.
 - Måling / eksempel:
 - Tolkning / usikkerhet:
+
+- Tidspunkt: 16:50
+- Hva ble testet: Review egen kode
+- Betingelse / variant: uten plan
+- Resultat / observasjon:
+  - Mer interessante feil i denne?
+  ┌─────────────────────────────────────────┬─────────────────────┬────────────────────────────────────────┐
+  │                  Issue                  │      Severity       │                  File                  │                             
+  ├─────────────────────────────────────────┼─────────────────────┼────────────────────────────────────────┤
+  │ Inconsistent thumbnail URL construction │ Medium (latent bug) │ RecipeService:110,126 / MenuService:91 │                             
+  ├─────────────────────────────────────────┼─────────────────────┼────────────────────────────────────────┤
+  │ Silent file deletion failure            │ Low                 │ ImageService:84                        │                             
+  ├─────────────────────────────────────────┼─────────────────────┼────────────────────────────────────────┤
+  │ Unvalidated sortBy param                │ Medium              │ RecipeController:40                    │                             
+  ├─────────────────────────────────────────┼─────────────────────┼────────────────────────────────────────┤                             
+  │ Extension not derived from content type │ Low                 │ ImageService:92                        │
+  ├─────────────────────────────────────────┼─────────────────────┼────────────────────────────────────────┤                             
+  │ AbortController signal not forwarded    │ Medium              │ useRecipes.js:14, client.js:19         │
+  ├─────────────────────────────────────────┼─────────────────────┼────────────────────────────────────────┤                             
+  │ JSON.stringify dependency               │ Low                 │ useRecipes.js:29                       │
+  └─────────────────────────────────────────┴─────────────────────┴────────────────────────────────────────┘   
