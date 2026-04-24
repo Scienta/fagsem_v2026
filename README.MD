@@ -1,9 +1,9 @@
 # Program fagseminar 
 
 ## TLDR; 
-```text
-WIFI: scandic_easy
-```text
+
+[!TIP]
+> WIFI: scandic_easy
 
 Målet med denne helgen er å ekserimentere med språkmodeller. Under seminaret skal vi skrive kode, kanskje gjøre noen administrative oppgaver og skrive litt tekst. Poenget er å skrive minst mulig direkte, OG MEST MULIG VED HJELP AV SPRÅKMODELL.
 
