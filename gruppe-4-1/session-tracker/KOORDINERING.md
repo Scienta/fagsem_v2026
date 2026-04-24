@@ -58,7 +58,7 @@ Finding {
 ### Backend
 - [x] `GroupController` – `GET /groups` med seed-data (hardkod 2–3 grupper ved oppstart)
 - [x] `SessionController` – `POST /sessions`, `PATCH /sessions/:id`
-- [ ] `SessionController` – `GET /sessions` med valgfri `?status=`-filter
+- [x] `SessionController` – `GET /sessions` med valgfri `?status=`-filter
 - [x] `FindingController` – `POST /sessions/:id/findings`, `GET /sessions/:id/findings`, `GET /findings`
 - [x] In-memory storage (ConcurrentHashMap per ressurstype)
 - [x] Returnerer 404 med beskjed ved ukjent id
