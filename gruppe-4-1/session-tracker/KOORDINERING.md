@@ -37,6 +37,7 @@ Finding {
 | Method | Path                       | Request body                        | Response         |
 |--------|----------------------------|-------------------------------------|------------------|
 | GET    | /groups                    | –                                   | Group[]          |
+| GET    | /sessions?status=          | –  (status er optional query param) | Session[]        |
 | POST   | /sessions                  | `{ groupId: String }`               | Session          |
 | PATCH  | /sessions/:id              | `{ status: "ACTIVE" \| "DONE" }`    | Session          |
 | POST   | /sessions/:id/findings     | `{ text: String, type: FindingType}`| Finding          |
@@ -46,6 +47,7 @@ Finding {
 ### Regler
 - Server genererer alle `id`-felter og `startedAt` — klient sender dem aldri
 - `GET /findings` uten `?type=` returnerer alle funn
+- `GET /sessions` uten `?status=` returnerer alle sesjoner
 - `PATCH /sessions/:id` med ukjent id returnerer 404
 - Backend kjører på port **8080**, frontend proxier `/api` → `http://localhost:8080`
 
@@ -56,13 +58,14 @@ Finding {
 ### Backend
 - [x] `GroupController` – `GET /groups` med seed-data (hardkod 2–3 grupper ved oppstart)
 - [x] `SessionController` – `POST /sessions`, `PATCH /sessions/:id`
+- [ ] `SessionController` – `GET /sessions` med valgfri `?status=`-filter
 - [x] `FindingController` – `POST /sessions/:id/findings`, `GET /sessions/:id/findings`, `GET /findings`
 - [x] In-memory storage (ConcurrentHashMap per ressurstype)
 - [x] Returnerer 404 med beskjed ved ukjent id
 
 ### Frontend
 - [x] Hent og vis grupper fra `GET /api/groups`
-- [x] Hent og vis aktive sesjoner (lokal state — se åpne spørsmål)
+- [ ] Hent og vis sesjoner fra `GET /api/sessions` (polling hvert 5s — erstatter lokal state)
 - [x] Hent og vis live funn-feed fra `GET /api/findings` (polling hvert 5s)
 - [x] Mulighet til å starte sesjon for en gruppe (POST)
 - [x] Mulighet til å logge funn i en sesjon (POST)
@@ -97,6 +100,7 @@ Finding {
 | 2026-04-24 | Seed-data i GroupController oppdateres til faktiske seminargrupper (13 grupper, 5 temaer) fra README.MD | Applikasjonen skal reflektere virkeligheten |
 | 2026-04-24 | `GET /groups` returnerer grupper sortert etter `name` (alfanumerisk) | Gruppenavn er "Gruppe 1.1" osv. — sortering på backend gir riktig rekkefølge for alle klienter uten ekstra logikk i frontend |
 | 2026-04-24 | Frontend redesignes med moderne og fargerikt GUI — funksjonalitet uendret | Bedre brukeropplevelse på seminaret |
+| 2026-04-24 | Legg til `GET /sessions?status=` — frontend poller dette i stedet for lokal state | Sesjoner må synkroniseres på tvers av flere frontend-klienter mot samme backend |
 
 ---
 
@@ -104,7 +108,7 @@ Finding {
 
 *(Agenter: legg til spørsmål her dersom noe er uklart — ikke anta, ikke gjett)*
 
-- [ ] **Mangler `GET /sessions`** — Frontend trenger dette for å vise sesjoner som andre brukere har startet (og ved refresh). Nåværende løsning: sesjoner holdes i lokal React-state etter `POST /sessions`. Bør backend legge til `GET /sessions` (evt. med `?status=ACTIVE`)? — *Lagt til av frontendagent 2026-04-24*
+*(ingen åpne spørsmål)*
 
 ---
 
