@@ -61,4 +61,23 @@ Finding { id, sessionId, text, type: OBSERVATION|RESULT|BLOCKER }
 
 ---
 
+## 2026-04-24 – Build-oppsett og kompatibilitetsproblemer
+
+### Problem: Gradle + Java 25
+- Gradle 8.8 støtter ikke Java 25 — måtte installere Gradle 9.4.1 og oppdatere wrapperen
+- Kotlin 2.0.21 krasjet på Java 25 (`JavaVersion.parse("25.0.2")`) — løst ved å oppgradere til Kotlin 2.3.21
+- Spring Boot 3.4.3 sin innebygde ASM kan ikke lese Java 25 bytekode — løst ved å sette bytekode-target til Java 21 (`jvmTarget = JVM_21`) mens JDK forblir Java 25
+
+### Endelig byggkonfigurasjon
+- **JDK:** Java 25 (Temurin 25.0.2, via Gradle toolchain)
+- **Kotlin:** 2.3.21 (kompilerer på Java 25 uten problemer)
+- **Bytekode-target:** Java 21 (kompatibelt med Spring Boot 3.4.x sin ASM)
+- **Gradle:** 9.4.1
+- **Spring Boot:** 3.4.3
+
+### Andre endringer
+- `springBoot { mainClass }` satt eksplisitt — omgår `resolveMainClassName`-scanning av Java 25 klasser
+- `.gitignore` lagt til i `gruppe-4-1/session-tracker/` for å holde build-output ute av repoet
+- `./gradlew clean build` kjører grønt
+
 <!-- Legg til nye oppføringer under her etter hvert som arbeidet skrider frem -->
