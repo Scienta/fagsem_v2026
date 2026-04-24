@@ -339,9 +339,13 @@ export default function App() {
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                     {themeGroups.map((group, i) => {
                       const alreadyActive = activeSessions.some(s => s.groupId === group.id)
+                      const isUs = group.name === 'Gruppe 4.1'
                       return (
-                        <li key={group.id} style={{ ...s.groupRow, borderBottom: i === themeGroups.length - 1 ? 'none' : '1px solid #e2e8f0' }}>
-                          <span style={s.groupName}>{group.name}</span>
+                        <li key={group.id} style={{ ...s.groupRow, borderBottom: i === themeGroups.length - 1 ? 'none' : '1px solid #e2e8f0', ...(isUs ? { background: '#fffbeb', borderLeft: '3px solid #f59e0b', marginLeft: -4, paddingLeft: 4 } : {}) }}>
+                          <span style={s.groupName}>
+                            {group.name}
+                            {isUs && <span style={{ marginLeft: '0.4rem', fontSize: '0.7rem', fontWeight: 700, background: '#f59e0b', color: '#fff', borderRadius: 4, padding: '0.1rem 0.4rem' }}>Vi</span>}
+                          </span>
                           <span style={s.groupMembers}>{group.members.join(', ')}</span>
                           <button
                             onClick={() => handleStartSession(group.id)}
