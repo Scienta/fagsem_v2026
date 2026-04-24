@@ -24,6 +24,12 @@
   font-size: 0.9rem;
 }
 
+.quiz-score {
+  color: #a78bfa;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .timer-bar-track {
   height: 6px;
   background: rgba(255, 255, 255, 0.15);

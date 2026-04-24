@@ -7,11 +7,13 @@ import { ResultsPage } from './ResultsPage'
 import { questions } from './quiz/questions'
 
 type Page = 'lobby' | 'general-quiz' | 'music-quiz' | 'results'
+type QuizMode = 'points' | 'count'
 
 function App() {
   const [page, setPage] = useState<Page>('lobby')
   const [score, setScore] = useState(0)
   const [total, setTotal] = useState(0)
+  const [quizMode, setQuizMode] = useState<QuizMode>('count')
 
   function handleFinish(finalScore: number, quizTotal: number) {
     setScore(finalScore)
@@ -31,13 +33,13 @@ function App() {
   }
   if (page === 'results') {
     return (
-      <ResultsPage score={score} total={total} onPlayAgain={() => setPage('lobby')} />
+      <ResultsPage score={score} total={total} mode={quizMode} onPlayAgain={() => setPage('lobby')} />
     )
   }
   return (
     <LobbyPage
-      onStartGeneral={() => setPage('general-quiz')}
-      onStartMusic={() => setPage('music-quiz')}
+      onStartGeneral={() => { setQuizMode('count'); setPage('general-quiz') }}
+      onStartMusic={() => { setQuizMode('points'); setPage('music-quiz') }}
     />
   )
 }

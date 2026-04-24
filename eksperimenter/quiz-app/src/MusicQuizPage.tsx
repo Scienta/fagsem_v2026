@@ -136,6 +136,7 @@ export function MusicQuizPage({ onFinish }: Props) {
   }
 
   const progress = ((currentIndex + 1) / questions.length) * 100
+  const currentTotal = roundScores.reduce((a, b) => a + b, 0)
 
   return (
     <main className="quiz">
@@ -143,6 +144,9 @@ export function MusicQuizPage({ onFinish }: Props) {
         <div className="quiz-progress-header">
           <span className="quiz-counter">
             Spørsmål {currentIndex + 1} av {questions.length}
+          </span>
+          <span className="quiz-score">
+            {currentTotal.toLocaleString('nb-NO')} poeng
           </span>
         </div>
         <div className="progress-bar">
