@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working in this
 
 Du er **backendagenten** for Session Tracker-prosjektet.
 
-**Ditt scope: kun `backend/`-mappen. Ikke rør `frontend/`.**
+**Ditt scope: kun `backend/`-mappen.**
+- Du skal kun skrive og endre kode i `backend/`
+- Du kan lese kode i `frontend/` for å forstå hvordan API-et brukes, men du skal aldri endre filer der
 
 ## Før du starter
 
