@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { musicQuestions } from './quiz/musicQuestions'
-import { searchPreviewUrl } from './spotify/spotifyClient'
+import { searchTrack } from './spotify/spotifyClient'
 import './QuizPage.css'
 import './MusicQuizPage.css'
 
@@ -14,6 +14,7 @@ export function MusicQuizPage({ onFinish }: Props) {
     () => new Array(musicQuestions.length).fill(null)
   )
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [artworkUrl, setArtworkUrl] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -28,13 +29,17 @@ export function MusicQuizPage({ onFinish }: Props) {
 
     setIsLoading(true)
     setPreviewUrl(null)
+    setArtworkUrl(null)
     setIsPlaying(false)
+    audioRef.current?.pause()
 
-    searchPreviewUrl(question.searchQuery)
-      .then(url => {
-        if (!cancelled) {
-          setPreviewUrl(url)
-          setIsLoading(false)
+    searchTrack(question.searchQuery)
+      .then(track => {
+        if (cancelled) return
+        setIsLoading(false)
+        if (track) {
+          setPreviewUrl(track.previewUrl)
+          setArtworkUrl(track.artworkUrl)
         }
       })
       .catch(() => {
@@ -43,6 +48,13 @@ export function MusicQuizPage({ onFinish }: Props) {
 
     return () => { cancelled = true }
   }, [question.searchQuery])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio || !previewUrl) return
+    audio.play().catch(() => {})
+    setIsPlaying(true)
+  }, [previewUrl])
 
   function togglePlay() {
     const audio = audioRef.current
@@ -99,24 +111,32 @@ export function MusicQuizPage({ onFinish }: Props) {
       <div className="quiz-content">
         <p className="question-text">Hvem er artisten?</p>
 
-        <div className="audio-player">
-          {isLoading && <p className="audio-status">Laster inn sang...</p>}
-          {!isLoading && !previewUrl && (
-            <p className="audio-status">Forhåndsvisning ikke tilgjengelig</p>
+        <div className="audio-visual">
+          {artworkUrl && (
+            <div
+              className="album-cover-blur"
+              style={{ backgroundImage: `url(${artworkUrl})` }}
+            />
           )}
-          {previewUrl && (
-            <>
-              <audio ref={audioRef} src={previewUrl} onEnded={() => setIsPlaying(false)} />
-              <button
-                type="button"
-                className={`play-button${isPlaying ? ' playing' : ''}`}
-                onClick={togglePlay}
-                aria-label={isPlaying ? 'Pause' : 'Spill av'}
-              >
-                {isPlaying ? '⏸' : '▶'}
-              </button>
-            </>
-          )}
+          <div className="audio-overlay">
+            {isLoading && <p className="audio-status">Laster inn sang...</p>}
+            {!isLoading && !previewUrl && (
+              <p className="audio-status">Forhåndsvisning ikke tilgjengelig</p>
+            )}
+            {previewUrl && (
+              <>
+                <audio ref={audioRef} src={previewUrl} onEnded={() => setIsPlaying(false)} />
+                <button
+                  type="button"
+                  className={`play-button${isPlaying ? ' playing' : ''}`}
+                  onClick={togglePlay}
+                  aria-label={isPlaying ? 'Pause' : 'Spill av'}
+                >
+                  {isPlaying ? '⏸' : '▶'}
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="options">
