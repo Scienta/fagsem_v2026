@@ -7,6 +7,7 @@ vi.mock('./api', () => ({
   api: {
     getGroups: vi.fn(),
     getFindings: vi.fn(),
+    getSessions: vi.fn(),
     startSession: vi.fn(),
     endSession: vi.fn(),
     logFinding: vi.fn(),
@@ -20,6 +21,7 @@ describe('App', () => {
     vi.useFakeTimers()
     mockApi.getGroups.mockResolvedValue([])
     mockApi.getFindings.mockResolvedValue([])
+    mockApi.getSessions.mockResolvedValue([])
   })
 
   afterEach(() => {
@@ -43,7 +45,7 @@ describe('App', () => {
     expect(await screen.findByText('Testgruppe Beta')).toBeInTheDocument()
   })
 
-  it('viser funn-type og tekst i feed', async () => {
+  it('viser funn-label og tekst i feed', async () => {
     mockApi.getFindings.mockResolvedValue([
       { id: 'f1', sessionId: 's1', text: 'Dette er et viktig funn', type: 'BLOCKER' },
       { id: 'f2', sessionId: 's1', text: 'En observasjon', type: 'OBSERVATION' },
@@ -52,8 +54,30 @@ describe('App', () => {
     render(<App />)
 
     expect(await screen.findByText('Dette er et viktig funn')).toBeInTheDocument()
-    expect(await screen.findByText('BLOCKER')).toBeInTheDocument()
+    expect(await screen.findByText('Blocker')).toBeInTheDocument()
     expect(await screen.findByText('En observasjon')).toBeInTheDocument()
-    expect(await screen.findByText('OBSERVATION')).toBeInTheDocument()
+    expect(await screen.findByText('Observasjon')).toBeInTheDocument()
+  })
+
+  it('"✓ Aktiv"-knapp er disabled for gruppe med aktiv sesjon', async () => {
+    mockApi.getGroups.mockResolvedValue([
+      { id: 'g1', name: 'Gruppe Alpha', theme: 'Utvikler + agent i praksis', members: ['Alice'] },
+    ])
+    mockApi.getSessions.mockResolvedValue([
+      { id: 's1', groupId: 'g1', startedAt: '2026-01-01T00:00:00Z', status: 'ACTIVE' },
+    ])
+
+    render(<App />)
+
+    const button = await screen.findByRole('button', { name: '✓ Aktiv' })
+    expect(button).toBeDisabled()
+  })
+
+  it('viser feilmelding når getGroups feiler', async () => {
+    mockApi.getGroups.mockRejectedValue(new Error('Network error'))
+
+    render(<App />)
+
+    expect(await screen.findByText('Klarte ikke hente grupper fra backend')).toBeInTheDocument()
   })
 })

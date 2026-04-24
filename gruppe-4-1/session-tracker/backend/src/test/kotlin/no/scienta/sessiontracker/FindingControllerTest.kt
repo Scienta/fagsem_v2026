@@ -102,6 +102,65 @@ class FindingControllerTest {
     }
 
     @Test
+    fun `POST findings for unknown session returns 404`() {
+        mockMvc.post("/sessions/non-existent-id/findings") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"text": "some finding", "type": "OBSERVATION"}"""
+        }.andExpect {
+            status { isNotFound() }
+        }
+    }
+
+    @Test
+    fun `GET findings for unknown session returns 404`() {
+        mockMvc.get("/sessions/non-existent-id/findings").andExpect {
+            status { isNotFound() }
+        }
+    }
+
+    @Test
+    fun `GET findings with type OBSERVATION returns only OBSERVATION findings`() {
+        val sessionId = createSession()
+
+        mockMvc.post("/sessions/$sessionId/findings") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"text": "An observation", "type": "OBSERVATION"}"""
+        }.andReturn()
+
+        mockMvc.post("/sessions/$sessionId/findings") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"text": "A blocker", "type": "BLOCKER"}"""
+        }.andReturn()
+
+        mockMvc.get("/findings?type=OBSERVATION").andExpect {
+            status { isOk() }
+            jsonPath("$.length()") { value(1) }
+            jsonPath("$[0].type") { value("OBSERVATION") }
+        }
+    }
+
+    @Test
+    fun `GET findings with type RESULT returns only RESULT findings`() {
+        val sessionId = createSession()
+
+        mockMvc.post("/sessions/$sessionId/findings") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"text": "A result", "type": "RESULT"}"""
+        }.andReturn()
+
+        mockMvc.post("/sessions/$sessionId/findings") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"text": "An observation", "type": "OBSERVATION"}"""
+        }.andReturn()
+
+        mockMvc.get("/findings?type=RESULT").andExpect {
+            status { isOk() }
+            jsonPath("$.length()") { value(1) }
+            jsonPath("$[0].type") { value("RESULT") }
+        }
+    }
+
+    @Test
     fun `GET findings with type BLOCKER returns only BLOCKER findings`() {
         val sessionId = createSession()
 
