@@ -23,22 +23,17 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 
 ## Løpende logg
 
-### Oppføring
+### Oppføring – gruppe-4-1, frontend-implementasjon
 
-- Tidspunkt:
-- Hva ble testet:
-- Betingelse / variant:
+- Tidspunkt: 2026-04-24
+- Hva ble testet: Parallell multi-agent utvikling — frontendagent implementerer React-UI mens backendagent arbeider i parallell
+- Betingelse / variant: Frontendagent (Claude Sonnet 4.6) med eksisterende scaffold (App.tsx med TODOs, typer i api.ts)
 - Resultat / observasjon:
-- Måling / eksempel:
+  - Opprettet `src/api.ts` med typesikre API-kall for alle endepunkter
+  - Implementert `src/App.tsx` med full funksjonalitet: grupper, sesjoner, funn-logging, live feed (polling 5s)
+  - Avdekket manglende `GET /sessions`-endepunkt i API-kontrakten — løst med lokal state som workaround
+  - Flagget åpent spørsmål i KOORDINERING.md for koordinatoragenten
+- Måling / eksempel: All frontend-funksjonalitet implementert i 2 filer (~120 linjer App.tsx, ~35 linjer api.ts)
 - Tolkning / usikkerhet:
-
----
-
-### Oppføring
-
-- Tidspunkt:
-- Hva ble testet:
-- Betingelse / variant:
-- Resultat / observasjon:
-- Måling / eksempel:
-- Tolkning / usikkerhet:
+  - Lokal session-state betyr at refreshing taper sesjoner — avhenger av at backend legger til `GET /sessions`
+  - Interessant funn: API-kontrakten var ufullstendig (manglende GET /sessions) — ble oppdaget ved implementering, ikke ved planlegging
