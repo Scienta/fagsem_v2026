@@ -516,6 +516,11 @@ class GameScene extends Phaser.Scene {
       document.getElementById('status').textContent =
         `Player ${self.playerNumber} (${PLAYER_COLOR_NAMES[self.playerNumber]}) — Arrows · Up/Space jump · Reach the flag!`;
 
+      // Clear any stale remote sprites from a previous connection
+      for (const [, r] of this.remoteSprites) { r.sprite.destroy(); r.label.destroy(); }
+      this.remoteSprites.clear();
+      this.remoteScores.clear();
+
       this._loadLevel(currentLevel || 0);
       this.spawnLocalPlayer(self);
       for (const p of existingPlayers) {
@@ -618,9 +623,13 @@ class GameScene extends Phaser.Scene {
   }
 
   spawnRemotePlayer(p) {
+    // Destroy existing sprite for this socket ID if present (guards against duplicate spawns)
+    const existing = this.remoteSprites.get(p.id);
+    if (existing) { existing.sprite.destroy(); existing.label.destroy(); }
+
     const sprite = this.add.sprite(p.x, p.y, `player_${p.playerNumber}_idle`);
     sprite.setOrigin(0.5, 0.5).setAlpha(0.85).setDepth(2);
-    const label = this.add.text(p.x, p.y-32, `P${p.playerNumber}`, {
+    const label = this.add.text(p.x, p.y - 32, `P${p.playerNumber}`, {
       fontSize: '11px', fontFamily: 'monospace',
       color: '#ffffff', stroke: '#000000', strokeThickness: 3
     }).setOrigin(0.5, 0.5).setDepth(3);
