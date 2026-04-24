@@ -60,5 +60,5 @@ Hold denne filen oppdatert underveis i arbeidet.
   - **Animasjoner:** Fire tekstur-frames per spiller (idle, walk0, walk1, jump) tegnet med Phaser Graphics. Animasjons-state machine i update(): idle/gå/hopp basert på velocity og onGround. Gå-animasjon veksler mellom frames hvert 100ms.
   - **Power-ups (sopp):** Sopp plassert i hvert brett (1–2 per brett). Samling gir 500p og dobbel størrelse (setScale(1.5)). Goomba-treff mens powered = mister power i stedet for å dø. Synkronisert mellom klienter via server.
   - **Leaderboard:** Alle spilleres poengsum vises øverst til høyre i sanntid. Klienter sender `score_update` til server som relayer til alle. Sortert etter poengsum.
-  - **Deploy (Dockerfile):** Dockerfile lagt til for enkel deploy til Railway, Render, Fly.io m.fl. Server bruker allerede `process.env.PORT`.
+  - **Deploy:** Dockerfile lagt til og deployet til Railway. Spillet er live på https://mario-multiplayer-production.up.railway.app
 - **Lærte:** Web Audio API er et kraftig verktøy for prosedyrale 8-bit lyder uten assets. Separate tekstur-frames per animasjonsstilstand er enklere enn Phaser spritesheet-API ved runtime-generering.
