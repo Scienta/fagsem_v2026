@@ -21,6 +21,7 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 
 ---
 
+
 ## Løpende logg
 
 ### Oppføring
@@ -37,9 +38,11 @@ Bruk denne filen til korte notater underveis i eksperimentet.
 
 ### Oppføring
 
-- Tidspunkt:
-- Hva ble testet:
-- Betingelse / variant:
+- Tidspunkt: 15:15
+- Hva ble testet: Kjørte web appen
+- Betingelse / variant: uten plan
 - Resultat / observasjon:
+  - bug funnet: Kan ikke skrive ingrediensnavn. Bare å si fra så fikset claude det.
+  - Mangler dialog for å legge til bilde - som det sto i prompten. Det ble også addressert.
 - Måling / eksempel:
 - Tolkning / usikkerhet:

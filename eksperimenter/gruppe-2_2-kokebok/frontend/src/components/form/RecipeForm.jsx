@@ -27,11 +27,11 @@ function IngredientFields({ ingredients, onChange }) {
   return (
     <div className="space-y-2">
       {ingredients.map((ing, i) => (
-        <div key={i} className="flex gap-2 items-center">
-          <input className={`${inputClass} flex-1`} placeholder="Ingrediens" value={ing.name} onChange={e => update(i, 'name', e.target.value)} />
-          <input className={`${inputClass} w-24`} placeholder="Mengde" type="number" step="any" value={ing.amount} onChange={e => update(i, 'amount', e.target.value)} />
-          <input className={`${inputClass} w-20`} placeholder="Enhet" value={ing.unit} onChange={e => update(i, 'unit', e.target.value)} />
-          <button type="button" onClick={() => remove(i)} className="text-stone-400 hover:text-red-500 text-lg px-1">×</button>
+        <div key={i} className="flex gap-2 items-center min-w-0">
+          <input className="flex-1 min-w-0 border border-stone-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm" placeholder="Ingrediens" value={ing.name} onChange={e => update(i, 'name', e.target.value)} />
+          <input className="w-24 shrink-0 border border-stone-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm" placeholder="Mengde" type="number" step="any" value={ing.amount} onChange={e => update(i, 'amount', e.target.value)} />
+          <input className="w-20 shrink-0 border border-stone-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm" placeholder="Enhet" value={ing.unit} onChange={e => update(i, 'unit', e.target.value)} />
+          <button type="button" onClick={() => remove(i)} className="text-stone-400 hover:text-red-500 text-lg px-1 shrink-0">×</button>
         </div>
       ))}
       <Button type="button" variant="secondary" onClick={add} className="text-xs py-1.5">+ Legg til ingrediens</Button>
