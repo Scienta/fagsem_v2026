@@ -74,6 +74,15 @@ class GameScene extends Phaser.Scene {
     // Renamed from `this.sound` — Phaser.Scene already has a `sound` property
     // (the SoundManager plugin) and overwriting it is fragile.
     this.sfx                = null;
+    this.lives              = 3;
+    this.timer              = 300;
+    this.timerActive        = false;
+    this.timerText          = null;
+    this.livesText          = null;
+    this.questionBlockGroup  = null;
+    this.questionBlockSprites = new Map();
+    this.hitQuestionBlockIds  = new Set();
+    this.pipeGroup           = null;
   }
 
   create() {
@@ -110,6 +119,21 @@ class GameScene extends Phaser.Scene {
     this._drawMushroom(mg);
     mg.generateTexture('mushroom', 24, 24);
     mg.destroy();
+
+    const qg = this.add.graphics();
+    this._drawQBlock(qg, false);
+    qg.generateTexture('qblock', 32, 32);
+    qg.destroy();
+
+    const qgh = this.add.graphics();
+    this._drawQBlock(qgh, true);
+    qgh.generateTexture('qblock_hit', 32, 32);
+    qgh.destroy();
+
+    const pg = this.add.graphics();
+    this._drawPipe(pg);
+    pg.generateTexture('pipe', 40, 80);
+    pg.destroy();
   }
 
   _drawMarioBase(g, color) {
@@ -178,6 +202,36 @@ class GameScene extends Phaser.Scene {
     g.fillRect(8, 16, 3, 3); g.fillRect(13,16, 3, 3); // eyes
   }
 
+  _drawQBlock(g, hit) {
+    g.fillStyle(hit ? 0x8B6914 : 0xD88000);
+    g.fillRect(0, 0, 32, 32);
+    g.fillStyle(hit ? 0xAA8822 : 0xFFCC00);
+    g.fillRect(0, 0, 32, 4); g.fillRect(0, 0, 4, 32);
+    g.fillRect(28, 0, 4, 32); g.fillRect(0, 28, 32, 4);
+    g.fillStyle(hit ? 0x5A4000 : 0x885500);
+    g.fillRect(4, 4, 24, 3); g.fillRect(4, 4, 3, 24);
+    g.fillRect(25, 4, 3, 24); g.fillRect(4, 25, 24, 3);
+    if (!hit) {
+      g.fillStyle(0xFFFFFF);
+      g.fillRect(11, 7,  10, 3);  // top bar
+      g.fillRect(18, 10, 3,  5);  // right stem
+      g.fillRect(14, 15, 4,  3);  // curve
+      g.fillRect(14, 21, 4,  4);  // dot
+    }
+  }
+
+  _drawPipe(g) {
+    g.fillStyle(0x009900); g.fillRect(4, 16, 32, 64);   // body
+    g.fillStyle(0x00CC00); g.fillRect(4, 16, 8,  64);   // body highlight
+    g.fillStyle(0x006600); g.fillRect(28, 16, 8, 64);   // body shadow
+    g.fillStyle(0x00AA00); g.fillRect(0,  0,  40, 16);  // cap
+    g.fillStyle(0x00DD00); g.fillRect(0,  0,  10, 16);  // cap highlight
+    g.fillStyle(0x007700); g.fillRect(30, 0,  10, 16);  // cap shadow
+    g.lineStyle(2, 0x004400, 1);
+    g.strokeRect(0, 0, 40, 16);
+    g.strokeRect(4, 16, 32, 64);
+  }
+
   // ── Level loading ─────────────────────────────────────────────────────────
 
   _loadLevel(index) {
@@ -227,6 +281,27 @@ class GameScene extends Phaser.Scene {
     }
     this.mushroomGroup.refresh();
 
+    // Pipes
+    this.pipeGroup = this.physics.add.staticGroup();
+    for (const pipe of (lvl.pipes || [])) {
+      const sp = this.pipeGroup.create(pipe.x + 20, pipe.y + 40, 'pipe');
+      sp.setOrigin(0.5, 0.5);
+    }
+    this.pipeGroup.refresh();
+
+    // Question blocks
+    this.questionBlockGroup = this.physics.add.staticGroup();
+    this.questionBlockSprites.clear();
+    for (const qb of (lvl.questionBlocks || [])) {
+      const key = this.hitQuestionBlockIds.has(qb.id) ? 'qblock_hit' : 'qblock';
+      const sp = this.questionBlockGroup.create(qb.x, qb.y, key);
+      sp.setOrigin(0.5, 0.5);
+      sp.qbId = qb.id; sp.qbContains = qb.contains;
+      sp.hit = this.hitQuestionBlockIds.has(qb.id);
+      this.questionBlockSprites.set(qb.id, sp);
+    }
+    this.questionBlockGroup.refresh();
+
     // Flag
     const { flag } = lvl;
     this.flagGraphics = this.add.graphics();
@@ -237,7 +312,7 @@ class GameScene extends Phaser.Scene {
 
     // Level name
     if (this.levelText) this.levelText.destroy();
-    this.levelText = this.add.text(16, 46, lvl.name, {
+    this.levelText = this.add.text(16, 54, lvl.name, {
       fontSize: '16px', fontFamily: 'monospace',
       color: '#ffffff', stroke: '#000000', strokeThickness: 3
     }).setDepth(10);
@@ -253,13 +328,20 @@ class GameScene extends Phaser.Scene {
     this.coinSprites.clear();
     if (this.mushroomGroup)  { this.mushroomGroup.clear(true,true);  this.mushroomGroup.destroy();  this.mushroomGroup = null; }
     this.mushroomSprites.clear();
-    if (this.flagGraphics)   { this.flagGraphics.destroy();   this.flagGraphics = null; }
-    if (this.flagZone)       { this.flagZone.destroy();       this.flagZone = null; }
+    if (this.flagGraphics)       { this.flagGraphics.destroy();         this.flagGraphics = null; }
+    if (this.flagZone)           { this.flagZone.destroy();             this.flagZone = null; }
+    if (this.pipeGroup)          { this.pipeGroup.clear(true,true);     this.pipeGroup.destroy();         this.pipeGroup = null; }
+    if (this.questionBlockGroup) { this.questionBlockGroup.clear(true,true); this.questionBlockGroup.destroy(); this.questionBlockGroup = null; }
+    this.questionBlockSprites.clear();
   }
 
   _addPlayerColliders() {
     this.levelColliders.push(
       this.physics.add.collider(this.localPlayer, this.platformGroup),
+      this.physics.add.collider(this.localPlayer, this.pipeGroup),
+      this.physics.add.collider(this.localPlayer, this.questionBlockGroup, (player, block) => {
+        if (player.body.blocked.up && !block.hit) this._hitQuestionBlock(block);
+      }),
       this.physics.add.overlap(this.localPlayer, this.goombas,      this._onGoombaOverlap,   null, this),
       this.physics.add.overlap(this.localPlayer, this.coinGroup,    (_p, c) => this._collectCoin(c)),
       this.physics.add.overlap(this.localPlayer, this.mushroomGroup,(_p, m) => this._collectMushroom(m)),
@@ -291,6 +373,16 @@ class GameScene extends Phaser.Scene {
       color: '#ffffff', stroke: '#000000', strokeThickness: 3,
       align: 'right'
     }).setOrigin(1, 0).setDepth(10);
+
+    this.timerText = this.add.text(480, 16, 'TIME 300', {
+      fontSize: '16px', fontFamily: 'monospace',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 4
+    }).setOrigin(0.5, 0).setDepth(10);
+
+    this.livesText = this.add.text(16, 38, 'LIVES: 3', {
+      fontSize: '13px', fontFamily: 'monospace',
+      color: '#ff6666', stroke: '#000000', strokeThickness: 3
+    }).setDepth(10);
   }
 
   // Display-only — safe to call from remote score updates without re-broadcasting.
@@ -327,11 +419,14 @@ class GameScene extends Phaser.Scene {
   _setupSocket() {
     this.socket = io();
 
-    this.socket.on('init', ({ self, existingPlayers, currentLevel, deadGoombas, collectedCoins, collectedMushrooms }) => {
+    this.socket.on('init', ({ self, existingPlayers, currentLevel, deadGoombas, collectedCoins, collectedMushrooms, hitQuestionBlocks }) => {
       this.selfData             = self;
       this.deadGoombaIds        = new Set(deadGoombas       || []);
       this.collectedCoinIds     = new Set(collectedCoins    || []);
       this.collectedMushroomIds = new Set(collectedMushrooms|| []);
+      this.hitQuestionBlockIds  = new Set(hitQuestionBlocks || []);
+      this.lives = 3;
+      this.timer = 300;
 
       document.getElementById('status').textContent =
         `Player ${self.playerNumber} (${PLAYER_COLOR_NAMES[self.playerNumber]}) — Arrows · Up/Space jump · Reach the flag!`;
@@ -342,6 +437,8 @@ class GameScene extends Phaser.Scene {
       this.remoteScores.clear();
 
       this._loadLevel(currentLevel || 0);
+      this._updateLivesDisplay();
+      this.timerText.setText('TIME 300');
       this.spawnLocalPlayer(self);
       for (const p of existingPlayers) {
         this.spawnRemotePlayer(p);
@@ -400,6 +497,9 @@ class GameScene extends Phaser.Scene {
       this.sfx.levelUp();
       this.deadGoombaIds = new Set(); this.collectedCoinIds = new Set(); this.collectedMushroomIds = new Set();
       this.flagReached = false; this.powered = false;
+      this.hitQuestionBlockIds = new Set();
+      this.timer = 300;
+      this.timerText.setText('TIME 300');
       this._loadLevel(level);
       if (this.localPlayer) {
         this.localPlayer.setScale(1.0);
@@ -409,7 +509,17 @@ class GameScene extends Phaser.Scene {
       }
     });
 
+    this.socket.on('question_block_hit', ({ id }) => {
+      const sp = this.questionBlockSprites.get(id);
+      if (sp && !sp.hit) {
+        sp.hit = true;
+        sp.setTexture('qblock_hit');
+        this.questionBlockGroup.refresh();
+      }
+    });
+
     this.socket.on('game_won', () => {
+      this.timerActive = false;
       this.add.rectangle(480, 270, 960, 540, 0x000000, 0.75).setDepth(98);
       this.add.text(480, 220, 'YOU WIN!', {
         fontSize: '64px', fontFamily: 'monospace',
@@ -445,6 +555,8 @@ class GameScene extends Phaser.Scene {
     this.localPlayer.body.setCollideWorldBounds(true);
     this.localPlayer.body.setMaxVelocityX(300);
     this._addPlayerColliders();
+
+    this.timerActive = true;
 
     this.localLabel = this.add.text(self.x, lvl.spawnY - 32, 'YOU', {
       fontSize: '11px', fontFamily: 'monospace',
@@ -535,9 +647,17 @@ class GameScene extends Phaser.Scene {
     if (this.invincible) return;
     this.powered = false;
     this.localPlayer.setScale(1.0);
+    this.sfx.die();
+    this.lives = Math.max(0, this.lives - 1);
+    this._updateLivesDisplay();
+    if (this.lives <= 0) {
+      this._showGameOver();
+      return;
+    }
+    this.timer = 300;
+    this.timerText.setText('TIME 300');
     this.localPlayer.setPosition(this.selfData.x, LEVELS[this.currentLevel].spawnY);
     this.localPlayer.body.setVelocity(0, 0);
-    this.sfx.die();
     this._startInvincibility(2000);
   }
 
@@ -549,9 +669,62 @@ class GameScene extends Phaser.Scene {
     });
   }
 
+  _updateLivesDisplay() {
+    this.livesText.setText(`LIVES: ${this.lives}`);
+  }
+
+  _hitQuestionBlock(block) {
+    block.hit = true;
+    this.hitQuestionBlockIds.add(block.qbId);
+    block.setTexture('qblock_hit');
+    this.questionBlockGroup.refresh();
+    this.socket.emit('question_block_hit', { id: block.qbId });
+
+    const origY = block.y;
+    this.tweens.add({
+      targets: block, y: block.y - 10, duration: 80, yoyo: true,
+      onComplete: () => { block.y = origY; }
+    });
+
+    const pts = block.qbContains === 'mushroom' ? 500 : 200;
+    this.score += pts;
+    this._onLocalScoreChanged();
+    this.sfx[block.qbContains === 'mushroom' ? 'mushroom' : 'coin']();
+
+    const txt = this.add.text(block.x, block.y - 20, `+${pts}`, {
+      fontSize: '14px', fontFamily: 'monospace',
+      color: '#FFD700', stroke: '#000000', strokeThickness: 3
+    }).setOrigin(0.5).setDepth(50);
+    this.tweens.add({ targets: txt, y: txt.y - 40, alpha: 0, duration: 800,
+      onComplete: () => txt.destroy() });
+  }
+
+  _showGameOver() {
+    this.timerActive = false;
+    if (this.localPlayer) { this.localPlayer.destroy(); this.localPlayer = null; }
+    this.add.rectangle(480, 270, 960, 540, 0x000000, 0.8).setDepth(98);
+    this.add.text(480, 200, 'GAME OVER', {
+      fontSize: '64px', fontFamily: 'monospace',
+      color: '#ff4444', stroke: '#000000', strokeThickness: 6
+    }).setOrigin(0.5).setDepth(99);
+    this.add.text(480, 295, `Score: ${this.score}`, {
+      fontSize: '28px', fontFamily: 'monospace',
+      color: '#ffffff', stroke: '#000000', strokeThickness: 4
+    }).setOrigin(0.5).setDepth(99);
+    this.add.text(480, 348, 'Refresh to play again', {
+      fontSize: '18px', fontFamily: 'monospace', color: '#aaaaaa'
+    }).setOrigin(0.5).setDepth(99);
+  }
+
   // ── Update ────────────────────────────────────────────────────────────────
 
   update(_time, delta) {
+    if (this.timerActive && this.timer > 0) {
+      this.timer = Math.max(0, this.timer - delta / 1000);
+      this.timerText.setText(`TIME ${Math.ceil(this.timer).toString().padStart(3, ' ')}`);
+      if (this.timer <= 0) this._respawn();
+    }
+
     if (!this.localPlayer) return;
 
     const body     = this.localPlayer.body;

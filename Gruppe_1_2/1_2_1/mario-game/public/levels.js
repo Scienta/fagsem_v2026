@@ -28,6 +28,13 @@ const LEVELS = [
       {id:9,x:200,y:472},{id:10,x:400,y:472},{id:11,x:600,y:472},
     ],
     mushrooms: [{ id:0, x:820, y:368 }],
+    questionBlocks: [
+      { id:0, x:256, y:344, contains:'coin' },
+      { id:1, x:288, y:344, contains:'coin' },
+      { id:2, x:320, y:344, contains:'mushroom' },
+      { id:3, x:352, y:344, contains:'coin' },
+    ],
+    pipes: [{ x:480, y:420 }],
     flag: { x:930, y:500 },
   },
   {
@@ -61,6 +68,12 @@ const LEVELS = [
       {id:13,x:150,y:472},{id:14,x:560,y:472},
     ],
     mushrooms: [{ id:0, x:560, y:258 }],
+    questionBlocks: [
+      { id:0, x:150, y:368, contains:'coin' },
+      { id:1, x:500, y:368, contains:'mushroom' },
+      { id:2, x:800, y:368, contains:'coin' },
+    ],
+    pipes: [{ x:50, y:420 }],
     flag: { x:930, y:140 },
   },
   {
@@ -94,6 +107,12 @@ const LEVELS = [
       {id:11,x:70,y:472},{id:12,x:270,y:458},{id:13,x:440,y:418},
     ],
     mushrooms: [{ id:0, x:540, y:303 }],
+    questionBlocks: [
+      { id:0, x:100, y:370, contains:'coin' },
+      { id:1, x:360, y:355, contains:'mushroom' },
+      { id:2, x:660, y:235, contains:'coin' },
+    ],
+    pipes: [{ x:30, y:420 }],
     flag: { x:930, y:205 },
   },
   {
@@ -133,6 +152,12 @@ const LEVELS = [
       {id:15,x:100,y:472},{id:16,x:460,y:408},
     ],
     mushrooms: [{ id:0, x:450, y:208 }, { id:1, x:725, y:208 }],
+    questionBlocks: [
+      { id:0, x:140, y:370, contains:'coin' },
+      { id:1, x:420, y:370, contains:'mushroom' },
+      { id:2, x:740, y:370, contains:'coin' },
+    ],
+    pipes: [{ x:50, y:420 }],
     flag: { x:920, y:155 },
   },
   {
@@ -175,6 +200,12 @@ const LEVELS = [
       {id:14,x:820,y:103},{id:15,x:870,y:103},{id:16,x:920,y:103},
     ],
     mushrooms: [{ id:0, x:390, y:258 }, { id:1, x:715, y:173 }],
+    questionBlocks: [
+      { id:0, x:250, y:330, contains:'coin' },
+      { id:1, x:550, y:200, contains:'mushroom' },
+      { id:2, x:830, y:230, contains:'coin' },
+    ],
+    pipes: [{ x:35, y:420 }],
     flag: { x:930, y:125 },
   },
 ];

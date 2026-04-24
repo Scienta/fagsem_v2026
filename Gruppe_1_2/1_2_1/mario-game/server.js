@@ -16,9 +16,10 @@ const POSITION_UPDATE_MIN_INTERVAL_MS = 20;
 
 // Pre-compute valid IDs per level so event validation is O(1).
 const LEVEL_IDS = LEVELS.map(lvl => ({
-  goombas:   new Set(lvl.goombas.map(g => g.id)),
-  coins:     new Set(lvl.coins.map(c => c.id)),
-  mushrooms: new Set((lvl.mushrooms || []).map(m => m.id)),
+  goombas:        new Set(lvl.goombas.map(g => g.id)),
+  coins:          new Set(lvl.coins.map(c => c.id)),
+  mushrooms:      new Set((lvl.mushrooms       || []).map(m => m.id)),
+  questionBlocks: new Set((lvl.questionBlocks  || []).map(q => q.id)),
 }));
 
 let currentLevel       = 0;
@@ -26,6 +27,7 @@ let transitioning      = false;
 const deadGoombas        = new Set();
 const collectedCoins     = new Set();
 const collectedMushrooms = new Set();
+const hitQuestionBlocks  = new Set();
 
 function nextAvailableSlot() {
   const used = new Set([...players.values()].map(p => p.playerNumber));
@@ -69,9 +71,10 @@ io.on('connection', (socket) => {
     self: player,
     existingPlayers: [...players.values()].filter(p => p.id !== socket.id),
     currentLevel,
-    deadGoombas:       [...deadGoombas],
-    collectedCoins:    [...collectedCoins],
-    collectedMushrooms:[...collectedMushrooms]
+    deadGoombas:        [...deadGoombas],
+    collectedCoins:     [...collectedCoins],
+    collectedMushrooms: [...collectedMushrooms],
+    hitQuestionBlocks:  [...hitQuestionBlocks]
   });
 
   socket.broadcast.emit('player_joined', player);
@@ -127,6 +130,14 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('mushroom_collected', { id });
   });
 
+  socket.on('question_block_hit', ({ id } = {}) => {
+    if (!players.has(socket.id)) return;
+    if (!LEVEL_IDS[currentLevel].questionBlocks.has(id)) return;
+    if (hitQuestionBlocks.has(id)) return;
+    hitQuestionBlocks.add(id);
+    socket.broadcast.emit('question_block_hit', { id });
+  });
+
   socket.on('flag_reached', () => {
     if (!players.has(socket.id)) return;
     if (transitioning) return;
@@ -134,6 +145,7 @@ io.on('connection', (socket) => {
     deadGoombas.clear();
     collectedCoins.clear();
     collectedMushrooms.clear();
+    hitQuestionBlocks.clear();
 
     if (currentLevel >= LEVELS.length - 1) {
       io.emit('game_won');
