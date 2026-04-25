@@ -136,6 +136,7 @@ Fungerende lokale modeller:
 * glm-4.7-flash:q4_K_M (i Claude Code) lagde en applikasjon som ga riktig (nok) svar. Tidsbruk: 1 time og 45 minutter.
   Avvik på 1 krone i forhold til fasit.
 * gemma4:8b (i opencode) lagde en applikasjon som feilet på innlesing av innputtfil.
+* qwen3.6:35b (i Claude Code) lagde en applikasjon som ga riktig svar. Tidsbruk: 90 minutter (Mac, M2 Pro, 36G RAM)
 
 Ellers var det mest problemer:
 
@@ -150,13 +151,12 @@ Ellers var det mest problemer:
 
 #### Hva funket
 
-Claude.
-
-glm-4.7-flash:q4_K_M fungerte forsåvidt, men brukte 1 time og 45 minutter.
+Claude med Claude Code fungerer. Lokale modeller fungerer med betydelig mer tidsbruk.
 
 #### Hva funket ikke
 
-Lokale små modeller (gemma4:8b og lignende) klarer ikke å benytte seg av verktøyene i Claude Code og OpenCode.
+Integrasjon mellom agenter og modeller (verktøy) er ikke helt vanntett, og lokale modeller (gemma4:8b og lignende)
+klarer ikke å benytte seg av verktøyene i Claude Code og OpenCode.
 
 #### Begrensninger
 
