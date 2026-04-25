@@ -1,0 +1,103 @@
+╭─── Claude Code v2.1.119 ─────────────────────────────────────────────────────╮
+│                                              │ Tips for getting started      │
+│             Welcome back Trygve!             │ Run /init to create a CLAUDE… │
+│                                              │ ───────────────────────────── │
+│                    ▐▛███▜▌                   │ Recent activity               │
+│                   ▝▜█████▛▘                  │ No recent activity            │
+│                     ▘▘ ▝▝                    │                               │
+│                                              │                               │
+│   Sonnet 4.6 · API Usage Billing · Scienta   │                               │
+│       ~/dev/com.github/nostra/mcalert        │                               │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+❯ Forklar innholdet i dette prosjektet                                          
+
+● Jeg skal utforske prosjektet for å gi deg en god oversikt.
+
+● Explore(Explore mcalert project structure)
+  ⎿  Done (19 tool uses · 46.7k tokens · 1m 1s)
+  (ctrl+o to expand)
+
+● Her er en oversikt over prosjektet:
+
+  ---
+  mcalert — Kubernetes/Prometheus overvåkingsapp for skrivebordet
+
+  Hva gjør det?
+
+  mcalert er en desktop-applikasjon (Mac/Linux/Windows) som overvåker
+  Kubernetes-clustere ved å polle Prometheus og vise statusen via et
+  systemtray-ikon. Ikonfarge og meny oppdateres automatisk basert på aktive
+  alerts.
+
+  Brukeren ser:
+  - Et tray-ikon (grønn/rød) som indikerer om noe brenner
+  - En dropdown-meny med statusen per Prometheus-endepunkt
+  - Et detaljvindu (JavaFX) med alle aktive alerts per endepunkt
+
+  ---
+  Tech stack
+
+  ┌─────────────┬──────────────────────────────┐
+  │  Komponent  │          Teknologi           │
+  ├─────────────┼──────────────────────────────┤
+  │ Framework   │ Quarkus 3.32.4               │
+  ├─────────────┼──────────────────────────────┤
+  │ UI          │ JavaFX 25 + systemtray (AWT) │
+  ├─────────────┼──────────────────────────────┤
+  │ HTTP-klient │ Quarkus REST Client Reactive │
+  ├─────────────┼──────────────────────────────┤
+  │ Konfig      │ SmallRye ConfigMapping       │
+  ├─────────────┼──────────────────────────────┤
+  │ CLI         │ PicoCLI (--no-tray)          │
+  ├─────────────┼──────────────────────────────┤
+  │ Bygg        │ Maven 4, JDK 25              │
+  └─────────────┴──────────────────────────────┘
+
+  ---
+  Arkitektur
+
+  Main.java
+    └── McTrayService          → starter tray eller no-tray modus
+          └── PrometheusTray   → system tray-ikon og meny
+
+    └── StatusWindow (JavaFX)  → detaljvindu med alerts
+
+  AlertResource (scheduler)    → poller alle endepunkter hvert 5s
+    └── SingleEndpointPoller   → ett Prometheus-endepunkt
+          └── AlertCaller      → REST-kall mot Prometheus /api/v1/alerts
+
+  Observer-mønster binder sammen backend og UI: AlertResource sender
+  PropertyChangeEvent, tray-ikonet og statusvinduet lytter og oppdaterer seg.
+
+  ---
+  Nøkkelfunksjoner
+
+  - Multi-endepunkt: Monitor flere Prometheus-instanser samtidig
+  - Watchdog-alerts: Hvis en bestemt alert ikke finnes → feil (vet at overvåking
+   er nede)
+  - Ignorer alerts: Suppresjon av kjente falske positiver per endepunkt
+  - Grafana-integrasjon: Oppdager Prometheus-datakildene automatisk via Grafana
+  API
+  - Shell-hooks: Kjøre et vilkårlig shell-script når status endres
+  - Custom headers: Basic auth, bearer token, etc. per endepunkt
+  - Mørk modus: Auto-detektert på Mac, inverterer tray-ikoner
+
+  ---
+  Konfigurasjon
+
+  Konfigureres via ~/.mcalert.properties:
+
+  mcalert.prometheus.endpoints.prod.uri=http://prometheus:9090/api/v1/alerts
+  mcalert.prometheus.endpoints.prod.ignore-alerts=CPUThrottlingHigh
+  mcalert.prometheus.endpoints.prod.watchdog-alerts=Watchdog
+  mcalert.prometheus.command-line.shell-command=/path/to/notify.sh
+
+  ---
+  Kort sagt: Et minimalistisk verktøy for SRE/DevOps-folk som vil ha
+  Kubernetes-alertstatus synlig i taskbar uten å ha Grafana åpen hele dagen.
+
+✻ Cooked for 1m 23s
+
+❯ /export                                                                       
+  ⎿  Conversation copied to clipboard
