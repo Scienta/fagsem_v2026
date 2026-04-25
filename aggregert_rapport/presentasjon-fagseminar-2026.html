@@ -108,9 +108,9 @@
   ul { list-style: none; padding: 0; }
   ul li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 1.05rem; line-height: 1.5; }
   ul li:last-child { border-bottom: none; }
-  ul li::before { content: '→'; margin-right: 10px; color: var(--accent); font-weight: 700; }
+  ul li::before { content: '\2192'; margin-right: 10px; color: var(--accent); font-weight: 700; }
 
-  ul.bullets li::before { content: '•'; color: var(--muted); font-size: 1.4rem; vertical-align: middle; margin-right: 8px; }
+  ul.bullets li::before { content: '\2022'; color: var(--muted); font-size: 1.4rem; vertical-align: middle; margin-right: 8px; }
 
   /* Tables */
   table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
@@ -202,47 +202,53 @@
   .border-t4 { border-color: rgba(232,93,117,0.35) !important; }
 
   .wide { max-width: 1100px; }
+
+  /* Numbered list for learnings */
+  ol.learnings { list-style: none; padding: 0; counter-reset: learn; }
+  ol.learnings li { counter-increment: learn; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 1rem; line-height: 1.5; }
+  ol.learnings li:last-child { border-bottom: none; }
+  ol.learnings li::before { content: counter(learn) '.'; margin-right: 10px; color: var(--accent); font-weight: 800; font-size: 1.1rem; }
 </style>
 </head>
 <body>
 
 <div class="deck" id="deck">
 
-  <!-- ── SLIDE 1: Tittel ── -->
+  <!-- SLIDE 1: Tittel -->
   <div class="slide active">
-    <div class="kicker">Scienta · Fagseminar Vår 2026</div>
+    <div class="kicker">Scienta &middot; Fagseminar V&aring;r 2026</div>
     <h1>AI-assistert utvikling<br>i praksis</h1>
-    <p class="subtitle" style="margin-top:1.2em">25. april 2026 &nbsp;·&nbsp; 9 grupper &nbsp;·&nbsp; ~30 deltakere &nbsp;·&nbsp; 4 tema</p>
+    <p class="subtitle" style="margin-top:1.2em">25. april 2026 &nbsp;&middot;&nbsp; 11 grupper &nbsp;&middot;&nbsp; ~35 deltakere &nbsp;&middot;&nbsp; 5 tema</p>
     <div class="stat-row" style="margin-top:3em;max-width:700px;width:100%">
-      <div class="stat"><div class="num">9</div><div class="label">Grupper</div></div>
-      <div class="stat"><div class="num">4</div><div class="label">Tema</div></div>
+      <div class="stat"><div class="num">11</div><div class="label">Grupper</div></div>
+      <div class="stat"><div class="num">5</div><div class="label">Tema</div></div>
       <div class="stat"><div class="num t2">Alle</div><div class="label">Leverte fungerende apper</div></div>
     </div>
   </div>
 
-  <!-- ── SLIDE 2: Oversikt ── -->
+  <!-- SLIDE 2: Oversikt -->
   <div class="slide">
     <div class="content">
-      <div class="kicker">Hva ble undersøkt?</div>
+      <div class="kicker">Hva ble unders&oslash;kt?</div>
       <h2>Fem tema, fire med rapporter</h2>
       <div class="two-col" style="margin-top:28px">
         <div>
           <div class="card border-t1" style="margin-bottom:16px">
             <span class="theme-badge badge-t1">Tema 1</span>
             <div style="font-weight:600;margin-bottom:4px">Utvikler + agent i praksis</div>
-            <div style="font-size:0.9rem;color:var(--muted)">Gruppe 1.1, 1.3</div>
+            <div style="font-size:0.9rem;color:var(--muted)">Gruppe 1.1, 1.3, 1.5</div>
           </div>
           <div class="card border-t2" style="margin-bottom:16px">
             <span class="theme-badge badge-t2">Tema 2</span>
             <div style="font-weight:600;margin-bottom:4px">AI-assistert systemutvikling</div>
-            <div style="font-size:0.9rem;color:var(--muted)">Gruppe 1.2, 2.1, 2.2</div>
+            <div style="font-size:0.9rem;color:var(--muted)">Gruppe 1.2, 2.1, 2.2, 2.3</div>
           </div>
         </div>
         <div>
           <div class="card border-t3" style="margin-bottom:16px">
             <span class="theme-badge badge-t3">Tema 3</span>
             <div style="font-weight:600;margin-bottom:4px">Lokal LLM i praksis</div>
-            <div style="font-size:0.9rem;color:var(--muted)">Gruppe 3.2</div>
+            <div style="font-size:0.9rem;color:var(--muted)">Gruppe 3.1, 3.2, 3.3</div>
           </div>
           <div class="card border-t4" style="margin-bottom:16px">
             <span class="theme-badge badge-t4">Tema 4</span>
@@ -259,26 +265,26 @@
     </div>
   </div>
 
-  <!-- ── SLIDE 3: Tema 1 header ── -->
+  <!-- SLIDE 3: Tema 1 header -->
   <div class="slide section-header">
     <div class="section-number t1">1</div>
     <span class="theme-badge badge-t1" style="font-size:0.95rem;padding:8px 20px">Tema 1</span>
     <h1 class="t1" style="font-size:2.6rem;margin-bottom:0.5em">Utvikler + agent<br>i praksis</h1>
-    <p class="lead">Gruppe 1.1 og 1.3</p>
-    <p class="subtitle" style="margin-top:0.8em">Funksjonelle beskrivelser · Erfaringsnivå · 19 modeller sammenlignet</p>
+    <p class="lead">Gruppe 1.1, 1.3 og 1.5</p>
+    <p class="subtitle" style="margin-top:0.8em">Funksjonelle beskrivelser &middot; Erfaringsniv&aring; &middot; 19 modeller &middot; Feedback-loop vs. &eacute;n bestilling</p>
   </div>
 
-  <!-- ── SLIDE 4: Gruppe 1.1 ── -->
+  <!-- SLIDE 4: Gruppe 1.1 -->
   <div class="slide">
     <div class="content">
-      <span class="kicker t1">Gruppe 1.1 – Musikk-quizapp</span>
+      <span class="kicker t1">Gruppe 1.1 &ndash; Musikk-quizapp</span>
       <h2>Funksjonell beskrivelse som prompt</h2>
-      <p style="margin-bottom:24px;color:var(--muted)">Iterativ utvikling → generert beskrivelse → gjenbruk på nye tech stacks</p>
+      <p style="margin-bottom:24px;color:var(--muted)">Iterativ utvikling &rarr; generert beskrivelse &rarr; gjenbruk p&aring; nye tech stacks</p>
       <div class="two-col">
         <div>
           <h3>Eksperiment</h3>
           <ul>
-            <li>~15 prompts → fungerende musikk-quiz i produksjon</li>
+            <li>~15 prompts &rarr; fungerende musikk-quiz i produksjon</li>
             <li>Claude genererte funksjonell beskrivelse av appen</li>
             <li>Beskrivelsen ble brukt som prompt til nye stacks</li>
             <li>Ingen manuell kode skrevet</li>
@@ -288,42 +294,42 @@
           <h3>Funn</h3>
           <ul>
             <li>Alle regenererte apper fungerte med minimalt av bugs</li>
-            <li>Lik funksjonalitet på tvers av ulike tech stacks</li>
+            <li>Lik funksjonalitet p&aring; tvers av ulike tech stacks</li>
             <li>Funksjonell beskrivelse kan erstatte iterativ prosess</li>
           </ul>
           <div class="highlight" style="margin-top:16px">
-            <p style="font-size:0.95rem;font-style:italic">"Man sitter aldri fast og får en god sparringspartner som kommer med forslag og alternativer."</p>
+            <p style="font-size:0.95rem;font-style:italic">&ldquo;Man sitter aldri fast og f&aring;r en god sparringspartner som kommer med forslag og alternativer.&rdquo;</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 5: Gruppe 1.3 exp 1 ── -->
+  <!-- SLIDE 5: Gruppe 1.3 exp 1 -->
   <div class="slide">
     <div class="content">
-      <span class="kicker t1">Gruppe 1.3 – Eksperiment 1</span>
-      <h2>Gjør erfaring en forskjell?</h2>
+      <span class="kicker t1">Gruppe 1.3 &ndash; Eksperiment 1</span>
+      <h2>Gj&oslash;r erfaring en forskjell?</h2>
       <p style="margin-bottom:24px;color:var(--muted)">Fire deltakere med ulik erfaring bygde Snake-spill fullt agentic</p>
       <table>
-        <tr><th>Deltaker</th><th>Erfaring</th><th>Tilnærming</th><th>Resultat</th></tr>
-        <tr><td>Felix</td><td>Daglig bruk</td><td>Én bred instruksjon</td><td><span class="tag green">Kjørende</span></td></tr>
-        <tr><td>Rafael</td><td>Daglig bruk</td><td>Én bred instruksjon</td><td><span class="tag green">Kjørende</span></td></tr>
-        <tr><td>Rune</td><td>Litt erfaring</td><td>Én bred instruksjon</td><td><span class="tag green">Kjørende</span></td></tr>
+        <tr><th>Deltaker</th><th>Erfaring</th><th>Tiln&aelig;rming</th><th>Resultat</th></tr>
+        <tr><td>Felix</td><td>Daglig bruk</td><td>&Eacute;n bred instruksjon</td><td><span class="tag green">Kj&oslash;rende</span></td></tr>
+        <tr><td>Rafael</td><td>Daglig bruk</td><td>&Eacute;n bred instruksjon</td><td><span class="tag green">Kj&oslash;rende</span></td></tr>
+        <tr><td>Rune</td><td>Litt erfaring</td><td>&Eacute;n bred instruksjon</td><td><span class="tag green">Kj&oslash;rende</span></td></tr>
         <tr><td>Vegard</td><td>Litt erfaring</td><td>Inkrementell styring</td><td><span class="tag green">Annerledes, strukturert</span></td></tr>
       </table>
       <div class="highlight" style="margin-top:20px">
-        <p><strong>Konklusjon:</strong> Erfaring viste seg i tilnærmingen, ikke i resultatet. Promptestrategi har større innvirkning enn erfaringsnivå – i hvert fall for enkle oppgaver.</p>
+        <p><strong>Konklusjon:</strong> Erfaring viste seg i tiln&aelig;rmingen, ikke i resultatet. Promptestrategi har st&oslash;rre innvirkning enn erfaringsniv&aring; &ndash; i hvert fall for enkle oppgaver.</p>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 6: Gruppe 1.3 exp 2 ── -->
+  <!-- SLIDE 6: Gruppe 1.3 exp 2 -->
   <div class="slide">
     <div class="content">
-      <span class="kicker t1">Gruppe 1.3 – Eksperiment 2</span>
+      <span class="kicker t1">Gruppe 1.3 &ndash; Eksperiment 2</span>
       <h2>19 modeller, identisk prompt</h2>
-      <p style="margin-bottom:20px;color:var(--muted)">"Create a single self-contained HTML file with a fully playable Snake game."</p>
+      <p style="margin-bottom:20px;color:var(--muted)">&ldquo;Create a single self-contained HTML file with a fully playable Snake game.&rdquo;</p>
       <div class="two-col">
         <div>
           <table>
@@ -340,34 +346,68 @@
             <div class="stat"><div class="num t2">16/19</div><div class="label">produserte spillbare spill</div></div>
             <div class="stat"><div class="num t4">2/19</div><div class="label">feilet helt (ingen output)</div></div>
           </div>
-          <p style="margin-top:16px;font-size:0.9rem">Modeller klustrer i stilgrupper – claude-sonnet-4 og sonnet-4.5 er nesten identiske</p>
+          <p style="margin-top:16px;font-size:0.9rem">Modeller klustrer i stilgrupper &ndash; claude-sonnet-4 og sonnet-4.5 er nesten identiske</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 7: Tema 2 header ── -->
+  <!-- SLIDE 7: Gruppe 1.5 -->
+  <div class="slide">
+    <div class="content">
+      <span class="kicker t1">Gruppe 1.5 &ndash; BlackJack i TypeScript</span>
+      <h2>Feedback-loop vs. &eacute;n stor bestilling</h2>
+      <p style="margin-bottom:20px;color:var(--muted)">Samme case bygd to ganger: A med &eacute;n detaljert spec, B med minimal start og 11 iterasjoner</p>
+      <div class="two-col">
+        <div>
+          <table>
+            <tr><th>M&aring;l</th><th>A &ndash; &Eacute;n bestilling</th><th>B &ndash; Feedback-loop</th></tr>
+            <tr><td>Tid</td><td>~2 min</td><td>~55 min</td></tr>
+            <tr><td>Inngripener</td><td>0</td><td>11</td></tr>
+            <tr><td>Linjer kode</td><td>182</td><td>122</td></tr>
+            <tr><td>Max complexity</td><td>~16</td><td>~5</td></tr>
+            <tr><td>Regeldekning</td><td><span class="tag green">Komplett</span></td><td><span class="tag red">Mangler 3</span></td></tr>
+            <tr><td>Runtime-bug</td><td><span class="tag red">Ikke testet</span></td><td><span class="tag green">Fanget</span></td></tr>
+          </table>
+        </div>
+        <div>
+          <h3>N&oslash;kkelfunn</h3>
+          <ul>
+            <li>Iterativ loop: 3&times; lavere kompleksitet, bedre testbarhet</li>
+            <li>&Eacute;n bestilling: komplett regeldekning p&aring; f&oslash;rste fors&oslash;k</li>
+            <li>Det du ikke sp&oslash;r om, blir ikke implementert</li>
+            <li>Runtime-testing fanger bugs som begge strategier ellers misser</li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:16px">
+        <p><strong>Avveining:</strong> Iterativ loop gir bedre <em>kvalitet</em>, &eacute;n bestilling gir bedre <em>komplettering</em>. Man trenger b&aring;de god spec og aktiv review.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Tema 2 header -->
   <div class="slide section-header">
     <div class="section-number t2">2</div>
     <span class="theme-badge badge-t2" style="font-size:0.95rem;padding:8px 20px">Tema 2</span>
     <h1 class="t2" style="font-size:2.6rem;margin-bottom:0.5em">AI-assistert<br>systemutvikling</h1>
-    <p class="lead">Gruppe 1.2, 2.1 og 2.2</p>
-    <p class="subtitle" style="margin-top:0.8em">Iterativ vs. planlagt · PO-drevet utvikling · Planning mode</p>
+    <p class="lead">Gruppe 1.2, 2.1, 2.2 og 2.3</p>
+    <p class="subtitle" style="margin-top:0.8em">Iterativ vs. planlagt &middot; PO-drevet &middot; Planning mode &middot; Spec-rammeverk</p>
   </div>
 
-  <!-- ── SLIDE 8: Gruppe 1.2 ── -->
+  <!-- SLIDE 9: Gruppe 1.2 -->
   <div class="slide">
     <div class="content wide">
-      <span class="kicker t2">Gruppe 1.2 – Multiplayer Mario</span>
+      <span class="kicker t2">Gruppe 1.2 &ndash; Multiplayer Mario</span>
       <h2>Iterativ vs. planlagt utvikling</h2>
       <p style="margin-bottom:20px;color:var(--muted)">Begge undergrupper bygget nettbasert multiplayer-spill fra scratch og deployet til Railway</p>
       <table>
         <tr><th>Aspekt</th><th>Iterativ (1_2_1)</th><th>Planlagt TDD (1_2_2)</th></tr>
-        <tr><td>Tester</td><td>31 grønne</td><td>31 grønne</td></tr>
-        <tr><td>Reconnect-bugs</td><td><span class="tag green">Funnet tidlig</span> – live-test</td><td><span class="tag red">Funnet sent</span> – ved deploy</td></tr>
-        <tr><td>Arkitekturkvalitet</td><td>Lavere</td><td>Høyere</td></tr>
-        <tr><td>Visuell polering</td><td>Høyere</td><td>Lavere</td></tr>
-        <tr><td>Blindsoner</td><td>Arkitekturell gjeld</td><td>Runtime-miljø, visuell rendering</td></tr>
+        <tr><td>Tester</td><td>31 gr&oslash;nne</td><td>31 gr&oslash;nne</td></tr>
+        <tr><td>Reconnect-bugs</td><td><span class="tag green">Funnet tidlig</span> &ndash; live-test</td><td><span class="tag red">Funnet sent</span> &ndash; ved deploy</td></tr>
+        <tr><td>Arkitekturkvalitet</td><td>Lavere</td><td>H&oslash;yere</td></tr>
+        <tr><td>Visuell polering</td><td>H&oslash;yere</td><td>Lavere</td></tr>
+        <tr><td>Blindsoner</td><td>Arkitekturell gjeld</td><td>Runtime-milj&oslash;, visuell rendering</td></tr>
       </table>
       <div class="highlight" style="margin-top:16px">
         <p>Parallell AI-kodegjennomgang (Sonnet + Opus): <strong>15 unike funn</strong> vs. 9 og 6 enkeltvis. Overlapp bare 4. Parallell review er kostnadseffektivt.</p>
@@ -375,15 +415,15 @@
     </div>
   </div>
 
-  <!-- ── SLIDE 9: Gruppe 2.1 ── -->
+  <!-- SLIDE 10: Gruppe 2.1 -->
   <div class="slide">
     <div class="content">
-      <span class="kicker t2">Gruppe 2.1 – Konro Content Tool</span>
+      <span class="kicker t2">Gruppe 2.1 &ndash; Konro Content Tool</span>
       <h2>En ikke-teknisk PO bygger en app</h2>
       <p style="margin-bottom:20px;color:var(--muted)">PO uten teknisk bakgrunn styrte hele utviklingen via flervalg-dialog</p>
       <div class="two-col">
         <div>
-          <h3>Tidsforbruk – idé til app</h3>
+          <h3>Tidsforbruk &ndash; id&eacute; til app</h3>
           <table>
             <tr><th>Fase</th><th>Tid</th></tr>
             <tr><td>Brainstorming</td><td>38 min</td></tr>
@@ -395,50 +435,85 @@
           </table>
         </div>
         <div>
-          <h3>Nøkkelfunn</h3>
+          <h3>N&oslash;kkelfunn</h3>
           <ul>
-            <li>Flervalg-spørsmål senket terskelen dramatisk</li>
+            <li>Flervalg-sp&oslash;rsm&aring;l senket terskelen dramatisk</li>
             <li>PO tok alle produktbeslutninger (tone, format, scope)</li>
-            <li>Ekte data avslørte alle bugs – syntetiske testdata ville ikke fanget noen</li>
+            <li>Ekte data avsl&oslash;rte alle bugs &ndash; syntetiske testdata ville ikke fanget noen</li>
             <li>Sesjon 2: PO la til features ALENE, uten utvikler</li>
-            <li>Fra feedback til endring: 2–4 minutter</li>
+            <li>Fra feedback til endring: 2&ndash;4 minutter</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 10: Gruppe 2.2 ── -->
+  <!-- SLIDE 11: Gruppe 2.2 -->
   <div class="slide">
     <div class="content">
-      <span class="kicker t2">Gruppe 2.2 – Matoppskriftsapp</span>
+      <span class="kicker t2">Gruppe 2.2 &ndash; Matoppskriftsapp</span>
       <h2>Planning mode: hjelper det?</h2>
-      <p style="margin-bottom:20px;color:var(--muted)">Tre betingelser, samme oppgave: "Lag en web-applikasjon for vedlikehold av matoppskrifter"</p>
+      <p style="margin-bottom:20px;color:var(--muted)">Tre betingelser, samme oppgave: &ldquo;Lag en web-applikasjon for vedlikehold av matoppskrifter&rdquo;</p>
       <table>
         <tr><th>Betingelse</th><th>Tid</th><th>Stack</th><th>Spontane features</th></tr>
-        <tr><td><strong>A</strong> – Kort prompt</td><td>7m 57s</td><td>Spring Boot + H2 + Vanilla JS</td><td>Ingen</td></tr>
-        <tr><td><strong>B</strong> – Detaljert spec</td><td>14m 45s</td><td>Spring Boot + MySQL + TypeScript</td><td>TypeScript, paginering, tester</td></tr>
-        <tr><td><strong>C</strong> – Spec + planning</td><td>23m 31s</td><td>Spring Boot + MySQL + React JSX</td><td>Konsistent arkitektur</td></tr>
+        <tr><td><strong>A</strong> &ndash; Kort prompt</td><td>7m 57s</td><td>Spring Boot + H2 + Vanilla JS</td><td>Ingen</td></tr>
+        <tr><td><strong>B</strong> &ndash; Detaljert spec</td><td>14m 45s</td><td>Spring Boot + MySQL + TypeScript</td><td>TypeScript, paginering, tester</td></tr>
+        <tr><td><strong>C</strong> &ndash; Spec + planning</td><td>23m 31s</td><td>Spring Boot + MySQL + React JSX</td><td>Konsistent arkitektur</td></tr>
       </table>
       <div class="highlight" style="margin-top:16px">
-        <p><strong>Viktigste funn:</strong> Detaljert spesifikasjon har større effekt på resultatkvalitet enn planning mode alene. B genererte spontant mer avanserte features enn C – men startet en TypeScript-migrering som aldri ble fullført.</p>
+        <p><strong>Viktigste funn:</strong> Detaljert spesifikasjon har st&oslash;rre effekt p&aring; resultatkvalitet enn planning mode alene. B genererte spontant mer avanserte features enn C &ndash; men startet en TypeScript-migrering som aldri ble fullf&oslash;rt.</p>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 11: Tema 3 header ── -->
+  <!-- SLIDE 12: Gruppe 2.3 -->
+  <div class="slide">
+    <div class="content wide">
+      <span class="kicker t2">Gruppe 2.3 &ndash; License Tracker</span>
+      <h2>Spec-kit rammeverk vs. frih&aring;nd</h2>
+      <p style="margin-bottom:20px;color:var(--muted)">Samme app bygd med og uten strukturert spesifikasjonsrammeverk (spec-kit)</p>
+      <div class="two-col">
+        <div>
+          <h3>Prosess</h3>
+          <table>
+            <tr><th>M&aring;l</th><th>Med spec-kit</th><th>Uten</th></tr>
+            <tr><td>Avklaringssp&oslash;rsm&aring;l</td><td>1</td><td>3</td></tr>
+            <tr><td>Stopp i flyt</td><td>1&ndash;2</td><td>5</td></tr>
+            <tr><td>Sporbarhet</td><td>~90%</td><td>~90%</td></tr>
+            <tr><td>TDD-m&aring;l n&aring;dd</td><td><span class="tag red">Nei (~40%)</span></td><td>N/A (~60%)</td></tr>
+          </table>
+        </div>
+        <div>
+          <h3>Kodekvalitet</h3>
+          <table>
+            <tr><th>Dimensjon</th><th>Vinner</th></tr>
+            <tr><td>Arkitektur</td><td><span class="tag blue">Spec-kit</span> Hexagonal</td></tr>
+            <tr><td>DTOs / grensesnitt</td><td><span class="tag green">Uten</span></td></tr>
+            <tr><td>Feilh&aring;ndtering</td><td><span class="tag green">Uten</span></td></tr>
+            <tr><td>Idempotent varsling</td><td><span class="tag green">Uten</span></td></tr>
+            <tr><td>Testdekning</td><td><span class="tag green">Uten</span> (22 vs 5)</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:16px">
+        <p><strong>Paradoks:</strong> Spec-kit ga bedre <em>planlegging</em>, men koden uten rammeverk var mer <em>produksjonsklar</em>. Quality gates fanget ikke &aring;penbare mangler (hardkodet webhook, manglende validering).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Tema 3 header -->
   <div class="slide section-header">
     <div class="section-number t3">3</div>
     <span class="theme-badge badge-t3" style="font-size:0.95rem;padding:8px 20px">Tema 3</span>
     <h1 class="t3" style="font-size:2.6rem;margin-bottom:0.5em">Lokal LLM<br>i praksis</h1>
-    <p class="lead">Gruppe 3.2</p>
-    <p class="subtitle" style="margin-top:0.8em">Cloud vs. lokale modeller · Ollama · Agent-verktøybruk</p>
+    <p class="lead">Gruppe 3.1, 3.2 og 3.3</p>
+    <p class="subtitle" style="margin-top:0.8em">Ollama &middot; Gemma4 &middot; Llama &middot; Qwen &middot; GLM &middot; Hybrid-orkestrering</p>
   </div>
 
-  <!-- ── SLIDE 12: Gruppe 3.2 ── -->
+  <!-- SLIDE 14: Gruppe 3.2 -->
   <div class="slide">
     <div class="content">
-      <span class="kicker t3">Gruppe 3.2 – Skatteberegner</span>
+      <span class="kicker t3">Gruppe 3.2 &ndash; Skatteberegner</span>
       <h2>Lokale modeller og agentic koding</h2>
       <p style="margin-bottom:24px;color:var(--muted)">Python-app for skatteberegning. Baseline: Opus 4.7. Variant: Ollama-modeller.</p>
       <div class="two-col">
@@ -446,43 +521,130 @@
           <h3>Resultater per modell</h3>
           <table>
             <tr><th>Modell</th><th>Resultat</th></tr>
-            <tr><td>claude opus 4.7</td><td><span class="tag green">Fungerte umiddelbart</span></td></tr>
-            <tr><td>gemma4:8b m.fl.</td><td><span class="tag red">Klarer ikke verktøybruk</span></td></tr>
-            <tr><td>Diverse små</td><td><span class="tag red">Forstår ikke oppgaven</span></td></tr>
-            <tr><td>glm-4.7-flash:q4_K_M</td><td><span class="tag blue">Fungerte – 1t 45min</span></td></tr>
+            <tr><td>Claude Opus 4.7</td><td><span class="tag green">7&ndash;8 min</span></td></tr>
+            <tr><td>qwen3.6:35b</td><td><span class="tag blue">90 min, korrekt</span></td></tr>
+            <tr><td>glm-4.7-flash</td><td><span class="tag blue">1t 45min, 1kr avvik</span></td></tr>
+            <tr><td>gemma4:8b</td><td><span class="tag red">Feilet</span></td></tr>
+            <tr><td>Diverse sm&aring;</td><td><span class="tag red">Forst&aring;r ikke oppgaven</span></td></tr>
           </table>
         </div>
         <div>
           <h3>Viktigste observasjoner</h3>
           <ul>
-            <li>Lokale modeller klarer ikke verktøybruk – nødvendig for agentic workflows</li>
-            <li>Mange forstår ikke engang AT de har fått en oppgave</li>
-            <li>GLM-4 løste oppgaven, men brukte 105 minutter ekstra og 1% avvik</li>
-            <li>Claude Code mangler default file-tools med lokal modell</li>
+            <li>Lokale modeller klarer ikke verkt&oslash;ybruk &ndash; n&oslash;dvendig for agentic workflows</li>
+            <li>Mange forst&aring;r ikke engang AT de har f&aring;tt en oppgave</li>
+            <li>Modeller som lyktes brukte 12&ndash;22&times; mer tid</li>
           </ul>
         </div>
-      </div>
-      <div class="highlight" style="margin-top:20px">
-        <p><strong>Konklusjon:</strong> Lokale LLM-er er ikke klare for agent-basert koding i daglig bruk. Skybaserte modeller er dramatisk overlegne på tid, kvalitet og reliabilitet.</p>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 13: Tema 4 header ── -->
+  <!-- SLIDE 15: Gruppe 3.1 -->
+  <div class="slide">
+    <div class="content">
+      <span class="kicker t3">Gruppe 3.1 &ndash; Snake-spill fra plan</span>
+      <h2>Skymodell vs. lokal p&aring; identisk plan</h2>
+      <p style="margin-bottom:24px;color:var(--muted)">Detaljert Snake-plan (Java 25, Lanterna, JUnit 5). To agenter implementerte uavhengig.</p>
+      <div class="two-col">
+        <div>
+          <div class="stat" style="margin-bottom:16px">
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px">Claude Code (Sonnet 4.6)</div>
+            <div class="num t2" style="font-size:2rem">13 min</div>
+            <div class="label">Spillbart spill, 4 bugfixer</div>
+          </div>
+          <div class="stat">
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px">OpenCode (Gemma4, lokal)</div>
+            <div class="num t4" style="font-size:2rem">Avbrutt</div>
+            <div class="label">Kompilerte ikke, fulgte ikke planen</div>
+          </div>
+        </div>
+        <div>
+          <h3>Funn</h3>
+          <ul>
+            <li>Skymodellen fulgte flerlags-planen tett</li>
+            <li>Lokal modell klarte ikke &aring; holde oversikt over avhengigheter i planen</li>
+            <li>Selv skymodellens bugfixer introduserte regresjoner (2 av 4 feil var nye)</li>
+            <li>Ollama p&aring; Mac presterte bedre enn p&aring; Linux</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: Gruppe 3.3 -->
+  <div class="slide">
+    <div class="content wide">
+      <span class="kicker t3">Gruppe 3.3 &ndash; Blackjack + OTP (Java)</span>
+      <h2>Hybrid-orkestrering: lokal + sky</h2>
+      <p style="margin-bottom:20px;color:var(--muted)">To kodebaser, to lokale modeller (llama3.1:8b, qwen3.6) + Claude som orkestrator</p>
+      <div class="two-col">
+        <div>
+          <h3>Modellsammenligning (is_soft)</h3>
+          <table>
+            <tr><th></th><th>llama3.1:8b</th><th>qwen3.6</th></tr>
+            <tr><td>Fors&oslash;k til korrekt</td><td>4</td><td><strong>1</strong></td></tr>
+            <tr><td>Hallusinering</td><td><span class="tag red">Ja</span></td><td><span class="tag green">Nei</span></td></tr>
+            <tr><td>Total tid</td><td>~135 sek</td><td>133 sek</td></tr>
+            <tr><td>Tester gr&oslash;nne</td><td>24/24</td><td>30/30</td></tr>
+          </table>
+          <p style="margin-top:12px;font-size:0.85rem;color:var(--muted)">qwen3.6 thinking-modus ubrukelig med lite kontekst &ndash; brukte hele vinduet p&aring; thinking</p>
+        </div>
+        <div>
+          <h3>Real-world Java (OTP)</h3>
+          <ul>
+            <li><strong>Llama:</strong> ~60% av koden (sortering, struktur)</li>
+            <li><strong>Claude:</strong> ~40% (metodekropp, McRAPTOR-variant)</li>
+            <li>917 tester gr&oslash;nne i raptor-modulen</li>
+          </ul>
+          <div class="highlight" style="margin-top:16px">
+            <p style="font-size:0.95rem"><strong>Lovende m&oslash;nster:</strong> Lokal modell for avgrensede deloppgaver, skymodell som orkestrator og supplement der konteksten er kompleks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: Tema 3 oppsummering -->
+  <div class="slide">
+    <div class="content">
+      <span class="kicker t3">Tema 3 &ndash; Oppsummering</span>
+      <h2>Lokale modeller: tre grupper, ett bilde</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:28px">
+        <div class="card">
+          <h3 style="color:var(--red)">Klarer ikke alene</h3>
+          <p>Verkt&oslash;ybruk feiler. Komplekse planer f&oslash;lges ikke. API-er hallusineres uten full kontekst. Selv de beste bruker 12&ndash;22&times; mer tid.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--t1)">Sterkere modeller hjelper</h3>
+          <p>qwen3.6 l&oslash;ste oppgave p&aring; 1. fors&oslash;k der llama trengte 4. glm-4.7-flash og qwen3.6:35b fullf&oslash;rte skatteberegner.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--green)">Hybrid fungerer</h3>
+          <p>Lokal modell for deloppgaver + skymodell som orkestrator ga 60/40-fordeling p&aring; real-world Java. 917 tester gr&oslash;nne.</p>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:24px">
+        <p><strong>Praktisk anbefaling:</strong> Ikke erstatt skymodeller med lokale. Bruk lokale modeller der konteksten er avgrenset og komplett, med skymodell som sikkerhetsnett.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18: Tema 4 header -->
   <div class="slide section-header">
     <div class="section-number t4">4</div>
     <span class="theme-badge badge-t4" style="font-size:0.95rem;padding:8px 20px">Tema 4</span>
     <h1 class="t4" style="font-size:2.6rem;margin-bottom:0.5em">Parallelle<br>kodeagenter</h1>
     <p class="lead">Gruppe 4.1</p>
-    <p class="subtitle" style="margin-top:0.8em">Session Tracker · Backend + Frontend + Tester · Kontraktstyring</p>
+    <p class="subtitle" style="margin-top:0.8em">Session Tracker &middot; Backend + Frontend + Tester &middot; Kontraktstyring</p>
   </div>
 
-  <!-- ── SLIDE 14: Gruppe 4.1 ── -->
+  <!-- SLIDE 19: Gruppe 4.1 -->
   <div class="slide">
     <div class="content">
-      <span class="kicker t4">Gruppe 4.1 – Session Tracker</span>
-      <h2>Fire agenter, én app</h2>
-      <p style="margin-bottom:20px;color:var(--muted)">Live fullstack-app for å spore seminargrupper. Kotlin + React, deployet dag én.</p>
+      <span class="kicker t4">Gruppe 4.1 &ndash; Session Tracker</span>
+      <h2>Fire agenter, &eacute;n app</h2>
+      <p style="margin-bottom:20px;color:var(--muted)">Live fullstack-app for &aring; spore seminargrupper. Kotlin + React, deployet dag &eacute;n.</p>
       <div class="two-col">
         <div>
           <h3>Agenter og leveranser</h3>
@@ -491,124 +653,118 @@
             <tr><td>Koordinator</td><td>KOORDINERING.md, API-kontrakt</td></tr>
             <tr><td>Backend</td><td>REST API, H2-database, alle endepunkter</td></tr>
             <tr><td>Frontend</td><td>Live polling, kortlayout, tema-farger</td></tr>
-            <tr><td>Tester</td><td>JUnit 5 + Vitest – alle grønne</td></tr>
+            <tr><td>Tester</td><td>JUnit 5 + Vitest &ndash; alle gr&oslash;nne</td></tr>
           </table>
         </div>
         <div>
           <h3>Koordineringsavvik</h3>
           <ul class="bullets">
-            <li><code>GET /sessions</code> manglet i kontrakten – funnet av frontendagent ved implementering</li>
-            <li>Seed-data brukte eksempelnavn – oppdaget av menneskelig koordinator</li>
-            <li><code>Group</code>-tabell kolliderte med SQL-reservert ord – funnet ved deploy</li>
+            <li><code>GET /sessions</code> manglet i kontrakten &ndash; funnet av frontendagent ved implementering</li>
+            <li>Seed-data brukte eksempelnavn &ndash; oppdaget av menneskelig koordinator</li>
+            <li><code>Group</code>-tabell kolliderte med SQL-reservert ord &ndash; funnet ved deploy</li>
           </ul>
         </div>
       </div>
       <div class="highlight" style="margin-top:16px">
-        <p><strong>Viktigste funn:</strong> Kontrakten er flaskehalsen. Avvik oppstår ikke fordi agentene gjør feil, men fordi kontrakten er ufullstendig. Menneskelig koordinering = kontraktstyring, ikke koding.</p>
+        <p><strong>Viktigste funn:</strong> Kontrakten er flaskehalsen. Avvik oppst&aring;r ikke fordi agentene gj&oslash;r feil, men fordi kontrakten er ufullstendig. Menneskelig koordinering = kontraktstyring, ikke koding.</p>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 15: Tverrgående funn ── -->
+  <!-- SLIDE 20: Tverrgående funn -->
   <div class="slide">
     <div class="content wide">
-      <div class="kicker">På tvers av alle tema</div>
-      <h2>Fem tverrgående funn</h2>
+      <div class="kicker">P&aring; tvers av alle tema</div>
+      <h2>Seks tverrgående funn</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px">
         <div class="card">
           <h3>1. AI har systematiske blindsoner</h3>
-          <p>Runtime-miljø, dataformat-antakelser, visuell rendering og sikkerhet ved systemgrenser fanges ikke av enhetstester. Testing med ekte data i produksjonslikt miljø er avgjørende.</p>
+          <p>Runtime-milj&oslash;, dataformat, visuell rendering, sikkerhet og runtime-feilh&aring;ndtering fanges ikke av enhetstester. Testing med ekte data i produksjonslikt milj&oslash; er avgj&oslash;rende.</p>
         </div>
         <div class="card">
-          <h3>2. Spesifikasjon trumfer verktøyvalg</h3>
-          <p>Erfaring med verktøyet, planning mode og modellvalg har mindre effekt enn god spesifikasjon og promptestrategi.</p>
+          <h3>2. Spesifikasjon trumfer verkt&oslash;yvalg</h3>
+          <p>Erfaring, planning mode og modellvalg har mindre effekt enn god spesifikasjon og promptestrategi. Fire uavhengige grupper viser dette.</p>
         </div>
         <div class="card">
-          <h3>3. Parallell review øker dekning</h3>
-          <p>Sonnet + Opus ga 15 unike funn. Kun Sonnet: 6. Kun Opus: 9. Overlapp: 4. Modeller har ulike sterksider.</p>
+          <h3>3. Kvalitet vs. komplettering</h3>
+          <p>Iterativ loop gir bedre arkitektur. &Eacute;n bestilling gir bedre regeldekning. Man trenger b&aring;de god spec og aktiv review &ndash; ingen av dem alene er nok.</p>
         </div>
         <div class="card">
-          <h3>4. Iterasjonshastighet er et fortrinn</h3>
-          <p>2 minutter fra PO-feedback til implementert endring. En ikke-teknisk PO kan styre utvikling direkte med riktig strukturert dialog.</p>
+          <h3>4. Parallell review &oslash;ker dekning</h3>
+          <p>Sonnet + Opus: 15 unike funn. Kun Sonnet: 6. Kun Opus: 9. Overlapp: 4. Modeller har ulike sterksider.</p>
         </div>
-        <div class="card" style="grid-column:1/-1">
-          <h3>5. Kontraktstyring = den kritiske menneskelige rollen ved multi-agent</h3>
-          <p>Menneskelig koordinering handler om å vedlikeholde API-kontrakt og kommunisere endringer eksplisitt – ikke om å skrive kode.</p>
+        <div class="card">
+          <h3>5. Iterasjonshastighet er et fortrinn</h3>
+          <p>2&ndash;4 min fra PO-feedback til endring. 11 iterasjoner p&aring; 55 min med kvalitetsl&oslash;ft per runde. Fundamentalt raskere enn tradisjonelle sykler.</p>
+        </div>
+        <div class="card">
+          <h3>6. Lokale modeller: hybrid fungerer</h3>
+          <p>Ikke klare alene, men lokal modell for deloppgaver + skymodell som orkestrator er en lovende praktisk tiln&aelig;rming.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 16: AI sine blindsoner ── -->
+  <!-- SLIDE 21: Blindsoner-oversikt -->
   <div class="slide">
     <div class="content">
       <div class="kicker">Alle grupper med produksjonsdeploy erfarte dette</div>
       <h2>AI sine systematiske blindsoner</h2>
-      <p style="margin-bottom:24px;color:var(--muted)">Enhetstester er nødvendig, men ikke tilstrekkelig</p>
+      <p style="margin-bottom:24px;color:var(--muted)">Enhetstester er n&oslash;dvendig, men ikke tilstrekkelig</p>
       <table>
         <tr><th>Blindsone</th><th>Eksempel fra fagseminaret</th><th>Gruppe</th></tr>
-        <tr><td>Runtime-miljø</td><td>WebSocket reconnect-håndtering feiler ved deploy til Railway</td><td>1.2</td></tr>
-        <tr><td>Dataformat-antakelser</td><td>Instagram-eksportens faktiske mappestruktur med dynamisk prefix</td><td>2.1</td></tr>
+        <tr><td>Runtime-milj&oslash;</td><td>WebSocket reconnect ved deploy til Railway</td><td>1.2</td></tr>
+        <tr><td>Dataformat</td><td>Instagram-eksportens mappestruktur med dynamisk prefix</td><td>2.1</td></tr>
         <tr><td>Encoding</td><td>Norske tegn eksportert som Latin-1 byte-sekvenser</td><td>2.1</td></tr>
-        <tr><td>Visuell korrekthet</td><td>Bugs som kun vises på skjerm – ikke i tester</td><td>1.2</td></tr>
-        <tr><td>SQL-reserverte ord</td><td><code>Group</code>-tabell kolliderte i produksjonsdatabase</td><td>4.1</td></tr>
-        <tr><td>Halvferdige implementasjoner</td><td>TypeScript-migrering startet men ikke fullført</td><td>2.2</td></tr>
+        <tr><td>Visuell korrekthet</td><td>Bugs som kun vises p&aring; skjerm, ikke i tester</td><td>1.2</td></tr>
+        <tr><td>Sikkerhet</td><td>Manglende inputvalidering, JSON-injection i Slack</td><td>2.3</td></tr>
+        <tr><td>SQL-reserverte ord</td><td><code>Group</code>-tabell feilet i produksjon</td><td>4.1</td></tr>
+        <tr><td>Runtime-feil</td><td>AbortError ved Ctrl+C ikke fanget</td><td>1.5</td></tr>
+        <tr><td>Halvferdige migreringer</td><td>TypeScript-migrering startet men ikke fullf&oslash;rt</td><td>2.2</td></tr>
       </table>
     </div>
   </div>
 
-  <!-- ── SLIDE 17: Konklusjon ── -->
+  <!-- SLIDE 22: 10 samlet læring -->
   <div class="slide">
-    <div class="content">
-      <div class="kicker">Oppsummering</div>
-      <h2>Seks anbefalinger</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:24px">
-        <div class="card">
-          <div style="font-size:1.8rem;margin-bottom:8px">📋</div>
-          <strong>Invester i spesifikasjon</strong>
-          <p style="margin-top:6px;font-size:0.9rem">En god spec gir bedre resultater enn planning mode eller verktøyvalg</p>
+    <div class="content wide">
+      <div class="kicker">Samlet l&aelig;ring</div>
+      <h2>Ti punkter for utviklere, PO-er og prosjektledere</h2>
+      <div class="two-col" style="margin-top:20px;gap:24px">
+        <div>
+          <ol class="learnings">
+            <li><strong>AI gir h&oslash;y fart, men krever styring.</strong> Tydelig scope, korte looper og kontrollpunkter avgj&oslash;r utfallet.</li>
+            <li><strong>Test med ekte data tidlig.</strong> De viktigste feilene fanges ikke av tester eller planlegging, men av faktisk kj&oslash;ring.</li>
+            <li><strong>Tester alene gir falsk trygghet.</strong> Visuelle feil, deploy-feil, sikkerhetshull og halvferdige migreringer slipper gjennom gr&oslash;nn build.</li>
+            <li><strong>God spec hjelper planlegging, men garanterer ikke god kode.</strong> Gapet mellom spec og implementasjon er der risikoen ligger.</li>
+            <li><strong>Promptestrategi betyr mye.</strong> Iterativ loop gir bedre arkitektur; &eacute;n bestilling gir bedre komplettering. Det du ikke ber om, blir ikke implementert.</li>
+          </ol>
         </div>
-        <div class="card">
-          <div style="font-size:1.8rem;margin-bottom:8px">🧪</div>
-          <strong>Test med ekte data</strong>
-          <p style="margin-top:6px;font-size:0.9rem">AI-generert kode har blindsoner for runtime og dataformat</p>
-        </div>
-        <div class="card">
-          <div style="font-size:1.8rem;margin-bottom:8px">🔄</div>
-          <strong>Parallell review</strong>
-          <p style="margin-top:6px;font-size:0.9rem">To modeller gir vesentlig bedre dekning enn én</p>
-        </div>
-        <div class="card">
-          <div style="font-size:1.8rem;margin-bottom:8px">💬</div>
-          <strong>Strukturer PO-dialogen</strong>
-          <p style="margin-top:6px;font-size:0.9rem">Flervalg og ett spørsmål om gangen gir ikke-tekniske brukere reell kontroll</p>
-        </div>
-        <div class="card">
-          <div style="font-size:1.8rem;margin-bottom:8px">📄</div>
-          <strong>Ha en API-kontrakt</strong>
-          <p style="margin-top:6px;font-size:0.9rem">Ved multi-agent er kontrakten flaskehalsen – ikke agentenes evner</p>
-        </div>
-        <div class="card">
-          <div style="font-size:1.8rem;margin-bottom:8px">☁️</div>
-          <strong>Bruk skymodeller</strong>
-          <p style="margin-top:6px;font-size:0.9rem">Lokale modeller er ikke klare for agent-basert koding i daglig praksis</p>
+        <div>
+          <ol class="learnings" style="counter-reset:learn 5">
+            <li><strong>Bruk uavhengig review.</strong> To modeller i parallell finner 67% flere problemer enn &eacute;n. Implementasjonsagenten er ikke sin egen beste reviewer.</li>
+            <li><strong>PO-rollen blir viktigere.</strong> N&aring;r koding g&aring;r raskt, er problemforst&aring;else og prioritering den reelle flaskehalsen.</li>
+            <li><strong>Ikke-tekniske roller kan styre utvikling.</strong> Strukturert dialog med flervalg gir reell produktkontroll. Hovedbarrieren er teknisk oppsett.</li>
+            <li><strong>Parallelle agenter krever kontrakt.</strong> Kontrakten er flaskehalsen, ikke agentene. Koordinatorrollen handler om kontrakt-vedlikehold.</li>
+            <li><strong>Lokale modeller: bruk hybrid.</strong> Ikke klare alene, men lokal for deloppgaver + sky som orkestrator er en lovende tiln&aelig;rming.</li>
+          </ol>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── SLIDE 18: Avslutning ── -->
+  <!-- SLIDE 23: Avslutning -->
   <div class="slide">
-    <div class="kicker">Fagseminar Vår 2026</div>
-    <h1 style="font-size:2.4rem;margin-bottom:0.6em">Det er ikke lenger et spørsmål om<br><em style="color:var(--accent)">om</em> AI kan hjelpe –</h1>
+    <div class="kicker">Fagseminar V&aring;r 2026</div>
+    <h1 style="font-size:2.4rem;margin-bottom:0.6em">Det er ikke lenger et sp&oslash;rsm&aring;l om<br><em style="color:var(--accent)">om</em> AI kan hjelpe &ndash;</h1>
     <p class="lead">men hvilke strategier, strukturer og sikkerhetsmekanismer<br>som gir de beste resultatene.</p>
     <div style="margin-top:3em;display:flex;gap:40px;align-items:center;justify-content:center;color:var(--muted);font-size:0.9rem">
-      <span>9 grupper</span>
-      <span>·</span>
-      <span>~30 deltakere</span>
-      <span>·</span>
-      <span>4 tema</span>
-      <span>·</span>
+      <span>11 grupper</span>
+      <span>&middot;</span>
+      <span>~35 deltakere</span>
+      <span>&middot;</span>
+      <span>5 tema</span>
+      <span>&middot;</span>
       <span>Alle leverte fungerende apper</span>
     </div>
   </div>
@@ -619,8 +775,8 @@
 <div id="progress"><div id="progress-bar"></div></div>
 <div id="nav">
   <span id="counter"></span>
-  <button class="nav-btn" id="btn-prev" title="Forrige (←)">&#8592;</button>
-  <button class="nav-btn" id="btn-next" title="Neste (→ / Mellomrom)">&#8594;</button>
+  <button class="nav-btn" id="btn-prev" title="Forrige (&larr;)">&larr;</button>
+  <button class="nav-btn" id="btn-next" title="Neste (&rarr; / Mellomrom)">&rarr;</button>
 </div>
 
 <script>
