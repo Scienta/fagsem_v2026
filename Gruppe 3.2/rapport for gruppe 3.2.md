@@ -4,7 +4,7 @@ tema: ""
 
 # Rapport
 
-Status for dokument: Provisorisk, på kanten til useriøs.
+Status for dokument: Levert. (Og korrigert igjen litt etterpå.)
 
 ---
 
@@ -106,7 +106,7 @@ Lokale modeller som ble evaluert:
 
 Lokale modeller ble kjørt av Ollama.
 
-Agenter som evaluert:
+Agenter som ble evaluert:
 
 * Claude Code
 * OpenCode
@@ -127,8 +127,8 @@ Siden gruppa hadde forskjellige maskiner og spesifikasjoner, er tidsbruk antagel
 
 ### 4. Resultater
 
-Claude Opus 4.7 i Claude Code ga inntrykk av å fungere som forventet. Den besvarte sin oppgave på 7-8 minutter (Mac M4,
-48G RAM). Denne ble akseptert som "fasit" for andre modeller å sammenligne seg
+Claude Opus 4.7 i Claude Code ga inntrykk av å fungere som forventet. Den besvarte sin oppgave på 7-8 minutter. Denne
+ble akseptert som "fasit" for andre modeller å sammenligne seg
 med. Vi satte ikke av tid til å verifisere løsningen.
 
 Fungerende lokale modeller:
